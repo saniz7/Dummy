@@ -1,6 +1,4 @@
-/fablo-target
 /web
-/backend/config
 /backend/patient-wallet
 /backend/doctor-wallet
 /backend/pharmacy-wallet

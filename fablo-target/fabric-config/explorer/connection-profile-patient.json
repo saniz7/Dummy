@@ -1,0 +1,49 @@
+{
+  "name": "fablo-test-network-patient",
+  "description": "Connection profile for Hyperledger Explorer in Fablo network",
+  "version": "1.0.0",
+  "client": {
+    "organization": "patient",
+    "tlsEnable": false,
+    "enableAuthentication": true,
+    "adminCredential": {
+      "id": "admin",
+      "password": "adminpw"
+    },
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        },
+        "orderer": "300"
+      }
+    }
+  },
+  "organizations": {
+    "patient": {
+      "mspid": "patientMSP",
+      "adminPrivateKey": {
+        "path": "/tmp/crypto/peerOrganizations/patient.healthcare.com/users/Admin@patient.healthcare.com/msp/keystore/priv-key.pem"
+      },
+      "peers": [
+        "peer0.patient.healthcare.com"
+      ],
+      "signedCert": {
+        "path": "/tmp/crypto/peerOrganizations/patient.healthcare.com/users/Admin@patient.healthcare.com/msp/signcerts/Admin@patient.healthcare.com-cert.pem"
+      }
+    }
+  },
+  "peers": {
+    "peer0.patient.healthcare.com": {
+      "url": "grpc://peer0.patient.healthcare.com:7041",
+      "tlsCACerts": {
+        "path": "/tmp/crypto/peerOrganizations/patient.healthcare.com/msp/tlscacerts/tlsca.patient.healthcare.com-cert.pem"
+      }
+    }
+  },
+  "channels": {
+    "main-channel1": {
+      "peers": {}
+    }
+  }
+}

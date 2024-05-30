@@ -1,0 +1,33 @@
+name: fablo-test-network-patient
+description: Connection profile for patient in Fablo network
+version: 1.0.0
+client:
+  organization: patient
+organizations:
+  patient:
+    mspid: patientMSP
+    peers:
+      - peer0.patient.healthcare.com
+      - peer0.doctor.healthcare.com
+      - peer0.pharmacy.healthcare.com
+      - peer0.lab.healthcare.com
+      - peer0.insurance.healthcare.com
+    certificateAuthorities:
+      - ca.patient.healthcare.com
+peers:
+  peer0.patient.healthcare.com:
+    url: grpc://localhost:7041
+  peer0.doctor.healthcare.com:
+    url: grpc://localhost:7061
+  peer0.pharmacy.healthcare.com:
+    url: grpc://localhost:7081
+  peer0.lab.healthcare.com:
+    url: grpc://localhost:7101
+  peer0.insurance.healthcare.com:
+    url: grpc://localhost:7121
+certificateAuthorities:
+  ca.patient.healthcare.com:
+    url: http://localhost:7040
+    caName: ca.patient.healthcare.com
+    httpOptions:
+      verify: false
