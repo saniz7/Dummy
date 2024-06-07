@@ -27,6 +27,8 @@ import SelectInsuranceCompany from "./components/patient/SelectInsuranceCompany"
 import AddPatientRecords from "./components/doctor/AddPatientRecord";
 import LabData from "./components/patient/LabData";
 import Logout from "./container/logout";
+import UpdatePassword from "./components/login/updatePassword";
+import UpdateProfile from "./components/profile/updateProfile";
 function App() {
 
   // console.log = function(){};
@@ -39,6 +41,7 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/update" element={<UpdatePassword/>} />
           <Route path="/select-doctor" element={<SelectDoctor/>} />
 
                           {/* Admin */}
@@ -54,6 +57,7 @@ function App() {
         {/* <Route > */}
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/select-doctor" element={<SelectDoctor/>} />
+          <Route path="/profile" element={<UpdateProfile/>} />
           {/* <Route path="/select-lab" element={<SelectLab/>} /> */}
           {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
 

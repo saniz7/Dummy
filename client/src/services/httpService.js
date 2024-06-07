@@ -50,6 +50,7 @@ const httpService = {
   setJWT,
   get: instance.get,
   post: instance.post,
+  patch: instance.patch,
   put: instance.put,
   delete: instance.delete,
 };

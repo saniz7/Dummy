@@ -8,10 +8,10 @@ function Register() {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
-  const [aadhaarNumber, setAadhaarNumber] = useState("");
+  // const [aadhaarNumber, setAadhaarNumber] = useState("");
   const [contact, setContact] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
   const [address, setAddress] = useState("");
@@ -33,7 +33,7 @@ function Register() {
 
     try {
             const res = await registerService.registerPatient({
-              args:[name,dob,gender,aadhaarNumber,contact,bloodGroup,address],
+              args:[dob,gender,contact,bloodGroup,address],
               fcn:"registerPatient",
               orgName:"patient",
               password,
@@ -51,11 +51,11 @@ function Register() {
                 "User registered successfully."
             );
 
-            setAadhaarNumber("")
+            // setAadhaarNumber("")
             setAddress("")
             setContact("")
             setBloodGroup("")
-            setName("")
+            // setName("")
             setPassword("")
             setGender("")
             setUsername("")
@@ -91,9 +91,9 @@ function Register() {
               onSubmit={(e) => handleSubmit(e)}
             >
               <Input
-                label="Username"
+                label="Email"
                 type="text"
-                id="username"
+                id="email"
                 required
                 value={username}
                 onChange={setUsername}
@@ -116,14 +116,14 @@ function Register() {
                 value={confirmPassword}
                 onChange={setConfirmPassword}
               />
-              <Input
+              {/* <Input
                 label="Name"
                 type="text"
                 id="name"
                 required
                 value={name}
                 onChange={setName}
-              />
+              /> */}
               <Input
                 label="Date of Birth"
                 type="date"
@@ -170,14 +170,14 @@ function Register() {
                 </div>
               </div>
 
-              <Input
+              {/* <Input
                 label="Citizenship Number"
                 type="text"
                 id="aadhaar_number"
                 required
                 value={aadhaarNumber}
                 onChange={setAadhaarNumber}
-              />
+              /> */}
 
               <Input
                 label="Contact"

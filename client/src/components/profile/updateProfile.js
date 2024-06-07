@@ -10,10 +10,11 @@ function UpdateProfile() {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [name, setName] = useState("");
+  const [username, setName] = useState("");
   const [gender, setGender] = useState("");
-  const [roomNo, setRoomNo] = useState("");
-  const [hallNo, setHallNo] = useState("");
+  const [blood, setBlood] = useState("");
+  const [date, setDate] = useState("");
+
   const [fullAddress, setFullAddress] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [profileImage, setProfileImage] = useState("");
@@ -29,14 +30,15 @@ function UpdateProfile() {
       setTextPrompt(location.state.promptText);
     }
     const res = await profileService.getProfileToUpdate();
+    console.log('res',res?.data?.userDataFromLedger);
 
-    if (res.data.success) {
-      setName(res.data.user.name ? res.data.user.name : "");
-      setGender(res.data.user.gender ? res.data.user.gender : "");
-      setRoomNo(res.data.user.roomno ? res.data.user.roomno : "");
-      setHallNo(res.data.user.hallno ? res.data.user.hallno : "");
-      setFullAddress(res.data.user.address ? res.data.user.address : "");
-      setPhoneNo(res.data.user.phoneno ? res.data.user.phoneno : "");
+    if (res?.data) {
+      setName(res?.data?.user?.userName ? res?.data?.user?.userName : "");
+      setGender(res?.data?.userDataFromLedger?.gender ? res?.data?.userDataFromLedger?.gender : "");
+      setFullAddress(res?.data?.userDataFromLedger?.address ? res?.data?.userDataFromLedger?.address : "");
+      setPhoneNo(res?.data?.userDataFromLedger?.contact ? res?.data?.userDataFromLedger?.contact : "");
+      setBlood(res?.data?.userDataFromLedger?.bloodGroup ? res?.data?.userDataFromLedger?.bloodGroup : "");
+      setDate(res?.data?.userDataFromLedger?.dob ? res?.data?.userDataFromLedger?.dob : "");
       setProfileImage(res.data.user.image ? res.data.user.image : "");
       setProfileImageUpload(res.data.user.image ? res.data.user.image : "");
     }
@@ -76,16 +78,24 @@ function UpdateProfile() {
     setSuccess("");
 
     const data = {
-      phoneno: phoneNo,
+      username:username,
+      contact: phoneNo,
       address: fullAddress,
       gender: gender,
-      roomno: roomNo,
-      hallno: hallNo,
-      image: profileImageUpload,
+      bloodGroup:blood,
+      dob:date
+      // image: profileImageUpload,
     };
 
     try {
-      const res = await profileService.updateProfile(data);
+      const res = await profileService.updateProfile({
+  args:[date,gender,phoneNo,blood,fullAddress],
+              fcn:"updatePatient",
+              orgName:"patient",
+              // password,
+              username
+
+      });
       if (res.data.success) {
         setLoader(false);
         setTextPrompt("");
@@ -104,7 +114,11 @@ function UpdateProfile() {
       setLoader(false);
     }
   };
-
+  const formatDate = (date) => {
+  const [day, month, year] = date.split('-');
+  return `${year}-${month}-${day}`;
+};  const formattedDate = formatDate(date); 
+console.log(formattedDate);
   // const handleFileChange = (e) => {
   //   setProfileImageUpload(e.target.files[0]);
   //   setProfileImage(URL.createObjectURL(e.target.files[0]));
@@ -155,7 +169,7 @@ function UpdateProfile() {
               <div className="text-red-500 text-center text-base my-5">
                 {textPrompt}
               </div>
-              <div className="grid gap-1 grid-cols-2">
+              <div className="grid gap-1 grid-cols-2 mb-3">
                 <div>
                   <label
                     className="block uppercase text-xs font-bold mb-2"
@@ -170,7 +184,7 @@ function UpdateProfile() {
                   focus:outline-none focus:ring w-full"
                     placeholder="Name"
                     style={{ transition: "all 0.15s ease 0s" }}
-                    value={name}
+                    value={username}
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
@@ -205,6 +219,46 @@ function UpdateProfile() {
                   </select>
                 </div>
               </div>
+              <div className="grid gap-1 grid-cols-2 mb-2">
+  <div>
+                  <label
+                    className="block uppercase text-xs font-bold mb-2"
+                    htmlFor="grid-password"
+                  >
+                    Blood Group
+                  </label>
+                  <input
+                    type="name"
+                    className="border-0 px-3 py-3 placeholder-gray-400 
+                  text-gray-700 bg-white rounded text-sm shadow 
+                  focus:outline-none focus:ring w-full"
+                    placeholder="Name"
+                    style={{ transition: "all 0.15s ease 0s" }}
+                    value={blood}
+                    onChange={(e) => setBlood(e.target.value)}
+                    required
+                  />
+                </div>
+                 <div>
+                  <label
+                    className="block uppercase text-xs font-bold mb-2"
+                    htmlFor="grid-password"
+                  >
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    className="border-0 px-3 py-3 placeholder-gray-400 
+                  text-gray-700 bg-white rounded text-sm shadow 
+                  focus:outline-none focus:ring w-full"
+                    placeholder="Name"
+                    style={{ transition: "all 0.15s ease 0s" }}
+                    value={formattedDate}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
             </div>
             <div className="relative w-full mb-3">
               <label
@@ -214,24 +268,7 @@ function UpdateProfile() {
                 Address
               </label>
               <div className="grid gap-1 grid-cols-2">
-                <input
-                  type="text"
-                  className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                  placeholder="Room No."
-                  style={{ transition: "all 0.15s ease 0s" }}
-                  value={roomNo}
-                  onChange={(e) => setRoomNo(e.target.value)}
-                  required
-                />
-                <input
-                  type="text"
-                  className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                  placeholder="Hall No."
-                  style={{ transition: "all 0.15s ease 0s" }}
-                  value={hallNo}
-                  onChange={(e) => setHallNo(e.target.value)}
-                  required
-                />
+
                 <input
                   type="text"
                   className="border-0 col-span-2 px-3 mt-2 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"

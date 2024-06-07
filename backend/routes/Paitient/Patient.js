@@ -1,8 +1,10 @@
 const express = require('express');
 const {isAuthenticatedUser,authorizeRoles} = require('../../middleware/auth')
 const {giveAccess, removeAccess,UserList,HealthRecords,LabRecords,PharmacyRecords,InsuranceRecords} = require('../../Controller/Patient/Patient');
+const { updatePatient } = require('../../Controller/Admin/Admin');
 
 const router = express.Router();
+router.route('/update-patient').patch(updatePatient);
 
 router.route('/give-access').post(isAuthenticatedUser,authorizeRoles("patient"), giveAccess);
 router.route('/remove-access').post(isAuthenticatedUser,authorizeRoles("patient"), removeAccess);

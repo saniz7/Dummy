@@ -16,20 +16,16 @@ class KVContract extends Contract {
   async registerPatient(
     ctx,
     patientId,
-    name,
     dob,
     gender,
-    aadharNumber,
     contact,
     bloodGroup,
     address
   ) {
     const newPatient = {
       patientId,
-      name,
       dob,
       gender,
-      aadharNumber,
       contact,
       bloodGroup,
       address,
@@ -95,7 +91,35 @@ class KVContract extends Contract {
 
     return JSON.stringify(allResults);
   }
+  /////////////////////////////
+  // Update Patient
+  /////////////////////////////
+  async updatePatient(ctx, patientId, dob, gender, contact, bloodGroup, address) {
+    // Check if the patient exists
+    const exists = await this.patientExists(ctx, patientId);
+    if (!exists) {
+      throw new Error(`The patient with ID ${patientId} does not exist`);
+    }
 
+    // Retrieve the existing patient data
+    const buffer = await ctx.stub.getState(patientId);
+    const patient = JSON.parse(buffer.toString());
+
+    // Update the patient data with new values
+    patient.dob = dob || patient.dob;
+    patient.gender = gender || patient.gender;
+    patient.contact = contact || patient.contact;
+    patient.bloodGroup = bloodGroup || patient.bloodGroup;
+    patient.address = address || patient.address;
+
+    // Store the updated patient data back into the state
+    const updatedBuffer = Buffer.from(JSON.stringify(patient));
+    await ctx.stub.putState(patientId, updatedBuffer);
+
+    console.log("Patient is updated successfully!!!");
+
+    return { success: "OK" };
+  }
   /////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////// DOCTOR RELATED CHAINCODE //////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////

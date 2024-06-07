@@ -80,10 +80,10 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
             
             console.log("result:", result);
 
-            result.medicalRecords.forEach(medicalRecords => {
-                medicalRecords.labTests = JSON.parse(JSON.parse(medicalRecords.labTests));
-                medicalRecords.medicines = JSON.parse(JSON.parse(medicalRecords.medicines));
-            });
+            // result.medicalRecords.forEach(medicalRecords => {
+                // medicalRecords.labTests = JSON.parse(JSON.parse(medicalRecords.labTests));
+                // medicalRecords.medicines = JSON.parse(JSON.parse(medicalRecords.medicines));
+            // });
 
             return result
 

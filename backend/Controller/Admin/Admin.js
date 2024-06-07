@@ -103,12 +103,12 @@ exports.register = async (req,res,next)=>{
 
 exports.registerPatient = async (req,res,next)=>{
 
-    const args = req.body.args;
-    const username = req.body.username;
-    const orgName = req.body.orgName || "patient" ;
-    const password = req.body.password;
-    const transient = {};
-    const fcn = req.body.fcn || "registerPatient";
+   const args = req.body.args || [];
+    const username = req.body.username || '';
+    const orgName = req.body.orgName || 'patient';
+    const password = req.body.password || '';
+    const transient = req.body.transient || {};
+    const fcn = req.body.fcn || 'registerPatient';
 
     // check admin status
 
@@ -142,21 +142,21 @@ exports.registerPatient = async (req,res,next)=>{
         return;
     }
 
-    while(true){
-        var userId = Math.floor(100000 + Math.random() * 900000);
-        const us = await User.findOne({ userId }).select("+password");
-        if(us){
-            continue
-        }else{
-            break
-        }
+while (true) {
+    var userId = Math.floor(100000 + Math.random() * 900000).toString();
+    const us = await User.findOne({ userId }).select("+password");
+    if (us) {
+        continue;
+    } else {
+        break;
     }
+}
 
-    
-    // wallet
-    let response = await helper.getRegisteredUser(username, orgName, true);
+// wallet
+let response = await helper.getRegisteredUser(username, orgName, true);
 
-    args.unshift(userId);
+args.unshift(userId);
+
     logger.debug('args: ', args);
 
     // ledger
@@ -189,6 +189,65 @@ exports.registerPatient = async (req,res,next)=>{
     }
 
 
+}
+exports.updatePatient = async (req, res, next) => {
+    const args = req.body.args || [];
+    const username = req.body.username || '';
+    const orgName = req.body.orgName || 'patient';
+    const transient = req.body.transient || {};
+    const fcn = req.body.fcn || 'updatePatient';
+
+    // Input validation
+    if (!username) {
+        res.json(getErrorMessage('\'username\''));
+        return;
+    }
+    if (!orgName) {
+        res.json(getErrorMessage('\'orgName\''));
+        return;
+    }
+    if (args.length < 5) {
+        res.status(400).json({
+            success: false,
+            message: 'Missing arguments for updating patient'
+        });
+        return;
+    }
+
+    // Check if the user exists
+    const user = await User.findOne({ userName: username }).select("+password");
+    if (!user) {
+        res.status(404).json({
+            success: false,
+            message: "User does not exist"
+        });
+        return;
+    }
+
+    // Add userId to args
+    args.unshift(user.userId);
+
+    // wallet
+    let response = await helper.getRegisteredUser(username, orgName, true);
+
+    // ledger
+    let message = await invoke.invokeTransaction("main-channel1", "chaincode1", fcn, args, username, orgName, transient);
+    
+    console.log("ledger message: ", message);
+
+    logger.debug('-- returned from updating the patient %s for organization %s', username, orgName);
+    logger.debug('check', response);
+    if (response && typeof response !== 'string') {
+        logger.debug('Successfully updated the patient %s for organization %s', username, orgName);
+        res.json({
+            success: true,
+            message: `Successfully updated the patient with id ${user.userId}`,
+            response
+        });
+    } else {
+        logger.debug('Failed to update the patient %s for organization %s with::%s', username, orgName, response);
+        res.json({ success: false, message: response });
+    }
 }
 
 exports.Login = async (req,res,next)=>{
@@ -324,3 +383,59 @@ exports.getUserDetails = async (req,res,next)=>{
 
 
 }
+exports.getUserDetailSelf = async (req, res, next) => {
+    try {
+        console.log("started", req.session.uid);
+
+        // Fetch the user's own details
+        const user = await User.findOne({ userId: req.session.uid });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        console.log("user: ", user);
+
+        // Retrieve the registration arguments
+        const registrationArgs = {
+            userId: user.userId,
+            userName: user.userName,
+            orgName: user.orgName,
+            gender: user.gender,
+            contact: user.contact,
+            // Add other fields here as per your User schema
+        };
+
+        // Determine the function to call based on the user's orgName
+        let fcn;
+        switch (user.orgName) {
+            case "doctor":
+                fcn = "getDoctor";
+                break;
+            case "patient":
+                fcn = "getPatient";
+                break;
+            case "lab":
+                fcn = "getLab";
+                break;
+            case "pharmacy":
+                fcn = "getPharmacy";
+                break;
+            case "insurance":
+                fcn = "getIncuranceCompany";
+                break;
+            default:
+                return res.status(400).json({ success: false, message: 'Invalid orgName' });
+        }
+
+        // Fetch data from the ledger
+        const userDataFromLedger = await query.query("main-channel1", "chaincode1", [user.userId], fcn, user.userName, user.orgName);
+
+        // Return the user details along with registration arguments
+        res.status(200).json({ success: true, user, userDataFromLedger, registrationArgs, status: "success" });
+    } catch (error) {
+        console.error("Error fetching user details: ", error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+

@@ -57,11 +57,24 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         // Chaincode functions to be invoked, number of arguments and their values
 
         if (fcn === "registerPatient") {
-
-            result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+            result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4], args[5]);
+            if (!result) {
+            throw new Error('Transaction result is undefined');
+        }
             message = `Successfully added the patient to the ledger with id ${args[0]}`
 
-        } else if (fcn === "registerDoctor") {
+        }else if (fcn === "updatePatient") {
+    // Make sure the `args` array contains all the necessary parameters
+    if (args.length < 6) {
+        throw new Error('Missing arguments for updating patient');
+    }
+
+    result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4], args[5]);
+    if (!result) {
+        throw new Error('Transaction result is undefined');
+    }
+    message = `Successfully updated the patient with id ${args[0]}`
+} else if (fcn === "registerDoctor") {
 
             result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
             message = `Successfully added the doctor to the ledger with id ${args[0]}`

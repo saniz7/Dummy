@@ -6,12 +6,12 @@ function getProfile() {
 }
 
 function getProfileToUpdate(){
-    return httpService.get("/profile");
+    return httpService.get("/get-user-detail-self");
 }
 
 function updateProfile(data) {
     console.log(data);
-    return httpService.put('update-profile', data);
+    return httpService.patch("/update-patient", data);
 }
 
 const profileService = { getProfile, updateProfile, getProfileToUpdate };
