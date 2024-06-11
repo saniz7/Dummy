@@ -1,3 +1,4 @@
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Assuming you're using Heroicons
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../common/loader";
@@ -9,6 +10,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [org, setOrg] = useState("patient");
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
   const navigate = useNavigate();
 
@@ -69,7 +71,7 @@ function Login() {
                 />
               </div>
 
-              <div>
+              <div className="relative">
                 <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -77,7 +79,7 @@ function Login() {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   id="password"
                   placeholder="Password"
@@ -86,6 +88,16 @@ function Login() {
                   value={password}
                   required
                 />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-5 w-5 text-indigo-600" /> // Color changed to match the sign-in button
+                  ) : (
+                    <EyeIcon className="h-5 w-5 text-gray-500" />
+                  )}
+                </div>
               </div>
 
               <div className="relative">
@@ -105,11 +117,7 @@ function Login() {
                 >
                   <option value={"patient"}>Patient</option>
                   <option value={"doctor"}>Doctor</option>
-                  {/* <option value={"lab"}>Lab</option> */}
-                  {/* <option value={"pharmacy"}>Pharmacy</option> */}
-                  {/* <option value={"insurance"}>Insurance</option> */}
                   <option value={"Admin"}>Admin</option>
-
                 </select>
                 <div className="absolute inset-y-0 right-0 top-5 flex items-center pr-2 pointer-events-none">
                   <svg
@@ -134,7 +142,7 @@ function Login() {
               )}
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full bg-indigo-600 text-white hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 {loader ? <Loader height={5} width={5} /> : "Sign In"}
               </button>
@@ -154,4 +162,5 @@ function Login() {
     </>
   );
 }
+
 export default Login;
