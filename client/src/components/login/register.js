@@ -1,17 +1,16 @@
 import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/input";
 import Loader from "../../common/loader";
-import authService from "../../services/authService";
 import registerService from "../../services/registerService";
+
 function Register() {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  // const [name, setName] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
-  // const [aadhaarNumber, setAadhaarNumber] = useState("");
   const [contact, setContact] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
   const [address, setAddress] = useState("");
@@ -19,8 +18,10 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const navigate = useNavigate();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,54 +30,51 @@ function Register() {
     setError("");
     setSuccess("");
 
-  
-
     try {
-            const res = await registerService.registerPatient({
-              args:[dob,gender,contact,bloodGroup,address],
-              fcn:"registerPatient",
-              orgName:"patient",
-              password,
-              username
-            });
-        
-        
-        
-        
-        
-        setLoader(false);
+      const res = await registerService.registerPatient({
+        args: [dob, gender, contact, bloodGroup, address],
+        fcn: "registerPatient",
+        orgName: "patient",
+        password,
+        username,
+      });
 
-        if (res.data.success === true) {
-            setSuccess(
-                "User registered successfully."
-            );
+      setLoader(false);
 
-            // setAadhaarNumber("")
-            setAddress("")
-            setContact("")
-            setBloodGroup("")
-            // setName("")
-            setPassword("")
-            setGender("")
-            setUsername("")
-            setPassword("")
-            setConfirmPassword("")
-            
-            setDob("")
-           
-            return;
-        }
-    } catch (error) {
-        setLoader(false);
+      if (res.data.success === true) {
+        setSuccess("User registered successfully.");
 
-        if (error.response) {
-            setError(error.response.data.message);
-        } else {
-            setError("Something went wrong!");
-        }
+        setAddress("");
+        setContact("");
+        setBloodGroup("");
+        setPassword("");
+        setGender("");
+        setUsername("");
+        setPassword("");
+        setConfirmPassword("");
+        setDob("");
+
         return;
+      }
+    } catch (error) {
+      setLoader(false);
+
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError("Something went wrong!");
+      }
+      return;
     }
-};
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
 
   return (
     <>
@@ -99,31 +97,40 @@ function Register() {
                 onChange={setUsername}
               />
 
-              <Input
-                label="Password"
-                type="password"
-                id="password"
-                required
-                value={password}
-                onChange={setPassword}
-              />
+              <div className="relative">
+                <Input
+                  label="Password"
+                  type={passwordVisible ? "text" : "password"}
+                  id="password"
+                  required
+                  value={password}
+                  onChange={setPassword}
+                />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </div>
+              </div>
 
-              <Input
-                label="Confirm Password"
-                type="password"
-                id="confirm_password"
-                required
-                value={confirmPassword}
-                onChange={setConfirmPassword}
-              />
-              {/* <Input
-                label="Name"
-                type="text"
-                id="name"
-                required
-                value={name}
-                onChange={setName}
-              /> */}
+              <div className="relative">
+                <Input
+                  label="Confirm Password"
+                  type={confirmPasswordVisible ? "text" : "password"}
+                  id="confirm_password"
+                  required
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </div>
+              </div>
+
               <Input
                 label="Date of Birth"
                 type="date"
@@ -133,14 +140,14 @@ function Register() {
                 onChange={setDob}
               />
 
-              <div class="mt-6">
+              <div className="mt-6">
                 <label
-                  for="gender"
-                  class="block text-sm font-medium text-gray-900 dark:text-white"
+                  htmlFor="gender"
+                  className="block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Gender
                 </label>
-                <div class="mt-2 relative">
+                <div className="mt-2 relative">
                   <select
                     id="gender"
                     name="gender"
@@ -148,19 +155,19 @@ function Register() {
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
                   >
-                    <option value="Male" class="bg-gray-800 text-white">
+                    <option value="Male" className="bg-gray-800 text-white">
                       Male
                     </option>
-                    <option value="Female" class="bg-gray-800 text-white">
+                    <option value="Female" className="bg-gray-800 text-white">
                       Female
                     </option>
-                    <option value="Other" class="bg-gray-800 text-white">
+                    <option value="Other" className="bg-gray-800 text-white">
                       Other
                     </option>
                   </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                     <svg
-                      class="h-4 w-4 fill-current"
+                      className="h-4 w-4 fill-current"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -169,15 +176,6 @@ function Register() {
                   </div>
                 </div>
               </div>
-
-              {/* <Input
-                label="Citizenship Number"
-                type="text"
-                id="aadhaar_number"
-                required
-                value={aadhaarNumber}
-                onChange={setAadhaarNumber}
-              /> */}
 
               <Input
                 label="Contact"
@@ -206,14 +204,11 @@ function Register() {
                 onChange={setAddress}
               />
 
-
               {error ? (
-                <div className="text-red-500 text-sm text-center  ">
-                  {error}
-                </div>
+                <div className="text-red-500 text-sm text-center">{error}</div>
               ) : null}
               {success ? (
-                <div className="text-green-500 text-sm text-center  ">
+                <div className="text-green-500 text-sm text-center">
                   {success}
                 </div>
               ) : null}
@@ -240,4 +235,5 @@ function Register() {
     </>
   );
 }
+
 export default Register;
