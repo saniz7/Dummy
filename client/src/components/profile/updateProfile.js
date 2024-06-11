@@ -10,16 +10,16 @@ function UpdateProfile() {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [username, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [gender, setGender] = useState("");
   const [blood, setBlood] = useState("");
   const [date, setDate] = useState("");
-
   const [fullAddress, setFullAddress] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [profileImageUpload, setProfileImageUpload] = useState();
   const [textPrompt, setTextPrompt] = useState("");
+  const [editMode, setEditMode] = useState(false); // Add edit mode state
 
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ function UpdateProfile() {
     console.log('res',res?.data?.userDataFromLedger);
 
     if (res?.data) {
-      setName(res?.data?.user?.userName ? res?.data?.user?.userName : "");
+      setUsername(res?.data?.user?.userName ? res?.data?.user?.userName : "");
       setGender(res?.data?.userDataFromLedger?.gender ? res?.data?.userDataFromLedger?.gender : "");
       setFullAddress(res?.data?.userDataFromLedger?.address ? res?.data?.userDataFromLedger?.address : "");
       setPhoneNo(res?.data?.userDataFromLedger?.contact ? res?.data?.userDataFromLedger?.contact : "");
@@ -57,18 +57,17 @@ function UpdateProfile() {
       return;
     }
     else{
-
       const reader = new FileReader();
       setProfileImageUpload("");
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setProfileImage(reader.result);
-        setProfileImageUpload(reader.result);
-      }
-    };
-    
-    reader.readAsDataURL(e.target.files[0]);
-  }
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setProfileImage(reader.result);
+          setProfileImageUpload(reader.result);
+        }
+      };
+      
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   const postProfile = async (e) => {
@@ -89,12 +88,11 @@ function UpdateProfile() {
 
     try {
       const res = await profileService.updateProfile({
-  args:[date,gender,phoneNo,blood,fullAddress],
-              fcn:"updatePatient",
-              orgName:"patient",
-              // password,
-              username
-
+        args:[date,gender,phoneNo,blood,fullAddress],
+        fcn:"updatePatient",
+        orgName:"patient",
+        // password,
+        username
       });
       if (res.data.success) {
         setLoader(false);
@@ -114,15 +112,14 @@ function UpdateProfile() {
       setLoader(false);
     }
   };
+
   const formatDate = (date) => {
-  const [day, month, year] = date.split('-');
-  return `${year}-${month}-${day}`;
-};  const formattedDate = formatDate(date); 
-console.log(formattedDate);
-  // const handleFileChange = (e) => {
-  //   setProfileImageUpload(e.target.files[0]);
-  //   setProfileImage(URL.createObjectURL(e.target.files[0]));
-  // };
+    const [day, month, year] = date.split('-');
+    return `${year}-${month}-${day}`;
+  };  
+
+  const formattedDate = formatDate(date); 
+  console.log(formattedDate);
 
   return (
     <>
@@ -130,6 +127,14 @@ console.log(formattedDate);
         <div className="flex-auto px-4 lg:px-10 pb-10 text-2xl mt-5 mx-5 md:mx-48">
           <div className="text-center mb-3 font-bold uppercase">
             <small>Update Profile</small>
+          </div>
+          <div className="text-center mb-3 font-bold uppercase">
+            <button
+              className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+              onClick={() => setEditMode(!editMode)} // Toggle edit mode
+            >
+              {editMode ? "Cancel" : "Edit"}
+            </button>
           </div>
           <form onSubmit={(e) => postProfile(e)}>
             <div className="relative w-full mb-3 mt-7">
@@ -146,7 +151,7 @@ console.log(formattedDate);
                       className="absolute bottom-0 right-0 p-1 inline-block w-10 h-10 border-2 cursor-pointer border-white bg-gray-300 rounded-full"
                     >
                       <svg
-                        xmlns="h    ttp://www.w3.org/2000/svg"
+                        xmlns="http://www.w3.org/2000/svg"
                         fill="black"
                         className="bi bi-camera"
                         viewBox="0 0 16 16"
@@ -162,6 +167,7 @@ console.log(formattedDate);
                       accept="image/*"
                       onChange={handleUpdateDataChange}
                       className="hidden"
+                      disabled={!editMode} // Disable when not in edit mode
                     />
                   </div>
                 </div>
@@ -185,7 +191,8 @@ console.log(formattedDate);
                     placeholder="Name"
                     style={{ transition: "all 0.15s ease 0s" }}
                     value={username}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => setUsername(e.target.value)}
+                    disabled={!editMode} // Disable when not in edit mode
                     required
                   />
                 </div>
@@ -209,6 +216,7 @@ console.log(formattedDate);
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
                     required
+                    disabled={!editMode} // Disable when not in edit mode
                   >
                     <option value="" disabled hidden>
                       Gender
@@ -220,7 +228,7 @@ console.log(formattedDate);
                 </div>
               </div>
               <div className="grid gap-1 grid-cols-2 mb-2">
-  <div>
+                <div>
                   <label
                     className="block uppercase text-xs font-bold mb-2"
                     htmlFor="grid-password"
@@ -236,10 +244,11 @@ console.log(formattedDate);
                     style={{ transition: "all 0.15s ease 0s" }}
                     value={blood}
                     onChange={(e) => setBlood(e.target.value)}
+                    disabled={!editMode} // Disable when not in edit mode
                     required
                   />
                 </div>
-                 <div>
+                <div>
                   <label
                     className="block uppercase text-xs font-bold mb-2"
                     htmlFor="grid-password"
@@ -255,6 +264,7 @@ console.log(formattedDate);
                     style={{ transition: "all 0.15s ease 0s" }}
                     value={formattedDate}
                     onChange={(e) => setDate(e.target.value)}
+                    disabled={!editMode} // Disable when not in edit mode
                     required
                   />
                 </div>
@@ -268,7 +278,6 @@ console.log(formattedDate);
                 Address
               </label>
               <div className="grid gap-1 grid-cols-2">
-
                 <input
                   type="text"
                   className="border-0 col-span-2 px-3 mt-2 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
@@ -276,6 +285,7 @@ console.log(formattedDate);
                   style={{ transition: "all 0.15s ease 0s" }}
                   value={fullAddress}
                   onChange={(e) => setFullAddress(e.target.value)}
+                  disabled={!editMode} // Disable when not in edit mode
                   required
                 />
               </div>
@@ -294,27 +304,28 @@ console.log(formattedDate);
                 style={{ transition: "all 0.15s ease 0s" }}
                 value={phoneNo}
                 onChange={(e) => setPhoneNo(e.target.value)}
+                disabled={!editMode} // Disable when not in edit mode
                 required
               />
             </div>
             {error ? (
-              <div className="text-red-500 text-sm text-center  ">{error}</div>
+              <div className="text-red-500 text-sm text-center">{error}</div>
             ) : null}
             {success ? (
-              <div className="text-green-500 text-sm text-center  ">
-                {success}
+              <div className="text-green-500 text-sm text-center">{success}</div>
+            ) : null}
+            {editMode ? ( // Render submit button only when in edit mode
+              <div className="text-center mt-4">
+                <button
+                  className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+                  type="submit"
+                  style={{ transition: "all 0.15s ease 0s" }}
+                  disabled={loader}
+                >
+                  {loader ? <Loader height={5} width={5} /> : "Submit"}
+                </button>
               </div>
             ) : null}
-            <div className="text-center mt-4">
-              <button
-                className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                type="submit"
-                style={{ transition: "all 0.15s ease 0s" }}
-                disabled={loader}
-              >
-                {loader ? <Loader height={5} width={5} /> : "Submit"}
-              </button>
-            </div>
           </form>
         </div>
       </div>
