@@ -17,21 +17,21 @@ function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  const validateUsername = (username) => {
+    // Check if username contains leading or trailing spaces, or spaces in between
+    const spaceRegex = /^\s+|\s+$|\s+/;
+    return !spaceRegex.test(username);
+  };
+
   const validatePassword = (password) => {
     // Check if password contains at least 8 characters, including numbers and special symbols
     const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
     return passwordRegex.test(password);
   };
 
-
-<<<<<<< Updated upstream
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-=======
-  const navigate = useNavigate();
-  
-  
   const validateContact = (contact) => {
     // Check if contact only contains numbers
     const numbersRegex = /^[0-9]+$/;
@@ -39,8 +39,8 @@ function Register() {
     const length = contact.length === 10 && contact.substring(0, 2) === "98";
     return numbersRegex.test(contact) && length;
   };
-  
-    const validateDob = (dob) => {
+
+  const validateDob = (dob) => {
     // Convert date string to Date object
     const selectedDate = new Date(dob);
     // Get current date
@@ -48,44 +48,48 @@ function Register() {
     // Compare selected date with current date
     return selectedDate <= currentDate;
   };
->>>>>>> Stashed changes
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate username
+    if (!validateUsername(username)) {
+      setError("Username cannot contain leading, trailing, or consecutive spaces.");
+      return;
+    }
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    // Validate password
+    if (!validatePassword(password)) {
+      setError("Password must contain at least 8 characters, including numbers and special symbols.");
+      return;
+    }
+
+    // Validate date of birth
+    if (!validateDob(dob)) {
+      setError("Invalid DOB.");
+      return;
+    }
+
+    // Validate contact
+    if (!validateContact(contact)) {
+      setError("Invalid Number");
+      return;
+    }
+
+    // Other validations...
+
     setLoader(true);
     setError("");
     setSuccess("");
 
-<<<<<<< Updated upstream
-=======
- // Validate password
-    if (!validatePassword(password)) {
-      setError("Password must contain at least 8 characters, including numbers and special symbols.");
-      setLoader(false);
-      return;
-    }
-
-  // Validate date of birth
-    if (!validateDob(dob)) {
-      setError("Invalid DOB.");
-      setLoader(false);
-      return;
-    }
-    
-     // Validate contact
-    if (!validateContact(contact)) {
-      setError("Invalid Number");
-      setLoader(false);
-      return;
-    }
-    
-    // Other validations...
-  
-
->>>>>>> Stashed changes
     try {
       const res = await registerService.registerPatient({
         args: [dob, gender, contact, bloodGroup, address],
@@ -242,7 +246,7 @@ function Register() {
                 onChange={setContact}
               />
 
-               <div className="mt-6">
+              <div className="mt-6">
                 <label
                   htmlFor="blood_group"
                   className="block text-sm font-medium text-gray-900 dark:text-white"

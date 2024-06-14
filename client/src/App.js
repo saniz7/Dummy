@@ -29,7 +29,7 @@ import LabData from "./components/patient/LabData";
 import Logout from "./container/logout";
 import UpdatePassword from "./components/login/updatePassword";
 import UpdateProfile from "./components/profile/updateProfile";
-import MiniDrawer from "./components/patient/Dashboard";
+// import MiniDrawer from "./components/patient/Dashboard";
 import SelectDoctorpage from "./components/patient/Doctor/SelectDoctorpage";
 import DoctorCategoryPage from "./components/patient/Doctor/DoctorCategoryPage";
 function App() {
@@ -58,8 +58,7 @@ function App() {
 
         <Route element={<RoleAccess roles={["patient"]} />} >
         {/* <Route > */}
-          <Route path="/patientdashboard" element={<MiniDrawer/>} />
-          <Route path="/select-doctor" element={<DoctorCategoryPage/>} />
+e          <Route path="/select-doctor" element={<DoctorCategoryPage/>} />
           <Route path="/profile" element={<UpdateProfile/>} />
           {/* <Route path="/select-lab" element={<SelectLab/>} /> */}
           {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
