@@ -27,9 +27,14 @@ function Login() {
       if (res.success) {
         setLoader(false);
         navigate("/dashboard");
-      } else {
-        setError("Something went wrong!");
       }
+
+      //   if (org === "patient") {
+      //     navigate("/patientdashboard");
+      //   }
+      // } else {
+      //   navigate("/dashboard");
+      // }
     } catch (error) {
       setLoader(false);
       if (error.response) {

@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Loader from "../../common/loader";
-import Table from "../Table/table";
-import paitientService from "../../services/patientService";
-function SelectDoctor(props) {
+import React, { useEffect, useState } from 'react'
+import paitientService from "../../../services/patientService";
+import SelectDoctor from './selectDoctor';
+import { useLocation } from 'react-router-dom'
 
-  const [data, setData] = useState([]);
+const SelectDoctorpage = () => {
+   const [data, setData] = useState([]);
+  const [value, setValue] = useState([]);
   const [loader, setLoader] = useState(true);
   const [columnNames, setColumnNames] = useState([]);
   const [access, setaccess] = useState([]);
+
+    const location = useLocation();
+    const id = location.pathname.split('/')[2];
+    console.log('id',id);
 
   useEffect(() => {
     const getDoctorsList = async () => {
       let DoctorData = await paitientService.getOrganizationList("doctor");
 
-      console.log(DoctorData.data.records);
-      console.log(DoctorData.data.access);
+      // console.log(DoctorData.data.records);
+      // console.log(DoctorData.data.access);
 
       setData(DoctorData.data.records);
       setaccess(DoctorData.data.access);
@@ -32,8 +36,12 @@ function SelectDoctor(props) {
     getDoctorsList();
     updateColumnNames();
   }, []);
-
-
+console.log(data);
+  useEffect(() => {
+    const orthoDoctors = data.filter(item => item?.department === id);
+    setValue(orthoDoctors);
+  }, [data]);
+console.log(value);
 
   const doctorsDummyData = [
     {
@@ -102,36 +110,11 @@ function SelectDoctor(props) {
     }
 
   };
-
   return (
-    <>
-      {loader ?
-        <div className="mt-10" >
-          <Loader />
-        </div>
-        :
-        <>
-          {
-            data.length === 0 ? (
-              <div className="mt-10 text-center">
-                No Data Available
-              </div>
-            ) : (
-              <Table
-                tableName="Doctor List"
-                tableData={data}
-                columnNames={columnNames}
-                accessCheckbox={false}
-                // accessHandler={accessHandler}
-                access={access}
-                orgName="doctor"
-              />
-            )
-          }
-        </>
-      }
-    </>
-  );
+    <div>
+        <SelectDoctor data={value} loader={loader} columnNames={columnNames} access={access}/>
+    </div>
+  )
 }
 
-export default SelectDoctor;
+export default SelectDoctorpage

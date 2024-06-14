@@ -8,7 +8,7 @@ import Register from "./components/login/register";
 import RegisterByAdmin from "./components/login/registerByAdmin";
 import Dashboard from "./container/dashboard";
 import RoleAccess from "./common/roleAccess";
-import SelectDoctor from "./components/patient/selectDoctor";
+import SelectDoctor from "./components/patient/Doctor/selectDoctor";
 import HealthRecords from "./components/patient/HealthRecords";
 // import ChemistRecords from "./components/patient/selectChemist";
 import InsuranceRecords from "./components/patient/InsuranceRecords";
@@ -29,6 +29,9 @@ import LabData from "./components/patient/LabData";
 import Logout from "./container/logout";
 import UpdatePassword from "./components/login/updatePassword";
 import UpdateProfile from "./components/profile/updateProfile";
+import MiniDrawer from "./components/patient/Dashboard";
+import SelectDoctorpage from "./components/patient/Doctor/SelectDoctorpage";
+import DoctorCategoryPage from "./components/patient/Doctor/DoctorCategoryPage";
 function App() {
 
   // console.log = function(){};
@@ -42,7 +45,7 @@ function App() {
         <Route path="/register" element={<Register/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/update" element={<UpdatePassword/>} />
-          <Route path="/select-doctor" element={<SelectDoctor/>} />
+          <Route path="/select-doctor/:id" element={<SelectDoctorpage/>} />
 
                           {/* Admin */}
                           
@@ -55,8 +58,8 @@ function App() {
 
         <Route element={<RoleAccess roles={["patient"]} />} >
         {/* <Route > */}
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/select-doctor" element={<SelectDoctor/>} />
+          <Route path="/patientdashboard" element={<MiniDrawer/>} />
+          <Route path="/select-doctor" element={<DoctorCategoryPage/>} />
           <Route path="/profile" element={<UpdateProfile/>} />
           {/* <Route path="/select-lab" element={<SelectLab/>} /> */}
           {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}

@@ -262,7 +262,7 @@ function UpdateProfile() {
                   focus:outline-none focus:ring w-full"
                     placeholder="Name"
                     style={{ transition: "all 0.15s ease 0s" }}
-                    value={formattedDate}
+                    value={date}
                     onChange={(e) => setDate(e.target.value)}
                     disabled={!editMode} // Disable when not in edit mode
                     required

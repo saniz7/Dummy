@@ -88,7 +88,7 @@ function Dashboard() {
       imgSrc: Canteen,
       link: "/patient-records",
       blocked: false,
-    }
+    },
   ];
 
   const labDashboard = [
@@ -103,7 +103,7 @@ function Dashboard() {
       imgSrc: Canteen,
       link: "/patient-records",
       blocked: false,
-    }
+    },
   ];
 
   const insuranceDashboard = [
@@ -118,7 +118,7 @@ function Dashboard() {
       imgSrc: Canteen,
       link: "/patient-records",
       blocked: false,
-    }
+    },
   ];
 
   const adminDashboard = [
@@ -127,12 +127,10 @@ function Dashboard() {
       imgSrc: Canteen,
       link: "/add-user",
       blocked: false,
-    }
+    },
   ];
 
-  useEffect( () => {
-
-   
+  useEffect(() => {
     if (user === "patient") {
       setApps(patientDashboard);
     } else if (user === "doctor") {
@@ -146,15 +144,8 @@ function Dashboard() {
     } else if (user === "Admin") {
       setApps(adminDashboard);
     }
-    setloader(true)
-    
-
-   
-    
-  },[user]);
-
-
-  
+    setloader(true);
+  }, [user]);
 
   const navigate = useNavigate();
 
@@ -167,15 +158,18 @@ function Dashboard() {
           </div>
         </div>
 
-        {!loader ?
+        {!loader ? (
+          <>Loading.......</>
+        ) : (
           <>
-            Loading.......
-          </> :
-          <>
-
             <div className="text-center grid grid-cols-1 md:grid-cols-3 md:gap-5 justify-around mx-20 items-center mt-10 mb-10">
               {apps?.map((app, index) => (
-                <div key={index} onClick={() => { app.blocked ? <></> : navigate(`${app.link}`) }}>
+                <div
+                  key={index}
+                  onClick={() => {
+                    app.blocked ? <></> : navigate(`${app.link}`);
+                  }}
+                >
                   <div
                     // to={`${app.link}`}
                     className="scale-90 md:scale-100 border-2 rounded-3xl flex flex-col justify-center sm:mt-10 mx-5 md:mx-5 items-center border-blue-100  p-10 text-xl hover:border-blue-200 cursor-pointer hover:bg-blue-50 transition delay-100 hover:scale-90 md:hover:scale-110"
@@ -190,10 +184,8 @@ function Dashboard() {
                 </div>
               ))}
             </div>
-
-          </>}
-
-
+          </>
+        )}
       </div>
     </>
   );

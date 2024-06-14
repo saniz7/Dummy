@@ -94,7 +94,15 @@ class KVContract extends Contract {
   /////////////////////////////
   // Update Patient
   /////////////////////////////
-  async updatePatient(ctx, patientId, dob, gender, contact, bloodGroup, address) {
+  async updatePatient(
+    ctx,
+    patientId,
+    dob,
+    gender,
+    contact,
+    bloodGroup,
+    address
+  ) {
     // Check if the patient exists
     const exists = await this.patientExists(ctx, patientId);
     if (!exists) {
@@ -133,7 +141,7 @@ class KVContract extends Contract {
     name,
     dob,
     gender,
-    aadharNumber,
+    NMCnumber,
     contact,
     department,
     degree
@@ -143,7 +151,7 @@ class KVContract extends Contract {
       name,
       dob,
       gender,
-      aadharNumber,
+      NMCnumber,
       contact,
       department,
       orgName: "doctor",
@@ -197,7 +205,7 @@ class KVContract extends Contract {
       try {
         record = JSON.parse(strValue);
       } catch (err) {
-        console.log('errrrrrrrr',err);
+        console.log("errrrrrrrr", err);
         record = strValue;
       }
       allResults.push(record);
@@ -377,7 +385,7 @@ class KVContract extends Contract {
       name,
       contact,
       address,
-      createdAt
+      createdAt,
     };
 
     const buffer = Buffer.from(JSON.stringify(newLab));
@@ -431,7 +439,7 @@ class KVContract extends Contract {
   // Add Lab Test Report
   /////////////////////////////
   async addLabTestReport(ctx, recordId, labTestReport, labBill) {
-    let record = await this.getPrescriptionRecord(ctx, recordId); 
+    let record = await this.getPrescriptionRecord(ctx, recordId);
 
     record.labTests = JSON.stringify(labTestReport);
     record.labBill = labBill;
@@ -458,8 +466,6 @@ class KVContract extends Contract {
     return labRecord;
   }
 
-
-
   /////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////// INSURANCE RELATED CHAINCODE ///////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////
@@ -473,7 +479,7 @@ class KVContract extends Contract {
       name,
       contact,
       address,
-      createdAt
+      createdAt,
     };
 
     const buffer = Buffer.from(JSON.stringify(newInsurance));
@@ -536,15 +542,14 @@ class KVContract extends Contract {
     let record = JSON.parse(buffer.toString());
 
     let insuranceRecord;
-    if(!record.insuranceRecord){
+    if (!record.insuranceRecord) {
       return false;
-    }
-    else {
+    } else {
       let claimRequests = record.insuranceRecord.insuranceClaim;
-      
-      if(claimRequests){
+
+      if (claimRequests) {
         insuranceRecord = record.insuranceRecord;
-      } else{
+      } else {
         return false;
       }
     }
@@ -568,7 +573,7 @@ class KVContract extends Contract {
       insuranceClaim: true,
       status: "in process",
       claimRequestDate: requestDate,
-    }
+    };
 
     record.insuranceRecord = insuranceRecord;
 
@@ -576,7 +581,6 @@ class KVContract extends Contract {
     await ctx.stub.putState(recordId, recordBuffer);
 
     return { success: "OK" };
-
   }
 
   /////////////////////////////
@@ -602,7 +606,6 @@ class KVContract extends Contract {
 
     return { success: "OK" };
   }
-
 }
 
 exports.contracts = [KVContract];

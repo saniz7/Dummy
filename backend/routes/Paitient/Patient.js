@@ -8,6 +8,7 @@ router.route('/update-patient').patch(updatePatient);
 
 router.route('/give-access').post(isAuthenticatedUser,authorizeRoles("patient"), giveAccess);
 router.route('/remove-access').post(isAuthenticatedUser,authorizeRoles("patient"), removeAccess);
+// router.route('/department').get(isAuthenticatedUser,authorizeRoles("patient"), department);
 router.route('/user-list/:orgName').get(isAuthenticatedUser,authorizeRoles("patient"), UserList);
 router.route('/patient-health-records').get(isAuthenticatedUser,authorizeRoles("patient"),HealthRecords);
 router.route('/patient-lab-records').get(isAuthenticatedUser,authorizeRoles("patient"),LabRecords);
