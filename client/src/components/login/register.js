@@ -17,9 +17,38 @@ function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  
+  const validatePassword = (password) => {
+    // Check if password contains at least 8 characters, including numbers and special symbols
+    const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
+    return passwordRegex.test(password);
+  };
 
+
+<<<<<<< Updated upstream
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+=======
+  const navigate = useNavigate();
+  
+  
+  const validateContact = (contact) => {
+    // Check if contact only contains numbers
+    const numbersRegex = /^[0-9]+$/;
+    // Check if contact is exactly 10 digits and starts with 98
+    const length = contact.length === 10 && contact.substring(0, 2) === "98";
+    return numbersRegex.test(contact) && length;
+  };
+  
+    const validateDob = (dob) => {
+    // Convert date string to Date object
+    const selectedDate = new Date(dob);
+    // Get current date
+    const currentDate = new Date();
+    // Compare selected date with current date
+    return selectedDate <= currentDate;
+  };
+>>>>>>> Stashed changes
 
   const navigate = useNavigate();
 
@@ -30,6 +59,33 @@ function Register() {
     setError("");
     setSuccess("");
 
+<<<<<<< Updated upstream
+=======
+ // Validate password
+    if (!validatePassword(password)) {
+      setError("Password must contain at least 8 characters, including numbers and special symbols.");
+      setLoader(false);
+      return;
+    }
+
+  // Validate date of birth
+    if (!validateDob(dob)) {
+      setError("Invalid DOB.");
+      setLoader(false);
+      return;
+    }
+    
+     // Validate contact
+    if (!validateContact(contact)) {
+      setError("Invalid Number");
+      setLoader(false);
+      return;
+    }
+    
+    // Other validations...
+  
+
+>>>>>>> Stashed changes
     try {
       const res = await registerService.registerPatient({
         args: [dob, gender, contact, bloodGroup, address],
@@ -186,15 +242,31 @@ function Register() {
                 onChange={setContact}
               />
 
-              <Input
-                label="Blood Group"
-                type="text"
-                id="blood_group"
-                required
-                value={bloodGroup}
-                onChange={setBloodGroup}
-              />
-
+               <div className="mt-6">
+                <label
+                  htmlFor="blood_group"
+                  className="block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Blood Group
+                </label>
+                <select
+                  id="blood_group"
+                  name="blood_group"
+                  className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={bloodGroup}
+                  onChange={(e) => setBloodGroup(e.target.value)}
+                >
+                  <option value="">Select Blood Group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                </select>
+              </div>
               <Input
                 label="Address"
                 type="text"
