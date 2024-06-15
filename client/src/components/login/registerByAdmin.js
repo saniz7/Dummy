@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/input";
 import Loader from "../../common/loader";
 import registerService from "../../services/registerService";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 function RegisterByAdmin() {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -21,6 +22,7 @@ function RegisterByAdmin() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [specification, setSpecification] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -115,7 +117,9 @@ function RegisterByAdmin() {
       return;
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900 min-h-[93vh] py-10">
@@ -140,7 +144,7 @@ function RegisterByAdmin() {
                     onChange={(e) => setOrg(e.target.value)}
                   >
                     <option value={"doctor"}>Doctor</option>
-                    {/* <option value={"lab"}>Lab</option> */}
+                    <option value={"lab"}>Lab</option>
                     {/* <option value={"pharmacy"}>Pharmacy</option> */}
                     {/* <option value={"insurance"}>Insurance</option> */}
                   </select>
@@ -262,14 +266,22 @@ function RegisterByAdmin() {
                     onChange={setDob}
                   />
 
-                  <Input
-                    label="Password"
-                    type="password"
-                    id="password"
-                    required
-                    value={password}
-                    onChange={setPassword}
-                  />
+                  <div className="relative ">
+                    <Input
+                      label="Password"
+                      type={passwordVisible ? "text" : "password"}
+                      id="password"
+                      required
+                      value={password}
+                      onChange={setPassword}
+                    />
+                    <div
+                      className="absolute inset-y-0 top-6 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div>

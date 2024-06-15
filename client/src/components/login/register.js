@@ -56,7 +56,9 @@ function Register() {
 
     // Validate username
     if (!validateUsername(username)) {
-      setError("Username cannot contain leading, trailing, or consecutive spaces.");
+      setError(
+        "Username cannot contain leading, trailing, or consecutive spaces."
+      );
       return;
     }
 
@@ -68,7 +70,9 @@ function Register() {
 
     // Validate password
     if (!validatePassword(password)) {
-      setError("Password must contain at least 8 characters, including numbers and special symbols.");
+      setError(
+        "Password must contain at least 8 characters, including numbers and special symbols."
+      );
       return;
     }
 
@@ -157,7 +161,7 @@ function Register() {
                 onChange={setUsername}
               />
 
-              <div className="relative">
+              <div className="relative ">
                 <Input
                   label="Password"
                   type={passwordVisible ? "text" : "password"}
@@ -167,14 +171,14 @@ function Register() {
                   onChange={setPassword}
                 />
                 <div
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  className="absolute inset-y-0 top-6 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
                   onClick={togglePasswordVisibility}
                 >
                   {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                 </div>
               </div>
 
-              <div className="relative">
+              <div className="relative ">
                 <Input
                   label="Confirm Password"
                   type={confirmPasswordVisible ? "text" : "password"}
@@ -184,7 +188,7 @@ function Register() {
                   onChange={setConfirmPassword}
                 />
                 <div
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  className="absolute inset-y-0 top-6 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
                   onClick={toggleConfirmPasswordVisibility}
                 >
                   {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
