@@ -144,7 +144,7 @@ function RegisterByAdmin() {
                     onChange={(e) => setOrg(e.target.value)}
                   >
                     <option value={"doctor"}>Doctor</option>
-                    <option value={"lab"}>Lab</option>
+                    <option value={"lab"}>Lab</option>./
                     {/* <option value={"pharmacy"}>Pharmacy</option> */}
                     {/* <option value={"insurance"}>Insurance</option> */}
                   </select>
@@ -169,8 +169,8 @@ function RegisterByAdmin() {
               {org === "doctor" ? (
                 <div>
                   <Input
-                    label="Name"
-                    type="text"
+                    label="Email"
+                    type="email"
                     id="name"
                     required
                     value={name}
@@ -286,8 +286,8 @@ function RegisterByAdmin() {
               ) : (
                 <div>
                   <Input
-                    label="Name"
-                    type="text"
+                    label="Email"
+                    type="email"
                     id="name"
                     required
                     value={name}

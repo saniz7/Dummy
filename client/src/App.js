@@ -1,7 +1,7 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./container/home";
-import Navbar from "./container/navbar";  
+import Navbar from "./container/navbar";
 import Page404 from "./container/page404";
 import Login from "./components/login/login";
 import Register from "./components/login/register";
@@ -33,7 +33,6 @@ import UpdateProfile from "./components/profile/updateProfile";
 import SelectDoctorpage from "./components/patient/Doctor/SelectDoctorpage";
 import DoctorCategoryPage from "./components/patient/Doctor/DoctorCategoryPage";
 function App() {
-
   // console.log = function(){};
 
   return (
@@ -41,77 +40,75 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/register" element={<Register/>} />
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/update" element={<UpdatePassword/>} />
-          <Route path="/select-doctor/:id" element={<SelectDoctorpage/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/update" element={<UpdatePassword />} />
+        <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
 
-                          {/* Admin */}
-                          
+        {/* Admin */}
+
         <Route element={<RoleAccess roles={["Admin"]} />}>
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/add-user" element={<RegisterByAdmin/>} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-user" element={<RegisterByAdmin />} />
         </Route>
 
-                          {/* Patient */}
+        {/* Patient */}
 
-        <Route element={<RoleAccess roles={["patient"]} />} >
-        {/* <Route > */}
-e          <Route path="/select-doctor" element={<DoctorCategoryPage/>} />
-          <Route path="/profile" element={<UpdateProfile/>} />
-          {/* <Route path="/select-lab" element={<SelectLab/>} /> */}
+        <Route element={<RoleAccess roles={["patient"]} />}>
+          {/* <Route > */}
+          e <Route path="/select-doctor" element={<DoctorCategoryPage />} />
+          <Route path="/profile" element={<UpdateProfile />} />
+          <Route path="/select-lab" element={<SelectLab />} />
           {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
-
           {/* <Route path='/select-doctor/doctor-data' element={<DoctorData/>} /> */}
           {/* <Route path="/health-records" element={<HealthRecords/>} /> */}
-          <Route path="/" element={<HealthRecords/>} />
+          <Route path="/" element={<HealthRecords />} />
           {/* <Route path="/select-pharmacy" element={<SelectChemist/>} /> */}
           {/* <Route path="/select-pharmacy/lab-data" element={<LabData/>} /> */}
           {/* <Route path="/lab-records" element={<LabRecords />} /> */}
           {/* <Route path="/pharmacy-records" element={<PharmacyRecords />} /> */}
-
           {/* <Route path="/insurance-records" element={<InsuranceRecords />} /> */}
         </Route>
 
-                          {/* Doctor */}
-                          
+        {/* Doctor */}
+
         {/* <Route element={<RoleAccess roles={["doctor"]} />}> */}
         {/* <Route> */}
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/patient-records" element={<PaitentsRecords/>} />
-          <Route path="/add-patient-records" element={<AddPatientRecords/>} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/patient-records" element={<PaitentsRecords />} />
+        <Route path="/add-patient-records" element={<AddPatientRecords />} />
 
         {/* </Route> */}
 
-                          {/* Pharmacy */}
-                          
+        {/* Pharmacy */}
+
         <Route element={<RoleAccess roles={["pharmacy"]} />}>
-        {/* <Route> */}
-          <Route path="/dashboard" element={<Dashboard/>} />
+          {/* <Route> */}
+          <Route path="/dashboard" element={<Dashboard />} />
           {/* <Route path="/update-medicine-stock" element={<Dashboard/>} /> */}
-          <Route path="/customer-list" element={<CustomerList/>} />
-          <Route path="/generate-bill" element={<GenerateBills/>} />
+          <Route path="/customer-list" element={<CustomerList />} />
+          <Route path="/generate-bill" element={<GenerateBills />} />
         </Route>
 
-                          {/* Lab */}
-                          
+        {/* Lab */}
+
         <Route element={<RoleAccess roles={["lab"]} />}>
-        {/* <Route> */}
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/add-reports" element={<AddRecords/>} />
-          <Route path="/paitient-records" element={<Paitents/>} />
+          {/* <Route> */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-reports" element={<AddRecords />} />
+          <Route path="/paitient-records" element={<Paitents />} />
         </Route>
 
-                          {/* Insurance */}
-                          
+        {/* Insurance */}
+
         <Route element={<RoleAccess roles={["insurance"]} />}>
-        {/* <Route>   */}
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/latest-requests" element={<ClaimRequests/>} />
+          {/* <Route>   */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/latest-requests" element={<ClaimRequests />} />
         </Route>
 
-        <Route path="/logout" element={<Logout/>} />
+        <Route path="/logout" element={<Logout />} />
 
         <Route path="*" element={<Page404 />} />
       </Routes>
@@ -120,7 +117,6 @@ e          <Route path="/select-doctor" element={<DoctorCategoryPage/>} />
 }
 
 export default App;
-
 
 // patient
 //      /health-records
@@ -145,11 +141,11 @@ export default App;
 // lab
 //      /select-patient
 //      /add-reports
-	
+
 // insurance
 //      /latest-requests
 //      /patient-record
 //      /patient-claim
-	
+
 // admin
 //      /add-user

@@ -23,12 +23,12 @@ function Dashboard() {
     //   link: "/select-pharmacy",
     //   blocked: false,
     // },
-    // {
-    //   name: "Select Lab",
-    //   imgSrc: Canteen,
-    //   link: "/select-lab",
-    //   blocked: false,
-    // },
+    {
+      name: "Select Lab",
+      imgSrc: Canteen,
+      link: "/select-lab",
+      blocked: false,
+    },
     // {
     //   name: "Select Insurance Company",
     //   imgSrc: Canteen,
@@ -62,12 +62,12 @@ function Dashboard() {
   ];
 
   const doctorDashboard = [
-    // {
-    //   name: "Patient Records",
-    //   imgSrc: Canteen,
-    //   link: "/patient-records",
-    //   blocked: false,
-    // }
+    {
+      name: "Patient Records",
+      imgSrc: Canteen,
+      link: "/patient-records",
+      blocked: false,
+    },
   ];
 
   const chemistDashboard = [

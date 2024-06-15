@@ -5,12 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/common/logo.png";
 import defaultProfile from "../assets/images/common/defaultProfile.jpg";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", current: true },
-  { name: "Canteen", href: "/canteen", current: false },
-  { name: "Buy/Sell", href: "/buyAndSell", current: false },
-  { name: "Auto Sharing", href: "/autoShare", current: false },
-];
+const navigation = [];
 
 const userNavigation = [
   { name: "Your Profile", href: "/profile" },
@@ -23,7 +18,7 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const [navbarDropdown, setNavbarDropdown] = useState(false);
-  
+
   const navigate = useNavigate();
 
   return (
@@ -45,7 +40,7 @@ export default function Navbar() {
                           />
                         </div>
                         <div className="text-white ml-5 font-semibold text-lg">
-                           MedConnect
+                          MedConnect
                         </div>
                       </div>
                     </Link>
@@ -60,7 +55,9 @@ export default function Navbar() {
                                   key={item.name}
                                   to={item.href}
                                   className={classNames(
-                                    "/" + window.location.pathname.split('/')[1] === item.href
+                                    "/" +
+                                      window.location.pathname.split("/")[1] ===
+                                      item.href
                                       ? "bg-gray-900 text-white"
                                       : "text-gray-100 hover:bg-gray-700 hover:text-white",
                                     "px-3 py-2 rounded-md text-sm font-medium"
@@ -89,7 +86,10 @@ export default function Navbar() {
                                 <span className="sr-only">Open user menu</span>
                                 <img
                                   className="h-8 w-8 rounded-full"
-                                  src={localStorage.getItem("profileImage") || defaultProfile}
+                                  src={
+                                    localStorage.getItem("profileImage") ||
+                                    defaultProfile
+                                  }
                                   alt=""
                                 />
                               </Menu.Button>
@@ -112,8 +112,7 @@ export default function Navbar() {
                                         className={classNames(
                                           active ? "bg-gray-300" : "",
                                           "block px-4 py-2 text-sm text-gray-700"
-                                        )
-                                      }
+                                        )}
                                       >
                                         {item.name}
                                       </Link>
@@ -144,13 +143,13 @@ export default function Navbar() {
                       )}
                     </div>
                   </div>
-                    
-                    
-                    
-                    
-                    {/* Mobile menu button */}
 
-                  <div onClick={() => setNavbarDropdown(!navbarDropdown)} className="-mr-2 flex md:hidden">
+                  {/* Mobile menu button */}
+
+                  <div
+                    onClick={() => setNavbarDropdown(!navbarDropdown)}
+                    className="-mr-2 flex md:hidden"
+                  >
                     <div className="inline-flex cursor-pointer items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open main menu</span>
                       <svg
@@ -171,67 +170,76 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {navbarDropdown && <div className="md:hidden">
-                <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      onClick={() => setNavbarDropdown(!navbarDropdown)}
-                      className={classNames(
-                        "/" + window.location.pathname.split('/')[1] === item.href
-                          ? "bg-gray-900 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "block px-3 py-2 rounded-md text-base font-medium"
-                      )}
-                      aria-current={item.current ? "page" : undefined}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-                {authService.getCurrentUser() ? (
-                  <>
-                    <div className="border-t border-gray-700 pb-3">
-                      <div className="mt-3 space-y-1 px-2">
-                        {userNavigation.map((item) => (
+              {navbarDropdown && (
+                <div className="md:hidden">
+                  <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                    {navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        onClick={() => setNavbarDropdown(!navbarDropdown)}
+                        className={classNames(
+                          "/" + window.location.pathname.split("/")[1] ===
+                            item.href
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "block px-3 py-2 rounded-md text-base font-medium"
+                        )}
+                        aria-current={item.current ? "page" : undefined}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                  {authService.getCurrentUser() ? (
+                    <>
+                      <div className="border-t border-gray-700 pb-3">
+                        <div className="mt-3 space-y-1 px-2">
+                          {userNavigation.map((item) => (
+                            <Disclosure.Button
+                              key={item.name}
+                              as="a"
+                              href={item.href}
+                              className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                            >
+                              {item.name}
+                            </Disclosure.Button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="border-t border-gray-700 pt-4 pb-3">
+                        <div className="mt-3 space-y-1 px-2">
                           <Disclosure.Button
-                            key={item.name}
+                            key={"login"}
                             as="a"
-                            href={item.href}
-                            className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                            onClick={() => {
+                              navigate("/login");
+                              setNavbarDropdown(false);
+                            }}
+                            className="block rounded-md px-3 py-2 text-base font-medium text-white bg-gray-800 hover:bg-gray-700 hover:text-white cursor-pointer"
                           >
-                            {item.name}
+                            Login
                           </Disclosure.Button>
-                        ))}
+                          <Disclosure.Button
+                            key={"register"}
+                            as="a"
+                            onClick={() => {
+                              navigate("/register");
+                              setNavbarDropdown(false);
+                            }}
+                            className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white cursor-pointer"
+                          >
+                            Register
+                          </Disclosure.Button>
+                        </div>
                       </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="border-t border-gray-700 pt-4 pb-3">
-                      <div className="mt-3 space-y-1 px-2">
-                        <Disclosure.Button
-                          key={"login"}
-                          as="a"
-                          onClick={() => {navigate("/login"); setNavbarDropdown(false);}}
-                          className="block rounded-md px-3 py-2 text-base font-medium text-white bg-gray-800 hover:bg-gray-700 hover:text-white cursor-pointer"
-                        >
-                          Login
-                        </Disclosure.Button>
-                        <Disclosure.Button
-                          key={"register"}
-                          as="a"
-                          onClick={() => {navigate("/register"); setNavbarDropdown(false);}}
-                          className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white cursor-pointer"
-                        >
-                          Register
-                        </Disclosure.Button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>}
+                    </>
+                  )}
+                </div>
+              )}
             </>
           )}
         </Disclosure>
