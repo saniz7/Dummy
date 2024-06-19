@@ -32,87 +32,104 @@ import UpdateProfile from "./components/profile/updateProfile";
 // import MiniDrawer from "./components/patient/Dashboard";
 import SelectDoctorpage from "./components/patient/Doctor/SelectDoctorpage";
 import DoctorCategoryPage from "./components/patient/Doctor/DoctorCategoryPage";
+import Sidebar from "./container/sidebar";
+import { useLocation } from "react-router-dom";
 function App() {
-  // console.log = function(){};
-
+  const location = useLocation();
+  const pathname = location.pathname;
   return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/update" element={<UpdatePassword />} />
-        <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
-
-        {/* Admin */}
-
-        <Route element={<RoleAccess roles={["Admin"]} />}>
+    <div className="flex w-full">
+      {pathname !== "/" &&
+        pathname !== "/login" &&
+        pathname !== "/register" && (
+          <div className="hidden md:block md:w-1/5 xl:w-1/6">
+            <Sidebar />
+          </div>
+        )}
+      <div
+        className={`${
+          pathname !== "/" && pathname !== "/login" && pathname !== "/register"
+            ? "w-full md:w-4/5 xl:w-5/6 flex flex-col"
+            : "w-full"
+        }`}
+      >
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/add-user" element={<RegisterByAdmin />} />
-        </Route>
+          <Route path="/update" element={<UpdatePassword />} />
+          <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
 
-        {/* Patient */}
+          {/* Admin */}
 
-        <Route element={<RoleAccess roles={["patient"]} />}>
-          {/* <Route > */}
-          e <Route path="/select-doctor" element={<DoctorCategoryPage />} />
-          <Route path="/profile" element={<UpdateProfile />} />
-          <Route path="/select-lab" element={<SelectLab />} />
-          {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
-          {/* <Route path='/select-doctor/doctor-data' element={<DoctorData/>} /> */}
-          {/* <Route path="/health-records" element={<HealthRecords/>} /> */}
-          <Route path="/" element={<HealthRecords />} />
-          {/* <Route path="/select-pharmacy" element={<SelectChemist/>} /> */}
-          {/* <Route path="/select-pharmacy/lab-data" element={<LabData/>} /> */}
-          {/* <Route path="/lab-records" element={<LabRecords />} /> */}
-          {/* <Route path="/pharmacy-records" element={<PharmacyRecords />} /> */}
-          {/* <Route path="/insurance-records" element={<InsuranceRecords />} /> */}
-        </Route>
+          <Route element={<RoleAccess roles={["Admin"]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-user" element={<RegisterByAdmin />} />
+          </Route>
 
-        {/* Doctor */}
+          {/* Patient */}
 
-        {/* <Route element={<RoleAccess roles={["doctor"]} />}> */}
-        {/* <Route> */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/patient-records" element={<PaitentsRecords />} />
-        <Route path="/add-patient-records" element={<AddPatientRecords />} />
+          <Route element={<RoleAccess roles={["patient"]} />}>
+            {/* <Route > */}
+            e <Route path="/select-doctor" element={<DoctorCategoryPage />} />
+            <Route path="/profile" element={<UpdateProfile />} />
+            <Route path="/select-lab" element={<SelectLab />} />
+            {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
+            {/* <Route path='/select-doctor/doctor-data' element={<DoctorData/>} /> */}
+            {/* <Route path="/health-records" element={<HealthRecords/>} /> */}
+            <Route path="/" element={<HealthRecords />} />
+            {/* <Route path="/select-pharmacy" element={<SelectChemist/>} /> */}
+            {/* <Route path="/select-pharmacy/lab-data" element={<LabData/>} /> */}
+            {/* <Route path="/lab-records" element={<LabRecords />} /> */}
+            {/* <Route path="/pharmacy-records" element={<PharmacyRecords />} /> */}
+            {/* <Route path="/insurance-records" element={<InsuranceRecords />} /> */}
+          </Route>
 
-        {/* </Route> */}
+          {/* Doctor */}
 
-        {/* Pharmacy */}
-
-        <Route element={<RoleAccess roles={["pharmacy"]} />}>
+          {/* <Route element={<RoleAccess roles={["doctor"]} />}> */}
           {/* <Route> */}
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/update-medicine-stock" element={<Dashboard/>} /> */}
-          <Route path="/customer-list" element={<CustomerList />} />
-          <Route path="/generate-bill" element={<GenerateBills />} />
-        </Route>
+          <Route path="/patient-records" element={<PaitentsRecords />} />
+          <Route path="/add-patient-records" element={<AddPatientRecords />} />
 
-        {/* Lab */}
+          {/* </Route> */}
 
-        <Route element={<RoleAccess roles={["lab"]} />}>
-          {/* <Route> */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/add-reports" element={<AddRecords />} />
-          <Route path="/paitient-records" element={<Paitents />} />
-        </Route>
+          {/* Pharmacy */}
 
-        {/* Insurance */}
+          <Route element={<RoleAccess roles={["pharmacy"]} />}>
+            {/* <Route> */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            {/* <Route path="/update-medicine-stock" element={<Dashboard/>} /> */}
+            <Route path="/customer-list" element={<CustomerList />} />
+            <Route path="/generate-bill" element={<GenerateBills />} />
+          </Route>
 
-        <Route element={<RoleAccess roles={["insurance"]} />}>
-          {/* <Route>   */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/latest-requests" element={<ClaimRequests />} />
-        </Route>
+          {/* Lab */}
 
-        <Route path="/logout" element={<Logout />} />
+          <Route element={<RoleAccess roles={["lab"]} />}>
+            {/* <Route> */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-reports" element={<AddRecords />} />
+            <Route path="/paitient-records" element={<Paitents />} />
+          </Route>
 
-        <Route path="*" element={<Page404 />} />
-      </Routes>
-    </>
+          {/* Insurance */}
+
+          <Route element={<RoleAccess roles={["insurance"]} />}>
+            {/* <Route>   */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/latest-requests" element={<ClaimRequests />} />
+          </Route>
+
+          <Route path="/logout" element={<Logout />} />
+
+          <Route path="*" element={<Page404 />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 
