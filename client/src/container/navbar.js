@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="min-h-full">
+      <div className="">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
             <>
