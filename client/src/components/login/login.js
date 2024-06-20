@@ -1,4 +1,3 @@
-import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Assuming you're using Heroicons
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../common/loader";
@@ -10,7 +9,6 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [org, setOrg] = useState("patient");
-  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
   const navigate = useNavigate();
 
@@ -27,14 +25,9 @@ function Login() {
       if (res.success) {
         setLoader(false);
         navigate("/dashboard");
+      } else {
+        setError("Something went wrong!");
       }
-
-      //   if (org === "patient") {
-      //     navigate("/patientdashboard");
-      //   }
-      // } else {
-      //   navigate("/dashboard");
-      // }
     } catch (error) {
       setLoader(false);
       if (error.response) {
@@ -76,33 +69,23 @@ function Login() {
                 />
               </div>
 
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Password
-              </label>
-              <div className="relative flex items-center bg-white rounded-lg">
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Password
+                </label>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   name="password"
                   id="password"
                   placeholder="Password"
-                  className="bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
                   required
                 />
-                <div
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOffIcon className="h-5 w-5 text-indigo-600" /> // Color changed to match the sign-in button
-                  ) : (
-                    <EyeIcon className="h-5 w-5 text-gray-500" />
-                  )}
-                </div>
               </div>
 
               <div className="relative">
@@ -122,9 +105,11 @@ function Login() {
                 >
                   <option value={"patient"}>Patient</option>
                   <option value={"doctor"}>Doctor</option>
-                  <option value={"lab"}>Lab</option>
-
+                  {/* <option value={"lab"}>Lab</option> */}
+                  {/* <option value={"pharmacy"}>Pharmacy</option> */}
+                  {/* <option value={"insurance"}>Insurance</option> */}
                   <option value={"Admin"}>Admin</option>
+
                 </select>
                 <div className="absolute inset-y-0 right-0 top-5 flex items-center pr-2 pointer-events-none">
                   <svg
@@ -149,7 +134,7 @@ function Login() {
               )}
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full bg-indigo-600 text-white  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 {loader ? <Loader height={5} width={5} /> : "Sign In"}
               </button>
@@ -169,5 +154,4 @@ function Login() {
     </>
   );
 }
-
 export default Login;
