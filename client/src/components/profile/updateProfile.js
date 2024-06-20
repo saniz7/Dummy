@@ -30,15 +30,35 @@ function UpdateProfile() {
       setTextPrompt(location.state.promptText);
     }
     const res = await profileService.getProfileToUpdate();
-    console.log('res',res?.data?.userDataFromLedger);
+    console.log("res", res?.data?.userDataFromLedger);
 
     if (res?.data) {
       setUsername(res?.data?.user?.userName ? res?.data?.user?.userName : "");
-      setGender(res?.data?.userDataFromLedger?.gender ? res?.data?.userDataFromLedger?.gender : "");
-      setFullAddress(res?.data?.userDataFromLedger?.address ? res?.data?.userDataFromLedger?.address : "");
-      setPhoneNo(res?.data?.userDataFromLedger?.contact ? res?.data?.userDataFromLedger?.contact : "");
-      setBlood(res?.data?.userDataFromLedger?.bloodGroup ? res?.data?.userDataFromLedger?.bloodGroup : "");
-      setDate(res?.data?.userDataFromLedger?.dob ? res?.data?.userDataFromLedger?.dob : "");
+      setGender(
+        res?.data?.userDataFromLedger?.gender
+          ? res?.data?.userDataFromLedger?.gender
+          : ""
+      );
+      setFullAddress(
+        res?.data?.userDataFromLedger?.address
+          ? res?.data?.userDataFromLedger?.address
+          : ""
+      );
+      setPhoneNo(
+        res?.data?.userDataFromLedger?.contact
+          ? res?.data?.userDataFromLedger?.contact
+          : ""
+      );
+      setBlood(
+        res?.data?.userDataFromLedger?.bloodGroup
+          ? res?.data?.userDataFromLedger?.bloodGroup
+          : ""
+      );
+      setDate(
+        res?.data?.userDataFromLedger?.dob
+          ? res?.data?.userDataFromLedger?.dob
+          : ""
+      );
       setProfileImage(res.data.user.image ? res.data.user.image : "");
       setProfileImageUpload(res.data.user.image ? res.data.user.image : "");
     }
@@ -51,12 +71,11 @@ function UpdateProfile() {
   }, []);
 
   const handleUpdateDataChange = (e) => {
-    if(e.target.files[0].size/1024 > 4096){
+    if (e.target.files[0].size / 1024 > 4096) {
       setError("Image size should be less than 4MB");
       setProfileImageUpload("");
       return;
-    }
-    else{
+    } else {
       const reader = new FileReader();
       setProfileImageUpload("");
       reader.onload = () => {
@@ -65,7 +84,7 @@ function UpdateProfile() {
           setProfileImageUpload(reader.result);
         }
       };
-      
+
       reader.readAsDataURL(e.target.files[0]);
     }
   };
@@ -77,22 +96,22 @@ function UpdateProfile() {
     setSuccess("");
 
     const data = {
-      username:username,
+      username: username,
       contact: phoneNo,
       address: fullAddress,
       gender: gender,
-      bloodGroup:blood,
-      dob:date
+      bloodGroup: blood,
+      dob: date,
       // image: profileImageUpload,
     };
 
     try {
       const res = await profileService.updateProfile({
-        args:[date,gender,phoneNo,blood,fullAddress],
-        fcn:"updatePatient",
-        orgName:"patient",
+        args: [date, gender, phoneNo, blood, fullAddress],
+        fcn: "updatePatient",
+        orgName: "patient",
         // password,
-        username
+        username,
       });
       if (res.data.success) {
         setLoader(false);
@@ -114,11 +133,11 @@ function UpdateProfile() {
   };
 
   const formatDate = (date) => {
-    const [day, month, year] = date.split('-');
+    const [day, month, year] = date.split("-");
     return `${year}-${month}-${day}`;
-  };  
+  };
 
-  const formattedDate = formatDate(date); 
+  const formattedDate = formatDate(date);
   console.log(formattedDate);
 
   return (
@@ -128,14 +147,7 @@ function UpdateProfile() {
           <div className="text-center mb-3 font-bold uppercase">
             <small>Update Profile</small>
           </div>
-          <div className="text-center mb-3 font-bold uppercase">
-            <button
-              className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-              onClick={() => setEditMode(!editMode)} // Toggle edit mode
-            >
-              {editMode ? "Cancel" : "Edit"}
-            </button>
-          </div>
+
           <form onSubmit={(e) => postProfile(e)}>
             <div className="relative w-full mb-3 mt-7">
               <div className="flex justify-center mb-7">
@@ -312,7 +324,9 @@ function UpdateProfile() {
               <div className="text-red-500 text-sm text-center">{error}</div>
             ) : null}
             {success ? (
-              <div className="text-green-500 text-sm text-center">{success}</div>
+              <div className="text-green-500 text-sm text-center">
+                {success}
+              </div>
             ) : null}
             {editMode ? ( // Render submit button only when in edit mode
               <div className="text-center mt-4">
@@ -327,6 +341,14 @@ function UpdateProfile() {
               </div>
             ) : null}
           </form>
+          <div className="text-center mb-3 font-bold uppercase">
+            <button
+              className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+              onClick={() => setEditMode(!editMode)} // Toggle edit mode
+            >
+              {editMode ? "Cancel" : "Edit"}
+            </button>
+          </div>
         </div>
       </div>
     </>

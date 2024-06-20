@@ -8,6 +8,7 @@ import authService from "../../services/authService";
 function PaitentsRecords(props) {
   const [loader, setLoader] = useState(true);
   const [data, setData] = useState([]);
+  const [user, setUser] = useState([]);
   const [columnNames, setColumnNames] = useState([]);
   //   const [recordData, setRecordData] = useState([]);
   const [currentId, setCurrentId] = useState(484192);
@@ -15,7 +16,8 @@ function PaitentsRecords(props) {
   useEffect(() => {
     const getPatientRecordsAccessList = async () => {
       const res = await paitientService.getPatientAccessList();
-      console.log(res.data);
+      console.log(res.data.result.userName);
+      setUser(res.data.result.userName);
       if (res.data.success) {
         setData(res.data.accessMemberDetails);
         setLoader(false);
@@ -52,34 +54,42 @@ function PaitentsRecords(props) {
       // orgName: "patient",
     },
   ];
+  const RecordData = [
+    {
+      data,
+      user,
+    },
+  ];
 
   let topbutton;
   console.log(authService.getRole());
   if (authService.getRole() == "doctor") {
     topbutton = (
-      <>
-        <Link to="/add-patient-records">
+      <div className="flex items-center justify-center mt-10 font-bold text-3xl">
+        Doctor's Dashboard
+        {/* <Link to="/add-patient-records">
           <button
             type="submit"
             className="mt-8 ml-60 mb-0 bg-indigo-600 text-white  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
             Add Records
           </button>
-        </Link>
-      </>
+        </Link> */}
+      </div>
     );
   } else if (authService.getRole() == "lab") {
     topbutton = (
-      <>
-        <Link to="/add-reports">
+      <div className="flex items-center justify-center mt-10 font-bold text-3xl">
+        Lab Dashboard
+        {/* <Link to="/add-reports">
           <button
             type="submit"
             className="mt-8 ml-60 mb-0 bg-indigo-600 text-white  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
             Add Report
           </button>
-        </Link>
-      </>
+        </Link> */}
+      </div>
     );
   } else if (authService.getRole() == "pharmacy") {
     topbutton = (
@@ -127,12 +137,14 @@ function PaitentsRecords(props) {
 
               <Table3
                 tableName="Patients List"
+                user={user}
                 tableData={data}
                 columnNames={columnNames}
                 patientIdButtonClick={patientIdButtonClick}
               />
 
-              {authService.getRole() == "doctor" || authService.getRole() == "insurance" ? (
+              {authService.getRole() == "doctor" ||
+              authService.getRole() == "insurance" ? (
                 <div className="flex justify-between">
                   {data.map((record, index) => {
                     console.log(record.patientId === currentId);

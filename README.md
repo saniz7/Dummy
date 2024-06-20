@@ -96,7 +96,7 @@ git version 2.39.2
     ```bash
     $ ./fablo up fablo-config.json
     $ cd backend/config
-    $ ./generate-ccp
+    $ ./generate-ccp.sh
     ```
 
 - Start the backend server

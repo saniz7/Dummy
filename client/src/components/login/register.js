@@ -106,6 +106,8 @@ function Register() {
       setLoader(false);
 
       if (res.data.success === true) {
+        navigate("/login");
+
         setSuccess("User registered successfully.");
 
         setAddress("");

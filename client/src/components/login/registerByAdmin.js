@@ -99,6 +99,62 @@ function RegisterByAdmin() {
         } catch (error) {
             setLoader(false);
 
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError("Something went wrong!");
+      }
+      return;
+    }
+  };
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  return (
+    <>
+      <section className="bg-gray-50 dark:bg-gray-900 min-h-[93vh] py-10">
+        <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0">
+          <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+            <h2 className="mb-1 text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Register
+            </h2>
+            <form
+              className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
+              onSubmit={(e) => handleSubmit(e)}
+            >
+              <div class="mt-6">
+                {/* Dropdown input box, center aligned*/}
+                <div className="relative">
+                  <select
+                    id="dropdown"
+                    name="dropdown"
+                    className="block w-1/2 m-auto pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-600 focus:border-primary-600 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    defaultValue="Select"
+                    value={org}
+                    onChange={(e) => setOrg(e.target.value)}
+                  >
+                    <option value={"doctor"}>Doctor</option>
+                    <option value={"lab"}>Lab</option>./
+                    {/* <option value={"pharmacy"}>Pharmacy</option> */}
+                    {/* <option value={"insurance"}>Insurance</option> */}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-28 pointer-events-none">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             if (error.response) {
                 setError(error.response.data.message);
             } else {
@@ -168,6 +224,16 @@ function RegisterByAdmin() {
                                             value={name}
                                             onChange={setName}
                                         />
+              {org === "doctor" ? (
+                <div>
+                  <Input
+                    label="Email"
+                    type="email"
+                    id="name"
+                    required
+                    value={name}
+                    onChange={setName}
+                  />
 
                                         <div class="mt-3">
                                             <label for="gender" class="block text-sm font-medium text-gray-900 dark:text-white">Gender</label>
