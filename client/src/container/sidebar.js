@@ -1,120 +1,72 @@
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaUserMd, FaFlask, FaFileMedical, FaUsers, FaPills, FaBriefcaseMedical } from "react-icons/fa";
+import authService from "../services/authService";
 import Canteen from "../assets/images/dashboard/canteen.png";
 import BuyAndSell from "../assets/images/dashboard/buysell.png";
 import AutoShare from "../assets/images/dashboard/autoshare.png";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import authService from "../services/authService";
+
 const Sidebar = () => {
   const [user, setUser] = useState(authService.getRole("orgName"));
   const [apps, setApps] = useState([]);
-  const [loader, setloader] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [selected, setSelected] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const patientDashboard = [
     {
       name: "Select Doctor",
-      imgSrc: Canteen,
+      icon: <FaUserMd />,
       link: "/select-doctor",
       blocked: false,
     },
-    // {
-    //   name: "Select Pharmacy",
-    //   imgSrc: Canteen,
-    //   link: "/select-pharmacy",
-    //   blocked: false,
-    // },
     {
       name: "Select Lab",
-      imgSrc: Canteen,
+      icon: <FaFlask />,
       link: "/select-lab",
       blocked: false,
     },
-    // {
-    //   name: "Select Insurance Company",
-    //   imgSrc: Canteen,
-    //   link: "/select-insurance-company",
-    //   blocked: false,
-    // },
     {
       name: "Health Records",
-      imgSrc: BuyAndSell,
+      icon: <FaFileMedical />,
       link: "/health-records",
       blocked: false,
     },
-    // {
-    //   name: "Pharmacy Records",
-    //   imgSrc: AutoShare,
-    //   link: "/pharmacy-records",
-    //   blocked: false,
-    // },
-    // {
-    //   name: "Lab Records",
-    //   imgSrc: AutoShare,
-    //   link: "/lab-records",
-    //   blocked: false,
-    // },
-    // {
-    //   name: "Insurance Records",
-    //   imgSrc: AutoShare,
-    //   link: "/insurance-records",
-    //   blocked: false,
-    // }
   ];
 
   const doctorDashboard = [
     {
       name: "Patient Records",
-      imgSrc: Canteen,
+      icon: <FaFileMedical />,
       link: "/patient-records",
       blocked: false,
     },
   ];
 
   const chemistDashboard = [
-    // {
-    //   name: "Registered Patient",
-    //   imgSrc: Canteen,
-    //   link: "/registered-patient",
-    //   blocked: false,
-    // },
-    // {
-    //   name: "Generate Bill",
-    //   imgSrc: Canteen,
-    //   link: "/generate-bill",
-    //   blocked: false,
-    // }
     {
       name: "Patient Records",
-      imgSrc: Canteen,
+      icon: <FaFileMedical />,
       link: "/patient-records",
       blocked: false,
     },
   ];
 
   const labDashboard = [
-    // {
-    //   name: "Add Reports",
-    //   imgSrc: Canteen,
-    //   link: "/add-reports",
-    //   blocked: false,
-    // }
     {
       name: "Patient Records",
-      imgSrc: Canteen,
+      icon: <FaFileMedical />,
       link: "/patient-records",
       blocked: false,
     },
   ];
 
   const insuranceDashboard = [
-    // {
-    //   name: "Latest Requests",
-    //   imgSrc: Canteen,
-    //   link: "/latest-requests",
-    //   blocked: false,
-    // }
     {
       name: "Patient Records",
-      imgSrc: Canteen,
+      icon: <FaFileMedical />,
       link: "/patient-records",
       blocked: false,
     },
@@ -123,7 +75,7 @@ const Sidebar = () => {
   const adminDashboard = [
     {
       name: "Add User",
-      imgSrc: Canteen,
+      icon: <FaUsers />,
       link: "/add-user",
       blocked: false,
     },
@@ -143,43 +95,38 @@ const Sidebar = () => {
     } else if (user === "Admin") {
       setApps(adminDashboard);
     }
-    setloader(true);
+    setLoader(true);
   }, [user]);
-  console.log(user);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    setSelected(location.pathname);
+  }, [location.pathname]);
+
   return (
     <div className="bg-gray-50 h-screen">
-      <div className="capitalize h-16 bg-black text-white flex items-center justify-center">
+      <div className="capitalize h-16 bg-gray-800 text-white flex items-center justify-center">
         {user} Dashboard
       </div>
       {!loader ? (
         <>Loading.......</>
       ) : (
-        <>
-          <div className="flex flex-col">
-            {apps?.map((app, index) => (
-              <div
-                className="hover:cursor-pointer"
-                key={index}
-                onClick={() => {
-                  app.blocked ? <></> : navigate(`${app.link}`);
-                }}
-              >
-                <div
-                  // to={`${app.link}`}
-                  className=""
-                >
-                  {/* <img
-                  src={app.imgSrc}
-                  className="object-scale-down h-28 w-32 mb-5 "
-                  alt={`${app.name}`}
-                /> */}
-                  {app.name}
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="flex flex-col p-4">
+          {apps.map((app, index) => (
+            <div
+              key={index}
+              className={`flex items-center p-2 my-2 rounded cursor-pointer 
+                ${selected === app.link ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-700"}`}
+              onClick={() => {
+                if (!app.blocked) {
+                  navigate(app.link);
+                }
+              }}
+            >
+              <div className="mr-3">{app.icon}</div>
+              <div>{app.name}</div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
