@@ -61,6 +61,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/update" element={<UpdatePassword />} />
           <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
+          <Route path="/profile" element={<UpdateProfile />} />
 
           {/* Admin */}
 
@@ -73,8 +74,8 @@ function App() {
 
           <Route element={<RoleAccess roles={["patient"]} />}>
             {/* <Route > */}
-            e <Route path="/select-doctor" element={<DoctorCategoryPage />} />
-            <Route path="/profile" element={<UpdateProfile />} />
+            <Route path="/select-doctor" element={<DoctorCategoryPage />} />
+            {/* <Route path="/profile" element={<UpdateProfile />} /> */}
             <Route path="/select-lab" element={<SelectLab />} />
             {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
             {/* <Route path='/select-doctor/doctor-data' element={<DoctorData/>} /> */}
@@ -89,11 +90,15 @@ function App() {
 
           {/* Doctor */}
 
-          {/* <Route element={<RoleAccess roles={["doctor"]} />}> */}
-          {/* <Route> */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/patient-records" element={<PaitentsRecords />} />
-          <Route path="/add-patient-records" element={<AddPatientRecords />} />
+          <Route element={<RoleAccess roles={["doctor"]} />}>
+            {/* <Route> */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/patient-records" element={<PaitentsRecords />} />
+            <Route
+              path="/add-patient-records"
+              element={<AddPatientRecords />}
+            />
+          </Route>
 
           {/* </Route> */}
 
