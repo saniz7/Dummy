@@ -1,16 +1,12 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaUserMd, FaFlask, FaFileMedical, FaUsers, FaPills, FaBriefcaseMedical } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaFileMedical, FaFlask, FaUserMd, FaUsers } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
 import authService from "../services/authService";
-import Canteen from "../assets/images/dashboard/canteen.png";
-import BuyAndSell from "../assets/images/dashboard/buysell.png";
-import AutoShare from "../assets/images/dashboard/autoshare.png";
 
 const Sidebar = () => {
   const [user, setUser] = useState(authService.getRole("orgName"));
   const [apps, setApps] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [selected, setSelected] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,9 +94,7 @@ const Sidebar = () => {
     setLoader(true);
   }, [user]);
 
-  useEffect(() => {
-    setSelected(location.pathname);
-  }, [location.pathname]);
+  const isActive = (path) => location.pathname.startsWith(path);
 
   return (
     <div className="bg-gray-50 h-screen">
@@ -115,7 +109,7 @@ const Sidebar = () => {
             <div
               key={index}
               className={`flex items-center p-2 my-2 rounded cursor-pointer 
-                ${selected === app.link ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-700"}`}
+                ${isActive(app.link) ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-700"}`}
               onClick={() => {
                 if (!app.blocked) {
                   navigate(app.link);
