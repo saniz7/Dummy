@@ -79,7 +79,7 @@ function App() {
             <Route path="/select-lab" element={<SelectLab />} />
             {/* <Route path="/select-insurance-company" element={<SelectInsuranceCompany/>} /> */}
             {/* <Route path='/select-doctor/doctor-data' element={<DoctorData/>} /> */}
-            {/* <Route path="/health-records" element={<HealthRecords/>} /> */}
+            <Route path="/health-records" element={<HealthRecords />} />
             <Route path="/" element={<HealthRecords />} />
             {/* <Route path="/select-pharmacy" element={<SelectChemist/>} /> */}
             {/* <Route path="/select-pharmacy/lab-data" element={<LabData/>} /> */}
@@ -95,7 +95,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/patient-records" element={<PaitentsRecords />} />
             <Route
-              path="/add-patient-records"
+              path="/add-patient-records/:id"
               element={<AddPatientRecords />}
             />
           </Route>

@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import paitientService from "../../../services/patientService";
-import SelectDoctor from './selectDoctor';
-import { useLocation } from 'react-router-dom'
+import SelectDoctor from "./selectDoctor";
+import { useLocation } from "react-router-dom";
 
 const SelectDoctorpage = () => {
-   const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [value, setValue] = useState([]);
   const [loader, setLoader] = useState(true);
   const [columnNames, setColumnNames] = useState([]);
   const [access, setaccess] = useState([]);
 
-    const location = useLocation();
-    const id = location.pathname.split('/')[2];
-    console.log('id',id);
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
 
   useEffect(() => {
     const getDoctorsList = async () => {
@@ -25,7 +24,6 @@ const SelectDoctorpage = () => {
       setaccess(DoctorData.data.access);
 
       setLoader(false);
-
     };
     const updateColumnNames = () => {
       const keys = Object.keys(doctorsDummyData[0]);
@@ -36,12 +34,12 @@ const SelectDoctorpage = () => {
     getDoctorsList();
     updateColumnNames();
   }, []);
-console.log(data);
+  console.log(data);
   useEffect(() => {
-    const orthoDoctors = data.filter(item => item?.department === id);
+    const orthoDoctors = data.filter((item) => item?.department === id);
     setValue(orthoDoctors);
   }, [data]);
-console.log(value);
+  console.log(value);
 
   const doctorsDummyData = [
     {
@@ -55,12 +53,10 @@ console.log(value);
       department: "Ortho",
       // orgName: "doctor",
       // prescriptions: ["42621"]
-    }
+    },
   ];
 
-
   const accessHandler = async (e, id) => {
-
     console.log("checkbox", e.target.checked);
     console.log("checkbox id: ", id);
 
@@ -73,48 +69,48 @@ console.log(value);
         console.log(res);
 
         if (res.data.success) {
-          console.log("id: ",id);
+          console.log("id: ", id);
           window.alert(res.data.message);
           window.location.reload();
-        }
-        else{
+        } else {
           window.alert("Providing Access Failed");
         }
-
       } else {
-        e.target.checked = !e.target.checked
+        e.target.checked = !e.target.checked;
         console.log("Access cancelled");
       }
     } else {
-
-      var confirmed = window.confirm("Are you sure you want to remove access ?");
+      var confirmed = window.confirm(
+        "Are you sure you want to remove access ?"
+      );
 
       if (confirmed) {
         console.log("Access removed");
         const res = await paitientService.removeAccess(id);
         console.log(res);
 
-        if(res.data.success){
+        if (res.data.success) {
           window.alert(res.data.message);
           window.location.reload();
-        }
-        else{
+        } else {
           window.alert("Removing Access Failed");
         }
-
       } else {
-        e.target.checked = !e.target.checked
+        e.target.checked = !e.target.checked;
         console.log("Access cancelled");
       }
-
     }
-
   };
   return (
     <div>
-        <SelectDoctor data={value} loader={loader} columnNames={columnNames} access={access}/>
+      <SelectDoctor
+        data={value}
+        loader={loader}
+        columnNames={columnNames}
+        access={access}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default SelectDoctorpage
+export default SelectDoctorpage;
