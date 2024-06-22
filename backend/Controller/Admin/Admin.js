@@ -366,35 +366,29 @@ exports.Login = async (req, res, next) => {
   var token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
   if (orgName == "Admin") {
-    return res
-      .status(200)
-      .json({
-        success: true,
-        token,
-        userName: user.userName,
-        orgName: user.orgName,
-        userId: user.userId,
-      });
+    return res.status(200).json({
+      success: true,
+      token,
+      userName: user.userName,
+      orgName: user.orgName,
+      userId: user.userId,
+    });
   }
   let isUserRegistered = await helper.isUserRegistered(username, orgName);
 
   if (isUserRegistered) {
-    res
-      .status(200)
-      .json({
-        success: true,
-        token,
-        userName: user.userName,
-        orgName: user.orgName,
-        userId: user.userId,
-      });
+    res.status(200).json({
+      success: true,
+      token,
+      userName: user.userName,
+      orgName: user.orgName,
+      userId: user.userId,
+    });
   } else {
-    res
-      .status(400)
-      .json({
-        success: false,
-        message: `User with username ${username} is not registered with ${orgName}, Please register first.`,
-      });
+    res.status(400).json({
+      success: false,
+      message: `User with username ${username} is not registered with ${orgName}, Please register first.`,
+    });
   }
 };
 
@@ -442,14 +436,12 @@ exports.getUserDetails = async (req, res, next) => {
         })
       );
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          result,
-          accessMemberDetails,
-          status: "success",
-        });
+      res.status(200).json({
+        success: true,
+        result,
+        accessMemberDetails,
+        status: "success",
+      });
     }
   );
 };
@@ -513,17 +505,68 @@ exports.getUserDetailSelf = async (req, res, next) => {
     );
 
     // Return the user details along with registration arguments
-    res
-      .status(200)
-      .json({
-        success: true,
-        user,
-        userDataFromLedger,
-        registrationArgs,
-        status: "success",
-      });
+    res.status(200).json({
+      success: true,
+      user,
+      userDataFromLedger,
+      registrationArgs,
+      status: "success",
+    });
   } catch (error) {
     console.error("Error fetching user details: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+exports.getAllDoctors = async (req, res, next) => {
+  try {
+    console.log("Fetching all doctors");
+
+    // Fetch all users with orgName 'doctor'
+    const doctors = await User.find({ orgName: "doctor" });
+
+    if (doctors.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No doctors found" });
+    }
+
+    console.log("doctors: ", doctors);
+
+    // Retrieve the registration arguments and ledger data for all doctors
+    const doctorsData = await Promise.all(
+      doctors.map(async (doctor) => {
+        // Fetch data from the ledger for each doctor
+        const doctorDataFromLedger = await query.query(
+          "main-channel1",
+          "chaincode1",
+          [doctor.userId],
+          "getDoctor",
+          doctor.userName,
+          doctor.orgName
+        );
+
+        return {
+          user: doctor,
+          doctorDataFromLedger,
+          registrationArgs: {
+            userId: doctor.userId,
+            userName: doctor.userName,
+            orgName: doctor.orgName,
+            gender: doctor.gender,
+            contact: doctor.contact,
+            // Add other fields here as per your User schema
+          },
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      doctors: doctorsData,
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Error fetching doctors list: ", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

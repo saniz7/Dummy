@@ -5,7 +5,9 @@ import Loader from "../../common/loader";
 import paitientService from "../../services/patientService";
 import Table3 from "../Table/table3";
 import authService from "../../services/authService";
-function PaitentsRecords(props) {
+import profileService from "../../services/profileService";
+import DoctorTable from "../Table/DoctorTable";
+function DoctorList(props) {
   const [loader, setLoader] = useState(true);
   const [data, setData] = useState([]);
   const [user, setUser] = useState([]);
@@ -15,14 +17,13 @@ function PaitentsRecords(props) {
 
   useEffect(() => {
     const getPatientRecordsAccessList = async () => {
-      const res = await paitientService.getPatientAccessList();
+      const res = await profileService.getDoctorList();
       console.log(res.data);
-      setUser(res.data.result.userName);
+      setUser(res.data.doctors.user);
       if (res.data.success) {
-        setData(res.data.accessMemberDetails);
+        setData(res.data.doctors);
         setLoader(false);
       }
-      console.log(data);
     };
 
     const updateColumnNames = () => {
@@ -41,15 +42,17 @@ function PaitentsRecords(props) {
   };
 
   console.log(data);
+  console.log(user);
   const dummyRecordData = [
     {
-      patientId: "851280",
+      NMCnumber: "851280",
       name: "patient1",
       gender: "Female",
       contact: "9874563210",
       dob: "1999-10-10",
-      bloodGroup: "A+",
-      address: "delhi",
+      department: "delhi",
+      degree: "delhi",
+      // department: "delhi",
       // aadharNumber: "98965262666",
       // orgName: "patient",
     },
@@ -135,8 +138,8 @@ function PaitentsRecords(props) {
             <>
               {topbutton}
 
-              <Table3
-                tableName="Patients List"
+              <DoctorTable
+                tableName="Doctors List"
                 user={user}
                 tableData={data}
                 columnNames={columnNames}
@@ -387,4 +390,4 @@ function PaitentsRecords(props) {
   );
 }
 
-export default PaitentsRecords;
+export default DoctorList;

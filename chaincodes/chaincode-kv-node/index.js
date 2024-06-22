@@ -208,7 +208,9 @@ class KVContract extends Contract {
         console.log("errrrrrrrr", err);
         record = strValue;
       }
-      allResults.push(record);
+      if (record && record.type === "doctor") {
+        allResults.push(record);
+      }
       result = await iterator.next();
     }
 

@@ -34,6 +34,7 @@ import SelectDoctorpage from "./components/patient/Doctor/SelectDoctorpage";
 import DoctorCategoryPage from "./components/patient/Doctor/DoctorCategoryPage";
 import Sidebar from "./container/sidebar";
 import { useLocation } from "react-router-dom";
+import DoctorList from "./components/doctor/DoctorList";
 function App() {
   const location = useLocation();
   const pathname = location.pathname;
@@ -67,6 +68,7 @@ function App() {
 
           <Route element={<RoleAccess roles={["Admin"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/doctor-list" element={<DoctorList />} />
             <Route path="/add-user" element={<RegisterByAdmin />} />
           </Route>
 

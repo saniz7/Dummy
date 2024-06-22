@@ -128,6 +128,12 @@ function Dashboard() {
       link: "/add-user",
       blocked: false,
     },
+    {
+      name: "Doctor List",
+      imgSrc: Canteen,
+      link: "/doctor-list",
+      blocked: false,
+    },
   ];
 
   useEffect(() => {

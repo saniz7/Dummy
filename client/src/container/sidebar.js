@@ -75,6 +75,12 @@ const Sidebar = () => {
       link: "/add-user",
       blocked: false,
     },
+    {
+      name: "Doctor List",
+      icon: <FaUsers />,
+      link: "/doctor-list",
+      blocked: false,
+    },
   ];
 
   useEffect(() => {
@@ -109,7 +115,11 @@ const Sidebar = () => {
             <div
               key={index}
               className={`flex items-center p-2 my-2 rounded cursor-pointer 
-                ${isActive(app.link) ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-700"}`}
+                ${
+                  isActive(app.link)
+                    ? "bg-gray-800 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
               onClick={() => {
                 if (!app.blocked) {
                   navigate(app.link);
