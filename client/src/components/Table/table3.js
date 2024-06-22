@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 function Table3({
   tableName,
   tableData,
@@ -6,7 +8,9 @@ function Table3({
   user,
   patientIdButtonClick,
 }) {
-  console.log(columnNames);
+  // Add "Action" to the column names
+  const updatedColumnNames = [...columnNames, "Action"];
+
   return (
     <>
       <div className="container my-12 px-6 mx-auto">
@@ -21,7 +25,7 @@ function Table3({
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
-                          {columnNames.map((column, index) => {
+                          {updatedColumnNames.map((column, index) => {
                             return (
                               <th
                                 key={index}
@@ -36,8 +40,8 @@ function Table3({
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {tableData.map((item, index) => {
-                          const keys = columnNames;
-                          let id = item["patientId"];
+                          console.log(item);
+                          const keys = [...columnNames, "Action"];
                           return (
                             <tr
                               className="button-cursor"
@@ -55,7 +59,17 @@ function Table3({
                                     <div className="flex">
                                       <div className="ml-4">
                                         <div className="text-sm text-left font-medium text-gray-900">
-                                          {key === "name" ? user : item[key]}
+                                          {key === "name" ? (
+                                            user
+                                          ) : key === "Action" ? (
+                                            <Link
+                                              to={`/add-patient-records/${item.patientId}`}
+                                            >
+                                              Add Report
+                                            </Link>
+                                          ) : (
+                                            item[key]
+                                          )}
                                         </div>
                                       </div>
                                     </div>

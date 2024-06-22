@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Input from "../../common/input";
 import Loader from "../../common/loader";
 import paitientService from "../../services/patientService";
+import { useLocation } from "react-router-dom";
 
 function AddPatientRecords() {
+  const location = useLocation();
+
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -71,13 +74,15 @@ function AddPatientRecords() {
     console.log("labTests: ", labTests[index]);
   };
 
-//   const handleInputChange = (index, value) => {
-//     const newInputFields = [...inputFields];
-//     newInputFields[index] = value;
-//     setInputFields(newInputFields);
-//   };
+  //   const handleInputChange = (index, value) => {
+  //     const newInputFields = [...inputFields];
+  //     newInputFields[index] = value;
+  //     setInputFields(newInputFields);
+  //   };
 
   const handleSubmit = async (e) => {
+    const id = location.pathname.split("/")[2];
+
     e.preventDefault();
 
     setLoader(true);
@@ -86,15 +91,15 @@ function AddPatientRecords() {
 
     console.log("medicines: ", medicines);
     console.log("lab tests: ", labTests);
-    console.log("patientId: ", patientId);
+    console.log("patientId: ", id);
     console.log("diagnosis: ", diagnosis);
 
-    const args = [diagnosis, medicines, labTests, patientId];
+    const args = [diagnosis, medicines, labTests, id];
 
     try {
       let prescriptionData = {
         args: args,
-        patientId,
+        patientId: id,
       };
       const res = await paitientService.postPrescription(prescriptionData);
 
@@ -128,14 +133,14 @@ function AddPatientRecords() {
               className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
               onSubmit={(e) => handleSubmit(e)}
             >
-              <Input
+              {/* <Input
                 label="Patient Id"
                 type="number"
                 id="patientid"
                 required
-                value={patientId}
+                value="424140"
                 onChange={setPatientId}
-              />
+              /> */}
 
               <div
                 className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded"
