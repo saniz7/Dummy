@@ -180,6 +180,18 @@ class KVContract extends Contract {
     return doctor;
   }
 
+  // Delete a Doctor
+  async deleteDoctor(ctx, doctorId) {
+    // Check if the doctor exists before attempting to delete
+    const exists = await this.doctorExists(ctx, doctorId);
+    if (!exists) {
+      throw new Error(`The doctor with ID ${doctorId} does not exist`);
+    }
+
+    // Delete the doctor's record from the ledger
+    await ctx.stub.deleteState(doctorId);
+  }
+
   /////////////////////////////
   // Check if doctor exists
   /////////////////////////////

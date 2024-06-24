@@ -570,3 +570,37 @@ exports.getAllDoctors = async (req, res, next) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+exports.deleteDoctor = async (req, res, next) => {
+  try {
+    const doctorId = req.params.doctorId;
+
+    // Check if the doctor exists in the database
+    const doctor = await User.findOne({ userId: doctorId, orgName: "doctor" });
+
+    if (!doctor) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Doctor not found" });
+    }
+
+    // Delete the doctor from the blockchain ledger
+    await query.query(
+      "main-channel1",
+      "chaincode1",
+      [doctorId],
+      "deleteDoctor",
+      doctor.userName,
+      doctor.orgName
+    );
+
+    // Delete the doctor from the database
+    await User.deleteOne({ userId: doctorId });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Doctor deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting doctor: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

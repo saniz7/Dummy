@@ -16,11 +16,15 @@ function updateProfile(data) {
   console.log(data);
   return httpService.patch("/update-patient", data);
 }
+function deleteProfile(id) {
+  return httpService.delete(`/doctor/${id}`);
+}
 
 const profileService = {
   getProfile,
   getDoctorList,
   updateProfile,
+  deleteProfile,
   getProfileToUpdate,
 };
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import profileService from "../../services/profileService";
 
 function DoctorTable({
   tableName,
@@ -10,7 +11,17 @@ function DoctorTable({
 }) {
   // Add "Action" to the column names
   const updatedColumnNames = [...columnNames, "Action"];
-
+  const deleteDoctor = async (id) => {
+    try {
+      const res = await profileService.deleteProfile(id);
+      console.log("Doctor deleted successfully:", res);
+      // Refresh the page after successful deletion
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting doctor:", error);
+      // Handle error (e.g., show notification)
+    }
+  };
   return (
     <>
       <div className="container my-12 px-6 mx-auto">
@@ -59,11 +70,13 @@ function DoctorTable({
                                       <div className="ml-4">
                                         <div className="text-sm text-left font-medium text-gray-900">
                                           {key === "Action" ? (
-                                            <Link
-                                              to={`/add-patient-records/${item.patientId}`}
+                                            <span
+                                              onClick={() =>
+                                                deleteDoctor(item.user.userId)
+                                              }
                                             >
-                                              Add Report
-                                            </Link>
+                                              Delete Doctor
+                                            </span>
                                           ) : (
                                             item.doctorDataFromLedger[key]
                                           )}
