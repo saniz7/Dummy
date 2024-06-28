@@ -122,7 +122,7 @@ function RegisterByAdmin() {
   };
   return (
     <>
-      <section className="bg-gray-50 dark:bg-gray-900 min-h-[93vh] py-10">
+       <section style={{ backgroundColor: "#f3f2f5" }} className="min-h-[93vh] py-10">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0">
           <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
             <h2 className="mb-1 text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
