@@ -21,6 +21,7 @@ exports.register = async (req, res, next) => {
   const username = req.body.username;
   const orgName = req.body.orgName;
   const password = req.body.password;
+  const department = req.body.department;
   const transient = {};
   const fcn = req.body.fcn;
 
@@ -97,6 +98,7 @@ exports.register = async (req, res, next) => {
       orgName,
       password,
       userId,
+      department,
     });
     req.session.uid = user.userId;
     req.session.role = user.orgName;
@@ -601,6 +603,91 @@ exports.deleteDoctor = async (req, res, next) => {
       .json({ success: true, message: "Doctor deleted successfully" });
   } catch (error) {
     console.error("Error deleting doctor: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+// Fetch all labs
+exports.getAllLabs = async (req, res, next) => {
+  try {
+    console.log("Fetching all labs");
+
+    // Fetch all users with orgName 'lab'
+    const labs = await User.find({ orgName: "lab" });
+
+    if (labs.length === 0) {
+      return res.status(404).json({ success: false, message: "No labs found" });
+    }
+
+    console.log("labs: ", labs);
+
+    // Retrieve the registration arguments and ledger data for all labs
+    const labsData = await Promise.all(
+      labs.map(async (lab) => {
+        // Fetch data from the ledger for each lab
+        const labDataFromLedger = await query.query(
+          "main-channel1",
+          "chaincode1",
+          [lab.userId],
+          "getLab",
+          lab.userName,
+          lab.orgName
+        );
+
+        return {
+          user: lab,
+          labDataFromLedger,
+          registrationArgs: {
+            userId: lab.userId,
+            userName: lab.userName,
+            orgName: lab.orgName,
+            contact: lab.contact,
+            // Add other fields here as per your User schema
+          },
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      labs: labsData,
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Error fetching labs list: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// Delete a lab
+exports.deleteLab = async (req, res, next) => {
+  try {
+    const labId = req.params.labId;
+
+    // Check if the lab exists in the database
+    const lab = await User.findOne({ userId: labId, orgName: "lab" });
+
+    if (!lab) {
+      return res.status(404).json({ success: false, message: "Lab not found" });
+    }
+
+    // Delete the lab from the blockchain ledger
+    await query.query(
+      "main-channel1",
+      "chaincode1",
+      [labId],
+      "deleteLab",
+      lab.userName,
+      lab.orgName
+    );
+
+    // Delete the lab from the database
+    await User.deleteOne({ userId: labId });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Lab deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting lab: ", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

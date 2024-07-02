@@ -238,6 +238,7 @@ class KVContract extends Contract {
     recordId,
     patientId,
     doctorId,
+    department,
     diagnosis,
     medicines,
     labTests,
@@ -247,6 +248,7 @@ class KVContract extends Contract {
       recordId,
       patientId,
       doctorId,
+      department,
       diagnosis,
       medicines: JSON.stringify(medicines),
       labTests: JSON.stringify(labTests),
@@ -421,6 +423,27 @@ class KVContract extends Contract {
     const lab = JSON.parse(buffer.toString());
 
     return lab;
+  }
+
+  // Delete a Lab
+  async deleteLab(ctx, labId) {
+    // Check if the lab exists before attempting to delete
+    const exists = await this.labExists(ctx, labId);
+    if (!exists) {
+      throw new Error(`The lab with ID ${labId} does not exist`);
+    }
+
+    // Delete the lab's record from the ledger
+    await ctx.stub.deleteState(labId);
+  }
+
+  /////////////////////////////
+  // Check if lab exists
+  /////////////////////////////
+  async labExists(ctx, labId) {
+    const isLab = await ctx.stub.getState(labId);
+
+    return isLab && isLab.length > 0;
   }
 
   /////////////////////////////

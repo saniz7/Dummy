@@ -145,7 +145,7 @@ function DoctorData() {
             </h2>
             <div className="flex justify-between">
               {data.map((record, index) => (
-                <div key={index} >
+                <div key={index}>
                   <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                       <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -180,7 +180,7 @@ function DoctorData() {
                                 Medicines
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <ul className="list-disc list-inside">
+                                {/* <ul className="list-disc list-inside">
                                   {record.medicines.map((medicine, index) => (
                                     <li
                                       key={index}
@@ -189,7 +189,7 @@ function DoctorData() {
                                       {`${medicine.name} - ${medicine.dose}`}
                                     </li>
                                   ))}
-                                </ul>
+                                </ul> */}
                               </td>
                             </tr>
                             <tr>
@@ -197,7 +197,7 @@ function DoctorData() {
                                 Lab Tests
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <ul className="list-disc list-inside">
+                                {/* <ul className="list-disc list-inside">
                                   {record.medicines.map((medicine, index) => (
                                     <li
                                       key={index}
@@ -206,7 +206,7 @@ function DoctorData() {
                                       {`${medicine.name}`}
                                     </li>
                                   ))}
-                                </ul>
+                                </ul> */}
                               </td>
                             </tr>
                           </tbody>

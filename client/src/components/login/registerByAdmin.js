@@ -52,6 +52,7 @@ function RegisterByAdmin() {
           args,
           username: name,
           orgName: org,
+          department: department,
           password,
           fcn,
         });

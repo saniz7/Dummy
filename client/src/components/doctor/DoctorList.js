@@ -126,7 +126,8 @@ function DoctorList(props) {
     <>
       {loader ? (
         <div className="mt-10">
-          <Loader />
+          {/* <Loader /> */}
+          No data available
         </div>
       ) : (
         <>
@@ -213,7 +214,7 @@ function DoctorList(props) {
                                             Lab Tests
                                           </td>
                                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <ul className="list-disc list-inside">
+                                            {/* <ul className="list-disc list-inside">
                                               {rec.labTests.map(
                                                 (lab, index) => (
                                                   <li
@@ -226,7 +227,7 @@ function DoctorList(props) {
                                                   </li>
                                                 )
                                               )}
-                                            </ul>
+                                            </ul> */}
                                           </td>
                                         </tr>
                                       </tbody>
