@@ -9,6 +9,9 @@ function RegisterByAdmin() {
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState(""); // New state for name error
+  const [email, setEmail] = useState(""); // New state for email
+  const [emailError, setEmailError] = useState(""); // New state for email error
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
   const [NMCnumber, setNMCnumber] = useState("");
@@ -25,10 +28,34 @@ function RegisterByAdmin() {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
+  
+   const validateName = (name) => {
+    const regex = /^[A-Z][a-zA-Z]*$/;
+    if (!regex.test(name)) {
+      setNameError("Name should only contain letters and start with a capital letter.");
+      return false;
+    }
+    setNameError("");
+    return true;
+  };
+  
+   const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) {
+      setEmailError("Email should contain '@' and no spaces.");
+      return false;
+    }
+    setEmailError("");
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+   // Validate name and email
+    if (!validateName(name) || !validateEmail(email)) {
+      return;
+    }
     setLoader(true);
     setError("");
     setSuccess("");
