@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { FaFileMedical, FaFlask, FaUserMd, FaUsers } from "react-icons/fa";
+import {
+  FaFileMedical,
+  FaFlask,
+  FaUserMd,
+  FaUsers,
+  FaUserPlus,
+} from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import authService from "../services/authService";
 
@@ -71,7 +77,7 @@ const Sidebar = () => {
   const adminDashboard = [
     {
       name: "Add User",
-      icon: <FaUsers />,
+      icon: <FaUserPlus />,
       link: "/add-user",
       blocked: false,
     },
@@ -79,6 +85,12 @@ const Sidebar = () => {
       name: "Doctor List",
       icon: <FaUsers />,
       link: "/doctor-list",
+      blocked: false,
+    },
+    {
+      name: "Lab List",
+      icon: <FaFlask />,
+      link: "/lab-list",
       blocked: false,
     },
   ];

@@ -12,6 +12,8 @@ const {
   getUserDetailSelf,
   getAllDoctors,
   deleteDoctor,
+  getAllLabs,
+  deleteLab,
 } = require("../../Controller/Admin/Admin");
 
 const router = express.Router();
@@ -27,6 +29,8 @@ router.route("/users/login").post(Login);
 router.route("/get-user-detail").get(isAuthenticatedUser, getUserDetails);
 router.route("/get-user-detail-self").get(getUserDetailSelf);
 router.route("/doctorlist").get(getAllDoctors);
+router.route("/lablist").get(getAllLabs);
 router.route("/doctor/:doctorId").delete(deleteDoctor);
+router.route("/lab/:labId").delete(deleteLab);
 
 module.exports = router;

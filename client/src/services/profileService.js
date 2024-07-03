@@ -11,6 +11,9 @@ function getProfileToUpdate() {
 function getDoctorList() {
   return httpService.get("/doctorlist");
 }
+function getLabList() {
+  return httpService.get("/lablist");
+}
 
 function updateProfile(data) {
   console.log(data);
@@ -19,13 +22,18 @@ function updateProfile(data) {
 function deleteProfile(id) {
   return httpService.delete(`/doctor/${id}`);
 }
+function deleteLabProfile(id) {
+  return httpService.delete(`/lab/${id}`);
+}
 
 const profileService = {
   getProfile,
   getDoctorList,
   updateProfile,
   deleteProfile,
+  deleteLabProfile,
   getProfileToUpdate,
+  getLabList,
 };
 
 export default profileService;

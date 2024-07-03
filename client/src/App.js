@@ -64,8 +64,6 @@
 //           <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
 //           <Route path="/profile" element={<UpdateProfile />} />
 
-
-
 //           {/* Admin */}
 
 //           <Route element={<RoleAccess roles={["Admin"]} />}>
@@ -176,11 +174,7 @@
 // // admin
 // //      /add-user
 
-
-
-
-
-//second code 
+//second code
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./container/home";
@@ -220,6 +214,7 @@ import DoctorCategoryPage from "./components/patient/Doctor/DoctorCategoryPage";
 import Sidebar from "./container/sidebar";
 import { useLocation } from "react-router-dom";
 import DoctorList from "./components/doctor/DoctorList";
+import LabList from "./components/lab/LabList";
 
 function App() {
   const location = useLocation();
@@ -249,12 +244,13 @@ function App() {
           <Route path="/update" element={<UpdatePassword />} />
           <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
           <Route path="/profile" element={<UpdateProfile />} />
-          <Route path="/updatePassword" element={<UpdatePassword />} /> 
+          <Route path="/updatePassword" element={<UpdatePassword />} />
 
           {/* Admin */}
           <Route element={<RoleAccess roles={["Admin"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/doctor-list" element={<DoctorList />} />
+            <Route path="/lab-list" element={<LabList />} />
             <Route path="/add-user" element={<RegisterByAdmin />} />
           </Route>
 
@@ -270,7 +266,10 @@ function App() {
           <Route element={<RoleAccess roles={["doctor"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/patient-records" element={<PaitentsRecords />} />
-            <Route path="/add-patient-records/:id" element={<AddPatientRecords />} />
+            <Route
+              path="/add-patient-records/:id"
+              element={<AddPatientRecords />}
+            />
           </Route>
 
           {/* Pharmacy */}
@@ -334,4 +333,3 @@ export default App;
 
 // admin
 //      /add-user
-
