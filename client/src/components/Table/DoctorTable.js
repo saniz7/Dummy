@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import profileService from "../../services/profileService";
+import Modal from "../../container/modal";
 
 function DoctorTable({
   tableName,
@@ -9,26 +10,42 @@ function DoctorTable({
   user,
   patientIdButtonClick,
 }) {
-  // Add "Action" to the column names
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+
   const updatedColumnNames = [...columnNames, "Action"];
-  const deleteDoctor = async (id) => {
+
+  const handleDeleteClick = (id) => {
+    setSelectedDoctorId(id);
+    setIsModalOpen(true);
+  };
+
+  const deleteDoctor = async () => {
     try {
-      const res = await profileService.deleteProfile(id);
+      const res = await profileService.deleteProfile(selectedDoctorId);
       console.log("Doctor deleted successfully:", res);
-      // Refresh the page after successful deletion
       window.location.reload();
     } catch (error) {
       console.error("Error deleting doctor:", error);
       // Handle error (e.g., show notification)
+    } finally {
+      setIsModalOpen(false);
     }
   };
+
   return (
     <>
+      <Modal
+        isOpen={isModalOpen}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this doctor?"
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={deleteDoctor}
+      />
       <div className="container my-12 px-6 mx-auto">
         <section className="mb-32 text-center">
           <div className="mx-auto px-3 lg:px-6">
             <h2 className="text-3xl font-bold mb-12">{tableName}</h2>
-            {/* Table of Doctors with column Name Department Degree and Access Toggle Button */}
             <div className="flex flex-col">
               <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -71,9 +88,12 @@ function DoctorTable({
                                         <div className="text-sm text-left font-medium text-gray-900">
                                           {key === "Action" ? (
                                             <span
-                                              onClick={() =>
-                                                deleteDoctor(item.user.userId)
-                                              }
+                                              onClick={(e) => {
+                                                e.stopPropagation(); // Prevent triggering the row click
+                                                handleDeleteClick(
+                                                  item.user.userId
+                                                );
+                                              }}
                                             >
                                               Delete Doctor
                                             </span>

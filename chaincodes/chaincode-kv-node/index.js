@@ -238,20 +238,20 @@ class KVContract extends Contract {
     recordId,
     patientId,
     doctorId,
-    department,
     diagnosis,
     medicines,
     labTests,
+    department,
     createdAt
   ) {
     const newPrescriptionRecord = {
       recordId,
       patientId,
       doctorId,
-      department,
       diagnosis,
       medicines: JSON.stringify(medicines),
       labTests: JSON.stringify(labTests),
+      department,
       createdAt,
     };
 

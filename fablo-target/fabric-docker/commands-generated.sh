@@ -30,7 +30,7 @@ generateArtifacts() {
 
 startNetwork() {
   printHeadline "Starting network" "U1F680"
-  (cd "$FABLO_NETWORK_ROOT"/fabric-docker && docker compose up -d)
+  (cd "$FABLO_NETWORK_ROOT"/fabric-docker && docker-compose up -d)
   sleep 4
 }
 
@@ -226,7 +226,7 @@ stopNetwork() {
 
 networkDown() {
   printHeadline "Destroying network" "U1F916"
-  (cd "$FABLO_NETWORK_ROOT"/fabric-docker && docker compose down)
+  (cd "$FABLO_NETWORK_ROOT"/fabric-docker && docker-compose down)
 
   printf "\nRemoving chaincode containers & images... \U1F5D1 \n"
   for container in $(docker ps -a | grep "dev-peer0.patient.healthcare.com-chaincode1" | awk '{print $1}'); do

@@ -19,71 +19,69 @@ function getErrorMessage(field) {
 
 exports.prescription = async (req, res, next) => {
   console.log("req.body: ", req.body);
-  patientId = req.body.patientId;
+  const { patientId, diagnosis, medicines, labTests } = req.body;
   let username;
   let orgName;
   let department;
-  const userdata = await User.findOne({ userId: req.session.uid }).then(
-    async (result) => {
-      username = result.userName;
-      orgName = result.orgName;
-      department = result.department;
-      if (!result.access.includes(patientId)) {
-        return res.status(400).json({
-          success: false,
-          message: `Doctor do not have right to write prescription for this user`,
-        });
-      }
-    }
-  );
 
-  while (true) {
-    var recordId = Math.floor(10000 + Math.random() * 90000);
-    const us = await Record.findOne({ recordId }).select("+password");
-    if (us) {
-      continue;
-    } else {
-      break;
+  const userdata = await User.findOne({ userId: req.session.uid });
+  if (userdata) {
+    username = userdata.userName;
+    orgName = userdata.orgName;
+    department = userdata.department;
+    if (!userdata.access.includes(patientId)) {
+      return res.status(400).json({
+        success: false,
+        message: `Doctor does not have the right to write a prescription for this user`,
+      });
     }
+  } else {
+    return res.status(400).json({ success: false, message: "User not found" });
   }
 
-  logger.debug("req.body: ", req.body);
+  let recordId;
+  while (true) {
+    recordId = Math.floor(10000 + Math.random() * 90000);
+    const existingRecord = await Record.findOne({ recordId });
+    if (!existingRecord) break;
+  }
 
-  const args = req.body.args;
-  const transient = {};
-
-  // recordId PatientId DoctorId
-  args.unshift(req.session.uid);
-  args.unshift(req.body.patientId);
-  args.unshift(recordId);
-  args.unshift(department);
-  // check user has access or not
-  logger.debug("args: ", args);
-
-  args.push(new Date().toISOString());
-
-  let response = await invoke.invokeTransaction(
-    "main-channel1",
-    "chaincode1",
-    "createPrescriptionRecord",
-    args,
-    username,
-    orgName,
-    department,
-    transient
-  );
-
-  console.log("ledger message: ", response);
-
-  const records = await Record.create({
-    doctorId: req.session.uid,
+  const args = [
+    recordId,
     patientId,
-    RecordId: recordId,
-  });
+    req.session.uid,
+    diagnosis,
+    JSON.stringify(medicines),
+    JSON.stringify(labTests),
+    department,
+    new Date().toISOString(),
+  ];
 
-  res
-    .status(200)
-    .json({ success: true, message: "Record Added Successfully", records });
+  try {
+    const response = await invoke.invokeTransaction(
+      "main-channel1",
+      "chaincode1",
+      "createPrescriptionRecord",
+      args,
+      username,
+      orgName
+    );
+
+    console.log("ledger message: ", response);
+
+    const newRecord = await Record.create({
+      doctorId: req.session.uid,
+      patientId,
+      RecordId: recordId,
+    });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Record Added Successfully", newRecord });
+  } catch (error) {
+    console.error("Error adding record:", error);
+    res.status(500).json({ success: false, message: "Error adding record" });
+  }
 };
 
 exports.getPrescription = async (req, res, next) => {
@@ -98,7 +96,19 @@ exports.getPrescription = async (req, res, next) => {
       username = result.userName;
     }
   );
+  // logger.debug("req.body: ", req.body);
 
+  // const args = req.body.args;
+  // const transient = {};
+
+  // // recordId PatientId DoctorId
+  // args.unshift(req.session.uid);
+  // args.unshift(req.body.patientId);
+  // args.unshift(recordId);
+  // // check user has access or not
+  // logger.debug("args: ", args);
+
+  // args.push(new Date().toISOString());
   var recordsData = [];
 
   const records = await Record.find({

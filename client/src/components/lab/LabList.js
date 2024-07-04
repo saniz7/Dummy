@@ -46,7 +46,6 @@ function LabList(props) {
       contact: "9876543210",
       address: "123 Lab Street",
       orgName: "Lab Organization",
-      createdAt: "2024-07-01T05:51:08.726Z",
       // Add other fields here as per your schema
     },
   ];

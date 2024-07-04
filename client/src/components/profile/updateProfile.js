@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loader from "../../common/loader";
 import profileService from "../../services/profileService";
-import defaultProfile from "../../assets/images/common/defaultProfile.jpg";
+import PatientProfile from "./PatientProfile";
+import DoctorProfile from "./DoctorProfile";
+import authService from "../../services/authService";
+import LabProfile from "./LabProfile";
 
 function UpdateProfile() {
   const location = useLocation();
+  const userRole = authService.getRole();
 
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState("");
@@ -19,7 +23,18 @@ function UpdateProfile() {
   const [profileImage, setProfileImage] = useState("");
   const [profileImageUpload, setProfileImageUpload] = useState();
   const [textPrompt, setTextPrompt] = useState("");
-  const [editMode, setEditMode] = useState(false); // Add edit mode state
+  const [editMode, setEditMode] = useState(false);
+  const [userType, setUserType] = useState("");
+  const [degree, setDegree] = useState("");
+  const [department, setDepartment] = useState("");
+  const [NMCnumber, setNMCnumber] = useState("");
+
+  // New state variables for LabProfile
+  const [labName, setLabName] = useState("");
+  const [labAddress, setLabAddress] = useState("");
+  const [labContact, setLabContact] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
+  const [labId, setLabId] = useState("");
 
   const navigate = useNavigate();
 
@@ -29,38 +44,35 @@ function UpdateProfile() {
     if (location.state) {
       setTextPrompt(location.state.promptText);
     }
+
     const res = await profileService.getProfileToUpdate();
-    console.log("res", res?.data?.userDataFromLedger);
+    console.log("res", res?.data);
 
     if (res?.data) {
+      const userData = res?.data?.userDataFromLedger;
       setUsername(res?.data?.user?.userName ? res?.data?.user?.userName : "");
-      setGender(
-        res?.data?.userDataFromLedger?.gender
-          ? res?.data?.userDataFromLedger?.gender
-          : ""
-      );
-      setFullAddress(
-        res?.data?.userDataFromLedger?.address
-          ? res?.data?.userDataFromLedger?.address
-          : ""
-      );
-      setPhoneNo(
-        res?.data?.userDataFromLedger?.contact
-          ? res?.data?.userDataFromLedger?.contact
-          : ""
-      );
-      setBlood(
-        res?.data?.userDataFromLedger?.bloodGroup
-          ? res?.data?.userDataFromLedger?.bloodGroup
-          : ""
-      );
-      setDate(
-        res?.data?.userDataFromLedger?.dob
-          ? res?.data?.userDataFromLedger?.dob
-          : ""
-      );
+      setGender(userData?.gender ? userData?.gender : "");
+      setFullAddress(userData?.address ? userData?.address : "");
+      setPhoneNo(userData?.contact ? userData?.contact : "");
+      setDate(userData?.dob ? userData?.dob : "");
       setProfileImage(res.data.user.image ? res.data.user.image : "");
       setProfileImageUpload(res.data.user.image ? res.data.user.image : "");
+
+      setUserType(res.data.user?.type ? res.data.user.type : "");
+
+      if (res.data.user.orgName === "doctor") {
+        setDegree(userData?.degree ? userData?.degree : "");
+        setDepartment(userData?.department ? userData?.department : "");
+        setNMCnumber(userData?.NMCnumber ? userData?.NMCnumber : "");
+      } else if (res.data.user.orgName === "lab") {
+        setLabName(userData?.name ? userData?.name : "");
+        setLabAddress(userData?.address ? userData?.address : "");
+        setLabContact(userData?.contact ? userData?.contact : "");
+        setCreatedAt(userData?.createdAt ? userData?.createdAt : "");
+        setLabId(userData?.labId ? userData?.labId : "");
+      } else {
+        setBlood(userData?.bloodGroup ? userData?.bloodGroup : "");
+      }
     }
 
     setLoader(false);
@@ -100,16 +112,32 @@ function UpdateProfile() {
       contact: phoneNo,
       address: fullAddress,
       gender: gender,
-      bloodGroup: blood,
       dob: date,
       // image: profileImageUpload,
     };
 
+    if (userRole === "doctor") {
+      data.degree = degree;
+      data.department = department;
+      data.NMCnumber = NMCnumber;
+    } else if (userRole === "lab") {
+      data.name = labName;
+      data.address = labAddress;
+      data.contact = labContact;
+    } else {
+      data.bloodGroup = blood;
+    }
+
     try {
       const res = await profileService.updateProfile({
         args: [date, gender, phoneNo, blood, fullAddress],
-        fcn: "updatePatient",
-        orgName: "patient",
+        fcn: userType === "doctor" ? "updateDoctor" : "updatePatient",
+        orgName:
+          userType === "doctor"
+            ? "doctor"
+            : userType === "lab"
+            ? "lab"
+            : "patient",
         // password,
         username,
       });
@@ -132,203 +160,73 @@ function UpdateProfile() {
     }
   };
 
-  const formatDate = (date) => {
-    const [day, month, year] = date.split("-");
-    return `${year}-${month}-${day}`;
-  };
-
-  const formattedDate = formatDate(date);
-  console.log(formattedDate);
-
   return (
     <>
       <div>
-        <div className="flex-auto px-4 lg:px-10 pb-10 text-2xl mt-5 mx-5 md:mx-48">
-          <div className="text-center mb-3 font-bold uppercase">
-            <small>Update Profile</small>
-          </div>
-
-          <form onSubmit={(e) => postProfile(e)}>
-            <div className="relative w-full mb-3 mt-7">
-              <div className="flex justify-center mb-7">
-                <div className="w-28 h-28 relative">
-                  <img
-                    className="rounded-full mx-auto border w-28 h-28"
-                    src={profileImage ? profileImage : defaultProfile}
-                    alt="Rounded avatar"
-                  />
-                  <div className="profile-image">
-                    <label
-                      htmlFor="file-input"
-                      className="absolute bottom-0 right-0 p-1 inline-block w-10 h-10 border-2 cursor-pointer border-white bg-gray-300 rounded-full"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="black"
-                        className="bi bi-camera"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z" />{" "}
-                        <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />{" "}
-                      </svg>
-                    </label>
-                    <input
-                      type="file"
-                      id="file-input"
-                      name="avatar"
-                      accept="image/*"
-                      onChange={handleUpdateDataChange}
-                      className="hidden"
-                      disabled={!editMode} // Disable when not in edit mode
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="text-red-500 text-center text-base my-5">
-                {textPrompt}
-              </div>
-              <div className="grid gap-1 grid-cols-2 mb-3">
-                <div>
-                  <label
-                    className="block uppercase text-xs font-bold mb-2"
-                    htmlFor="grid-password"
-                  >
-                    Name
-                  </label>
-                  <input
-                    type="name"
-                    className="border-0 px-3 py-3 placeholder-gray-400 
-                  text-gray-700 bg-white rounded text-sm shadow 
-                  focus:outline-none focus:ring w-full"
-                    placeholder="Name"
-                    style={{ transition: "all 0.15s ease 0s" }}
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    disabled={!editMode} // Disable when not in edit mode
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block uppercase text-xs font-bold mb-2"
-                    htmlFor="grid-password"
-                  >
-                    Gender
-                  </label>
-                  <select
-                    id="gender"
-                    className={`form-control cursor-pointer block w-full px-3
-                   py-3 text-sm font-normal ${
-                     gender === "" ? "text-gray-400" : "text-gray-700"
-                   } bg-white 
-                   bg-clip-padding border-0 border-solid border-gray-300 
-                   rounded transition ease-in-out focus:text-gray-700
-                    focus:bg-white focus:border-indigo-600 shadow
-                    focus:outline-none`}
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    required
-                    disabled={!editMode} // Disable when not in edit mode
-                  >
-                    <option value="" disabled hidden>
-                      Gender
-                    </option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid gap-1 grid-cols-2 mb-2">
-                <div>
-                  <label
-                    className="block uppercase text-xs font-bold mb-2"
-                    htmlFor="grid-password"
-                  >
-                    Blood Group
-                  </label>
-                  <input
-                    type="name"
-                    className="border-0 px-3 py-3 placeholder-gray-400 
-                  text-gray-700 bg-white rounded text-sm shadow 
-                  focus:outline-none focus:ring w-full"
-                    placeholder="Name"
-                    style={{ transition: "all 0.15s ease 0s" }}
-                    value={blood}
-                    onChange={(e) => setBlood(e.target.value)}
-                    disabled={!editMode} // Disable when not in edit mode
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block uppercase text-xs font-bold mb-2"
-                    htmlFor="grid-password"
-                  >
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    className="border-0 px-3 py-3 placeholder-gray-400 
-                  text-gray-700 bg-white rounded text-sm shadow 
-                  focus:outline-none focus:ring w-full"
-                    placeholder="Name"
-                    style={{ transition: "all 0.15s ease 0s" }}
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    disabled={!editMode} // Disable when not in edit mode
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-xs font-bold mb-2"
-                htmlFor="grid-password"
+        {userRole === "doctor" ? (
+          <DoctorProfile
+            name={username}
+            gender={gender}
+            dob={date}
+            department={department}
+            degree={degree}
+            NMCnumber={NMCnumber}
+            contact={phoneNo}
+            profileImage={profileImage}
+            textPrompt={textPrompt}
+          />
+        ) : userRole === "lab" ? (
+          <LabProfile
+            labName={labName}
+            labAddress={labAddress}
+            labContact={labContact}
+            createdAt={createdAt}
+            labId={labId}
+            profileImage={profileImage}
+            textPrompt={textPrompt}
+          />
+        ) : (
+          <PatientProfile
+            username={username}
+            gender={gender}
+            blood={blood}
+            date={date}
+            fullAddress={fullAddress}
+            phoneNo={phoneNo}
+            profileImage={profileImage}
+            editMode={editMode} // Pass editMode to PatientProfile
+            setUsername={setUsername}
+            setGender={setGender}
+            setBlood={setBlood}
+            setDate={setDate}
+            setFullAddress={setFullAddress}
+            setPhoneNo={setPhoneNo}
+            handleUpdateDataChange={handleUpdateDataChange}
+            textPrompt={textPrompt}
+          />
+        )}
+        {userRole === "patient" &&
+          !editMode && ( // Render Edit button only for patient and when not in editMode
+            <div className="text-center mb-3 font-bold uppercase">
+              <button
+                className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                onClick={() => setEditMode(true)}
               >
-                Address
-              </label>
-              <div className="grid gap-1 grid-cols-2">
-                <input
-                  type="text"
-                  className="border-0 col-span-2 px-3 mt-2 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                  placeholder="Complete Address"
-                  style={{ transition: "all 0.15s ease 0s" }}
-                  value={fullAddress}
-                  onChange={(e) => setFullAddress(e.target.value)}
-                  disabled={!editMode} // Disable when not in edit mode
-                  required
-                />
-              </div>
+                Edit
+              </button>
             </div>
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-xs font-bold mb-2"
-                htmlFor="grid-password"
-              >
-                Phone Number
-              </label>
-              <input
-                type="number"
-                className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                placeholder="Phone Number"
-                style={{ transition: "all 0.15s ease 0s" }}
-                value={phoneNo}
-                onChange={(e) => setPhoneNo(e.target.value)}
-                disabled={!editMode} // Disable when not in edit mode
-                required
-              />
-            </div>
-            {error ? (
-              <div className="text-red-500 text-sm text-center">{error}</div>
-            ) : null}
-            {success ? (
-              <div className="text-green-500 text-sm text-center">
-                {success}
-              </div>
-            ) : null}
-            {editMode ? ( // Render submit button only when in edit mode
+          )}
+        {editMode &&
+          userRole === "patient" && ( // Render Form only when in editMode and userRole is patient
+            <form onSubmit={(e) => postProfile(e)}>
+              {error ? (
+                <div className="text-red-500 text-sm text-center">{error}</div>
+              ) : null}
+              {success ? (
+                <div className="text-green-500 text-sm text-center">
+                  {success}
+                </div>
+              ) : null}
               <div className="text-center mt-4">
                 <button
                   className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
@@ -339,17 +237,8 @@ function UpdateProfile() {
                   {loader ? <Loader height={5} width={5} /> : "Submit"}
                 </button>
               </div>
-            ) : null}
-          </form>
-          <div className="text-center mb-3 font-bold uppercase">
-            <button
-              className="bg-indigo-600 text-white active:bg-indigo-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-              onClick={() => setEditMode(!editMode)} // Toggle edit mode
-            >
-              {editMode ? "Cancel" : "Edit"}
-            </button>
-          </div>
-        </div>
+            </form>
+          )}
       </div>
     </>
   );
