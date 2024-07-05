@@ -4,27 +4,27 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../../common/loader";
 import paitientService from "../../services/patientService";
-import Table3 from "../Table/table3";
 import authService from "../../services/authService";
+import Table4 from "../Table/table4";
 
-function PaitentsRecords(props) {
+function PatientList(props) {
   const [loader, setLoader] = useState(true);
   const [data, setData] = useState([]);
   const [user, setUser] = useState([]);
-  const [users, setUsers] = useState([]);
   const [columnNames, setColumnNames] = useState([]);
   const [currentId, setCurrentId] = useState(484192);
 
   useEffect(() => {
     const getPatientRecordsAccessList = async () => {
       const res = await paitientService.getPatientAccessList();
-      setUsers(res.data);
+      console.log(res.data);
       setUser(res.data.result.userName);
       if (res.data.success) {
         setData(res.data.accessMemberDetails);
         setLoader(false);
       }
     };
+
     const updateColumnNames = () => {
       const keys = Object.keys(dummyRecordData[0]);
       console.log("keys: ", keys);
@@ -34,7 +34,7 @@ function PaitentsRecords(props) {
     getPatientRecordsAccessList();
     updateColumnNames();
   }, []);
-  console.log(users);
+
   const patientIdButtonClick = (id) => {
     console.log("patientIdButtonClick: ", id);
     setCurrentId(id);
@@ -133,7 +133,7 @@ function PaitentsRecords(props) {
             <>
               {topbutton}
 
-              <Table3
+              <Table4
                 tableName="Patients List"
                 user={user}
                 tableData={data}
@@ -200,4 +200,4 @@ function PaitentsRecords(props) {
   );
 }
 
-export default PaitentsRecords;
+export default PatientList;

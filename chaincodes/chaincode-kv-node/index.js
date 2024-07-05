@@ -16,6 +16,7 @@ class KVContract extends Contract {
   async registerPatient(
     ctx,
     patientId,
+    name,
     dob,
     gender,
     contact,
@@ -24,6 +25,7 @@ class KVContract extends Contract {
   ) {
     const newPatient = {
       patientId,
+      name,
       dob,
       gender,
       contact,
@@ -242,6 +244,11 @@ class KVContract extends Contract {
     medicines,
     labTests,
     department,
+    weight,
+    height,
+    temp,
+    bp,
+    name,
     createdAt
   ) {
     const newPrescriptionRecord = {
@@ -252,6 +259,11 @@ class KVContract extends Contract {
       medicines: JSON.stringify(medicines),
       labTests: JSON.stringify(labTests),
       department,
+      weight,
+      height,
+      temp,
+      bp,
+      name,
       createdAt,
     };
 

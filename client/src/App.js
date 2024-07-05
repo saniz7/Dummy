@@ -217,6 +217,8 @@ import DoctorList from "./components/doctor/DoctorList";
 import LabList from "./components/lab/LabList";
 import PatientDetails from "./components/doctor/PatientDetail";
 import PatientCategoryPage from "./components/doctor/PatientCategory";
+import PatientDetailCategory from "./components/doctor/PatientDetailCategory";
+import PatientList from "./components/lab/PatientList";
 
 function App() {
   const location = useLocation();
@@ -260,7 +262,15 @@ function App() {
           <Route element={<RoleAccess roles={["patient"]} />}>
             <Route path="/select-doctor" element={<DoctorCategoryPage />} />
             <Route path="/select-lab" element={<SelectLab />} />
-            <Route path="/health-records" element={<HealthRecords />} />
+            <Route path="/lab-records" element={<LabRecords />} />
+            <Route
+              path="/health-records-category"
+              element={<PatientDetailCategory />}
+            />
+            <Route
+              path="/health-records/:category"
+              element={<HealthRecords />}
+            />
             <Route path="/" element={<HealthRecords />} />
           </Route>
 
@@ -293,8 +303,10 @@ function App() {
           {/* Lab */}
           <Route element={<RoleAccess roles={["lab"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/add-reports" element={<AddRecords />} />
-            <Route path="/paitient-records" element={<Paitents />} />
+            <Route path="/add-reports/:rid/:pid" element={<AddRecords />} />
+
+            <Route path="/paitient-records" element={<PatientList />} />
+            <Route path="/view-paitient-records/:id" element={<Paitents />} />
           </Route>
 
           {/* Insurance */}

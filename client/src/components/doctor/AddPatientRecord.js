@@ -15,6 +15,10 @@ function AddPatientRecords() {
   const [medicines, setMedicines] = useState([]);
   const [labTests, setLabTests] = useState([]);
   const [diagnosis, setDiagnosis] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [temp, setTemp] = useState("");
+  const [bp, setBP] = useState("");
 
   const [inputFields, setInputFields] = useState([]);
   const [inputLabFields, setInputLabFields] = useState([]);
@@ -50,6 +54,18 @@ function AddPatientRecords() {
   const handleDiagnosisChange = (e) => {
     setDiagnosis(e.target.value);
   };
+  const handleweightChange = (e) => {
+    setWeight(e.target.value);
+  };
+  const handleheightChange = (e) => {
+    setHeight(e.target.value);
+  };
+  const handletempChange = (e) => {
+    setTemp(e.target.value);
+  };
+  const handlebpChange = (e) => {
+    setBP(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,6 +80,10 @@ function AddPatientRecords() {
       diagnosis,
       medicines,
       labTests,
+      weight,
+      height,
+      temp,
+      bp,
     };
 
     try {
@@ -76,8 +96,13 @@ function AddPatientRecords() {
         setMedicines([]);
         setLabTests([]);
         setDiagnosis("");
+        setWeight("");
+        setHeight("");
+        setTemp("");
+        setBP("");
         setInputFields([]);
         setInputLabFields([]);
+        window.location.href = "/patient-records";
       }
     } catch (error) {
       setError("An error occurred while adding the prescription");
@@ -96,6 +121,82 @@ function AddPatientRecords() {
             className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
             onSubmit={handleSubmit}
           >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="mt-3">
+                <label
+                  htmlFor={"weight"}
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Weight
+                </label>
+                <input
+                  type="text"
+                  name="weight"
+                  id="weight"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                  placeholder="Weight"
+                  required
+                  value={weight}
+                  onChange={handleweightChange}
+                />
+              </div>
+              <div className="mt-3">
+                <label
+                  htmlFor={"height"}
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Height
+                </label>
+                <input
+                  type="text"
+                  name="height"
+                  id="height"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                  placeholder="Height"
+                  required
+                  value={height}
+                  onChange={handleheightChange}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="">
+                <label
+                  htmlFor={"temperature"}
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Temperature
+                </label>
+                <input
+                  type="text"
+                  name="temperature"
+                  id="temperature"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                  placeholder="Temperature"
+                  required
+                  value={temp}
+                  onChange={handletempChange}
+                />
+              </div>
+              <div className="">
+                <label
+                  htmlFor={"bp"}
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Blood Pressure
+                </label>
+                <input
+                  type="text"
+                  name="bp"
+                  id="bp"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                  placeholder="Blood Pressure"
+                  required
+                  value={bp}
+                  onChange={handlebpChange}
+                />
+              </div>
+            </div>
             <div
               className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded"
               onClick={handleMedicineButtonClick}

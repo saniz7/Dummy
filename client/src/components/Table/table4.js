@@ -3,7 +3,7 @@ import { TiThMenu } from "react-icons/ti";
 import { Link } from "react-router-dom";
 import authService from "../../services/authService";
 
-function Table3({
+function Table4({
   tableName,
   tableData,
   columnNames,
@@ -11,17 +11,12 @@ function Table3({
   patientIdButtonClick,
 }) {
   const updatedColumnNames = [...columnNames, "Action"];
-  const [dropdownVisible, setDropdownVisible] = useState({});
-  const [ID, setID] = useState("");
+  const [show, setShow] = useState(false);
 
-  const handleClick = (patientId) => {
-    setID(patientId);
-    setDropdownVisible((prevState) => ({
-      ...prevState,
-      [patientId]: !prevState[patientId],
-    }));
+  const handleClick = () => {
+    setShow(!show);
   };
-  console.log(ID);
+
   return (
     <div className="container my-12 px-6 mx-auto">
       <section className="mb-32 text-center">
@@ -30,8 +25,8 @@ function Table3({
           <div className="flex flex-col relative">
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-200">
+                <div className=" shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-200 ">
                     <thead className="bg-gray-50">
                       <tr>
                         {updatedColumnNames.map((column, index) => (
@@ -47,7 +42,6 @@ function Table3({
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {tableData.map((item, index) => {
-                        console.log(item);
                         const keys = [...columnNames, "Action"];
                         return (
                           <tr
@@ -64,33 +58,22 @@ function Table3({
                               >
                                 <div className="flex justify-center">
                                   <div className="text-sm text-right font-medium text-gray-900">
-                                    {key === "Action" ? (
-                                      <div className="flex justify-end items-end ">
-                                        {dropdownVisible[item.patientId] && (
-                                          <div className="absolute flex flex-col gap-2 top-0 right-0 bg-gray-300 text-black p-2 rounded-lg z-10">
+                                    {key === "name" ? (
+                                      user
+                                    ) : key === "Action" ? (
+                                      <div className=" flex justify-end items-end">
+                                        {show && (
+                                          <div className="absolute flex flex-col gap-2 top-12 right-[80px] bg-gray-300 text-black p-2 rounded-lg z-10">
                                             <Link
-                                              key={index}
                                               className="hover:cursor-pointer"
-                                              to={`/add-patient-records/${ID}`}
-                                            >
-                                              Add Report
-                                            </Link>
-
-                                            <Link
-                                              key={index}
-                                              className="hover:cursor-pointer"
-                                              to={`/patient-category/${ID}`}
+                                              to={`/view-paitient-records/${item.patientId}`}
                                             >
                                               View Report
                                             </Link>
                                           </div>
                                         )}
                                         <div className="flex justify-end items-end cursor-pointer">
-                                          <TiThMenu
-                                            onClick={() =>
-                                              handleClick(item.patientId)
-                                            }
-                                          />
+                                          <TiThMenu onClick={handleClick} />
                                         </div>
                                       </div>
                                     ) : (
@@ -115,4 +98,4 @@ function Table3({
   );
 }
 
-export default Table3;
+export default Table4;

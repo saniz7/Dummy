@@ -19,10 +19,20 @@ function getErrorMessage(field) {
 
 exports.prescription = async (req, res, next) => {
   console.log("req.body: ", req.body);
-  const { patientId, diagnosis, medicines, labTests } = req.body;
+  const {
+    patientId,
+    diagnosis,
+    medicines,
+    labTests,
+    weight,
+    height,
+    temp,
+    bp,
+  } = req.body;
   let username;
   let orgName;
   let department;
+  let name;
 
   const userdata = await User.findOne({ userId: req.session.uid });
   if (userdata) {
@@ -54,6 +64,11 @@ exports.prescription = async (req, res, next) => {
     JSON.stringify(medicines),
     JSON.stringify(labTests),
     department,
+    weight,
+    height,
+    temp,
+    bp,
+    username,
     new Date().toISOString(),
   ];
 

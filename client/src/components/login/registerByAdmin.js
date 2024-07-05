@@ -3,105 +3,68 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/input";
 import Loader from "../../common/loader";
 import registerService from "../../services/registerService";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
-
-const departments = [
-  "Cardiology",
-  "Dermatology",
-  "Neurology",
-  "Orthopedics",
-  "Pediatrics",
-  "Psychiatry",
-  "Radiology",
-  "Surgery",
-  "Urology",
-  "Oncology",
-];
-
-const degrees = [
-  "MBBS",
-  "MD",
-  "DO",
-  "PhD",
-  "BSc",
-  "MSc",
-  "BDS",
-  "MDS",
-  "BHMS",
-  "BAMS",
-];
-
-const specifications = [
-  "General",
-  "Specialist",
-  "Consultant",
-  "Surgeon",
-  "Physician",
-  "Pediatrician",
-  "Radiologist",
-  "Cardiologist",
-  "Neurologist",
-  "Dermatologist",
-];
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 function RegisterByAdmin() {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [name, setName] = useState("");
-  const [nameError, setNameError] = useState(""); // New state for name error
-  const [email, setEmail] = useState(""); // New state for email
-  const [emailError, setEmailError] = useState(""); // New state for email error
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Male");
   const [NMCnumber, setNMCnumber] = useState("");
   const [contact, setContact] = useState("");
-  const [department, setDepartment] = useState(departments[0]);
-  const [degree, setDegree] = useState(degrees[0]);
+  const [department, setDepartment] = useState("cardiology");
+  const [degree, setDegree] = useState("mbbs");
   const [org, setOrg] = useState("doctor");
   const [password, setPassword] = useState("");
-  const [specification, setSpecification] = useState(specifications[0]);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userAgreement, setUserAgreement] = useState(false);
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [specification, setSpecification] = useState("Surgeon");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
-
-  const validateName = (name) => {
-    const regex = /^[A-Z][a-zA-Z]*$/;
-    if (!regex.test(name)) {
-      setNameError(
-        "Name should only contain letters and start with a capital letter."
-      );
-      return false;
-    }
-    setNameError("");
-    return true;
-  };
-
   const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-      setEmailError("Email should contain '@' and no spaces.");
-      return false;
-    }
-    setEmailError("");
-    return true;
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   };
 
+  const validateContact = (contact) => {
+    const re = /^[0-9]{10}$/;
+    return re.test(contact);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 8;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate name and email
-    if (!validateName(name) || !validateEmail(email)) {
-      return;
-    }
     setLoader(true);
     setError("");
     setSuccess("");
+    if (!validateEmail(name)) {
+      setError("Invalid email address.");
+      setLoader(false);
+      return;
+    }
+
+    if (!validateContact(contact)) {
+      setError("Contact number should be 10 digits.");
+      setLoader(false);
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError("Password should be at least 8 characters long.");
+      setLoader(false);
+      return;
+    }
 
     try {
-      let res;
+      var res;
+
       if (org === "doctor") {
         const args = [
           name,
@@ -109,7 +72,7 @@ function RegisterByAdmin() {
           gender,
           NMCnumber,
           contact,
-          department.toLowerCase(),
+          department,
           degree,
           specification,
         ];
@@ -122,9 +85,29 @@ function RegisterByAdmin() {
           password,
           fcn,
         });
-      } else if (org === "lab" || org === "pharmacy" || org === "insurance") {
+      } else if (org === "lab") {
         const args = [name, contact, city, address];
-        const fcn = `register${org.charAt(0).toUpperCase() + org.slice(1)}`;
+        const fcn = "registerLab";
+        res = await registerService.register({
+          args,
+          username: name,
+          orgName: org,
+          password,
+          fcn,
+        });
+      } else if (org === "pharmacy") {
+        const args = [name, contact, city, address];
+        const fcn = "registerPharmacy";
+        res = await registerService.register({
+          args,
+          username: name,
+          orgName: org,
+          password,
+          fcn,
+        });
+      } else if (org === "insurance") {
+        const args = [name, contact, city, address];
+        const fcn = "registerInsurance";
         res = await registerService.register({
           args,
           username: name,
@@ -155,6 +138,7 @@ function RegisterByAdmin() {
       }
     } catch (error) {
       setLoader(false);
+
       if (error.response) {
         setError(error.response.data.message);
       } else {
@@ -163,11 +147,9 @@ function RegisterByAdmin() {
       return;
     }
   };
-
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
-
   return (
     <>
       <section
@@ -183,19 +165,21 @@ function RegisterByAdmin() {
               className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
               onSubmit={(e) => handleSubmit(e)}
             >
-              <div className="mt-6">
+              <div class="mt-6">
+                {/* Dropdown input box, center aligned*/}
                 <div className="relative">
                   <select
                     id="dropdown"
                     name="dropdown"
                     className="block w-1/2 m-auto pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-600 focus:border-primary-600 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    defaultValue="Select"
                     value={org}
                     onChange={(e) => setOrg(e.target.value)}
                   >
                     <option value={"doctor"}>Doctor</option>
-                    <option value={"lab"}>Lab</option>
-                    <option value={"pharmacy"}>Pharmacy</option>
-                    <option value={"insurance"}>Insurance</option>
+                    <option value={"lab"}>Lab</option>./
+                    {/* <option value={"pharmacy"}>Pharmacy</option> */}
+                    {/* <option value={"insurance"}>Insurance</option> */}
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-28 pointer-events-none">
                     <svg
@@ -226,40 +210,34 @@ function RegisterByAdmin() {
                     onChange={setName}
                   />
 
-                  <div className="mt-3">
+                  <div class="mt-3">
                     <label
-                      htmlFor="gender"
-                      className="block text-sm font-medium text-gray-900 dark:text-white"
+                      for="gender"
+                      class="block text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Gender
                     </label>
-                    <div className="mt-2 relative">
+                    <div class="mt-2 relative">
                       <select
                         id="gender"
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
                         name="gender"
-                        className="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
-                        <option value="Male" className="bg-gray-800 text-white">
+                        <option value="Male" class="bg-gray-800 text-white">
                           Male
                         </option>
-                        <option
-                          value="Female"
-                          className="bg-gray-800 text-white"
-                        >
+                        <option value="Female" class="bg-gray-800 text-white">
                           Female
                         </option>
-                        <option
-                          value="Other"
-                          className="bg-gray-800 text-white"
-                        >
+                        <option value="Other" class="bg-gray-800 text-white">
                           Other
                         </option>
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                         <svg
-                          className="h-4 w-4 fill-current"
+                          class="h-4 w-4 fill-current"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
                         >
@@ -287,30 +265,85 @@ function RegisterByAdmin() {
                     onChange={setContact}
                   />
 
-                  <div className="mt-3">
+                  <div class="mt-3">
                     <label
-                      htmlFor="department"
-                      className="block text-sm font-medium text-gray-900 dark:text-white"
+                      for="department"
+                      class="block text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Department
                     </label>
-                    <div className="mt-2 relative">
+                    <div class="mt-2 relative">
                       <select
                         id="department"
                         value={department}
                         onChange={(e) => setDepartment(e.target.value)}
                         name="department"
-                        className="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
-                        {departments.map((dept, index) => (
-                          <option key={index} value={dept}>
-                            {dept}
-                          </option>
-                        ))}
+                        <option
+                          value="cardiology"
+                          className="bg-gray-800 text-white"
+                        >
+                          Cardiology
+                        </option>
+                        <option
+                          value="dermatology"
+                          className="bg-gray-800 text-white"
+                        >
+                          Dermatology
+                        </option>
+                        <option
+                          value="neurology"
+                          className="bg-gray-800 text-white"
+                        >
+                          Neurology
+                        </option>
+                        <option
+                          value="orthopedics"
+                          className="bg-gray-800 text-white"
+                        >
+                          Orthopedics
+                        </option>
+                        <option
+                          value="pediatrics"
+                          className="bg-gray-800 text-white"
+                        >
+                          Pediatrics
+                        </option>
+                        <option
+                          value="psychiatry"
+                          className="bg-gray-800 text-white"
+                        >
+                          Psychiatry
+                        </option>
+                        <option
+                          value="radiology"
+                          className="bg-gray-800 text-white"
+                        >
+                          Radiology
+                        </option>
+                        <option
+                          value="surgery"
+                          className="bg-gray-800 text-white"
+                        >
+                          Surgery
+                        </option>
+                        <option
+                          value="urology"
+                          className="bg-gray-800 text-white"
+                        >
+                          Urology
+                        </option>
+                        <option
+                          value="oncology"
+                          className="bg-gray-800 text-white"
+                        >
+                          Oncology
+                        </option>
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                         <svg
-                          className="h-4 w-4 fill-current"
+                          class="h-4 w-4 fill-current"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
                         >
@@ -320,30 +353,77 @@ function RegisterByAdmin() {
                     </div>
                   </div>
 
-                  <div className="mt-3">
+                  {/* <Input
+                    label="Degree"
+                    type="text"
+                    id="degree"
+                    required
+                    value={degree}  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validateContact = (contact) => {
+    const re = /^[0-9]{10}$/;
+    return re.test(contact);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 8;
+  };
+    return re.test(email);
+  };
+
+  const validateContact = (contact) => {
+    const re = /^[0-9]{10}$/;
+    return re.test(contact);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 8;
+  };
                     <label
-                      htmlFor="degree"
-                      className="block text-sm font-medium text-gray-900 dark:text-white"
+                      for="degree"
+                      class="block text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Degree
                     </label>
-                    <div className="mt-2 relative">
+                    <div class="mt-2 relative">
                       <select
                         id="degree"
-                        value={degree}
+                        value={gender}
                         onChange={(e) => setDegree(e.target.value)}
                         name="degree"
-                        className="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
-                        {degrees.map((deg, index) => (
-                          <option key={index} value={deg}>
-                            {deg}
-                          </option>
-                        ))}
+                        <option value="mbbs" class="bg-gray-800 text-white">
+                          MBBS
+                        </option>
+                        <option value="md" class="bg-gray-800 text-white">
+                          MD
+                        </option>
+                        <option value="ms" class="bg-gray-800 text-white">
+                          MS
+                        </option>
+                        <option value="dm" class="bg-gray-800 text-white">
+                          DM
+                        </option>
+                        <option value="mch" class="bg-gray-800 text-white">
+                          MCh
+                        </option>
+                        <option value="dnb" class="bg-gray-800 text-white">
+                          DNB
+                        </option>
+                        <option value="phd" class="bg-gray-800 text-white">
+                          PhD
+                        </option>
+                        <option value="other" class="bg-gray-800 text-white">
+                          Other
+                        </option>
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                         <svg
-                          className="h-4 w-4 fill-current"
+                          class="h-4 w-4 fill-current"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
                         >
@@ -352,31 +432,52 @@ function RegisterByAdmin() {
                       </div>
                     </div>
                   </div>
+                  {/* <Input
+                    label="Specification"
+                    type="text"
+                    id="specification"
+                    required
+                    value={specification}
+                    onChange={setSpecification}
+                  /> */}
 
-                  <div className="mt-3">
+                  <div class="mt-3">
                     <label
-                      htmlFor="specification"
-                      className="block text-sm font-medium text-gray-900 dark:text-white"
+                      for="specification"
+                      class="block text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Specification
                     </label>
-                    <div className="mt-2 relative">
+                    <div class="mt-2 relative">
                       <select
                         id="specification"
                         value={specification}
                         onChange={(e) => setSpecification(e.target.value)}
                         name="specification"
-                        className="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
-                        {specifications.map((spec, index) => (
-                          <option key={index} value={spec}>
-                            {spec}
-                          </option>
-                        ))}
+                        <option value="Surgeon" class="bg-gray-800 text-white">
+                          Surgeon
+                        </option>
+                        <option value="General" class="bg-gray-800 text-white">
+                          General
+                        </option>
+                        <option
+                          value="Physician"
+                          class="bg-gray-800 text-white"
+                        >
+                          Physician
+                        </option>
+                        <option
+                          value="Therapist"
+                          class="bg-gray-800 text-white"
+                        >
+                          Therapist
+                        </option>
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                         <svg
-                          className="h-4 w-4 fill-current"
+                          class="h-4 w-4 fill-current"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
                         >
@@ -385,15 +486,15 @@ function RegisterByAdmin() {
                       </div>
                     </div>
                   </div>
-
                   <Input
-                    label="Date of Birth"
+                    label="D.O.B"
                     type="date"
                     id="dob"
                     required
                     value={dob}
                     onChange={setDob}
                   />
+
                   <div className="relative ">
                     <Input
                       label="Password"
@@ -410,34 +511,9 @@ function RegisterByAdmin() {
                       {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                     </div>
                   </div>
-
-                  {loader ? (
-                    <div className="mt-6">
-                      <Loader />
-                    </div>
-                  ) : (
-                    <button
-                      type="submit"
-                      className="w-full px-4 py-2 mt-4 text-base font-semibold text-center text-white transition duration-200 ease-in bg-gray-900 rounded-lg shadow-md focus:ring-gray-500 focus:ring-offset-gray-200 focus:outline-none focus:ring-2 hover:bg-gray-700"
-                    >
-                      Register
-                    </button>
-                  )}
-
-                  {error && (
-                    <div className="text-red-500 mt-2 text-sm text-center">
-                      {error}
-                    </div>
-                  )}
-
-                  {success && (
-                    <div className="text-green-500 mt-2 text-sm text-center">
-                      {success}
-                    </div>
-                  )}
                 </div>
               ) : (
-                <>
+                <div>
                   <Input
                     label="Email"
                     type="email"
@@ -455,7 +531,22 @@ function RegisterByAdmin() {
                     value={contact}
                     onChange={setContact}
                   />
-
+                  <div className="relative ">
+                    <Input
+                      label="Password"
+                      type={passwordVisible ? "text" : "password"}
+                      id="password"
+                      required
+                      value={password}
+                      onChange={setPassword}
+                    />
+                    <div
+                      className="absolute inset-y-0 top-6 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                    </div>
+                  </div>
                   <Input
                     label="City"
                     type="text"
@@ -464,86 +555,48 @@ function RegisterByAdmin() {
                     value={city}
                     onChange={setCity}
                   />
-
                   <Input
                     label="Address"
-                    type="text"
-                    id="address"
+                    type="Address"
+                    id="Address"
                     required
                     value={address}
                     onChange={setAddress}
                   />
-
-                  <Input
-                    label="Date of Birth"
-                    type="text"
-                    id="dob"
-                    required
-                    value={dob}
-                    onChange={setDob}
-                  />
-
-                  <div className="flex relative">
-                    <Input
-                      label="Password"
-                      type={passwordVisible ? "text" : "password"}
-                      id="password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                  <div className="mt-3 flex items-center justify-between">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                      Show Password
-                    </label>
-                    <input
-                      type="checkbox"
-                      className="form-checkbox h-5 w-5 text-primary-600 dark:text-blue-500"
-                      onChange={togglePasswordVisibility}
-                    />
-                  </div>
-
-                  {loader ? (
-                    <div className="mt-6">
-                      <Loader />
-                    </div>
-                  ) : (
-                    <button
-                      type="submit"
-                      className="w-full px-4 py-2 mt-4 text-base font-semibold text-center text-white transition duration-200 ease-in bg-gray-900 rounded-lg shadow-md focus:ring-gray-500 focus:ring-offset-gray-200 focus:outline-none focus:ring-2 hover:bg-gray-700"
-                    >
-                      Register
-                    </button>
-                  )}
-
-                  {error && (
-                    <div className="text-red-500 mt-2 text-sm text-center">
-                      {error}
-                    </div>
-                  )}
-
-                  {success && (
-                    <div className="text-green-500 mt-2 text-sm text-center">
-                      {success}
-                    </div>
-                  )}
-                </>
+                </div>
               )}
-            </form>
-            <div className="flex items-center justify-center mt-4 space-x-4">
-              <Link
-                to="/"
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:underline"
+
+              {error ? (
+                <div className="text-red-500 text-sm text-center  ">
+                  {error}
+                </div>
+              ) : null}
+              {success ? (
+                <div className="text-green-500 text-sm text-center  ">
+                  {success}
+                </div>
+              ) : null}
+
+              <button
+                type="submit"
+                className="w-full text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Back to home
+                {loader ? <Loader height={5} width={5} /> : "Register"}
+              </button>
+
+              <Link
+                to="/login"
+                className="flex flex-wrap mt-3 justify-center cursor-pointer text-white"
+              >
+                <div>
+                  <small>Login</small>
+                </div>
               </Link>
-            </div>
+            </form>
           </div>
         </div>
       </section>
     </>
   );
 }
-
 export default RegisterByAdmin;

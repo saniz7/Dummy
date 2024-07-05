@@ -7,6 +7,7 @@ const {
   Login,
   registerPatient,
   updatePatient,
+  changePassword,
   register,
   getUserDetails,
   getUserDetailSelf,
@@ -23,8 +24,9 @@ router
   .post(isAuthenticatedUser, authorizeRoles("Admin"), register);
 // router.route('/register').post(register);
 router.route("/register-patient").post(registerPatient);
-// router.route('/update-patient').post(updatePatient);
+// router.route("/update-patient").post(updatePatient);
 router.route("/users/login").post(Login);
+router.route("/changepassword").put(changePassword);
 
 router.route("/get-user-detail").get(isAuthenticatedUser, getUserDetails);
 router.route("/get-user-detail-self").get(getUserDetailSelf);

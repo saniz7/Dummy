@@ -1,4 +1,5 @@
 const User = require("../../Model/Users");
+const bcrypt = require("bcryptjs");
 const constants = require("../../config/constants.json");
 const log4js = require("log4js");
 const logger = log4js.getLogger("BasicNetwork");
@@ -169,6 +170,7 @@ exports.registerPatient = async (req, res, next) => {
   // wallet
   let response = await helper.getRegisteredUser(username, orgName, true);
 
+  args.unshift(username);
   args.unshift(userId);
 
   logger.debug("args: ", args);
@@ -224,6 +226,39 @@ exports.registerPatient = async (req, res, next) => {
     res.json({ success: false, message: response });
   }
 };
+
+exports.changePassword = async (req, res) => {
+  const { userName, oldPassword, newPassword } = req.body;
+
+  try {
+    // Find the user by userName
+    const user = await User.findOne({ userName });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Compare old password
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid old password" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 exports.updatePatient = async (req, res, next) => {
   const args = req.body.args || [];
   const username = req.body.username || "";
@@ -409,6 +444,7 @@ exports.getUserDetails = async (req, res, next) => {
           const userDetails = await User.findOne({ userId: item }).then(
             async (accessResult) => {
               console.log("userDetails: ", accessResult);
+              console.log("userDetailsName: ", accessResult.userName);
 
               // fetch query
               let fcn;

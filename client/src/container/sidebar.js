@@ -33,7 +33,13 @@ const Sidebar = () => {
     {
       name: "Health Records",
       icon: <FaFileMedical />,
-      link: "/health-records",
+      link: "/health-records-category",
+      blocked: false,
+    },
+    {
+      name: "Lab Records",
+      icon: <FaFileMedical />,
+      link: "/lab-records",
       blocked: false,
     },
   ];
@@ -51,7 +57,7 @@ const Sidebar = () => {
     {
       name: "Patient Records",
       icon: <FaFileMedical />,
-      link: "/patient-records",
+      link: "/paitient-records",
       blocked: false,
     },
   ];
@@ -60,7 +66,7 @@ const Sidebar = () => {
     {
       name: "Patient Records",
       icon: <FaFileMedical />,
-      link: "/patient-records",
+      link: "/paitient-records",
       blocked: false,
     },
   ];

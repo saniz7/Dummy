@@ -3,13 +3,13 @@ import Input from "../../common/input";
 import Loader from "../../common/loader";
 import paitientService from "../../services/patientService";
 
-function AddReports() {
+function AddReports({ patientId, recordId }) {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [patientId, setPatientId] = useState("");
-  const [recordId, setRecordId] = useState("");
+  const [pId, setPId] = useState(patientId);
+  const [rId, setRId] = useState(recordId);
   const [medicines, setMedicines] = useState([]);
   const [labTests, setLabTests] = useState([]);
   const [diagnosis, setDiagnosis] = useState("");
@@ -102,16 +102,16 @@ function AddReports() {
 
     try {
       const res = await paitientService.postLabReport(postData);
-      if(res.data.success){
-            setSuccess("Report added successfully!");
-            setLoader(false);
-            setError("");
-          console.log("response data");
-          console.log(res.data);
-          return;
+      if (res.data.success) {
+        setSuccess("Report added successfully!");
+        setLoader(false);
+        setError("");
+        console.log("response data");
+        console.log(res.data);
+        return;
       }
     } catch (error) {
-        console.log("error");
+      console.log("error");
     }
 
     // console.log("username: ", username);
@@ -146,7 +146,7 @@ function AddReports() {
 
   return (
     <>
-      <section className="bg-gray-50 dark:bg-gray-900 min-h-[93vh] py-10">
+      <section className="bg-gray-50 dark:bg-gray-900 py-10 rounded-lg">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0">
           <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
             <h2 className="mb-1 text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -156,24 +156,25 @@ function AddReports() {
               className="mt-4 space-y-4 lg:mt-5 md:space-y-5"
               onSubmit={(e) => handleSubmit(e)}
             >
-              <Input
-                label="Patient Id"
-                type="number"
-                id="patientid"
-                required
-                value={patientId}
-                onChange={setPatientId}
-              />
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Patient Id"
+                  type="number"
+                  id="patientid"
+                  required
+                  value={pId}
+                  onChange={setPId}
+                />
 
-              <Input
-                label="Record Id"
-                type="number"
-                id="recordid"
-                required
-                value={recordId}
-                onChange={setRecordId}
-              />
-
+                <Input
+                  label="Record Id"
+                  type="number"
+                  id="recordid"
+                  required
+                  value={rId}
+                  onChange={setRId}
+                />
+              </div>
               <div
                 className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded"
                 onClick={handleLabButtonClick}

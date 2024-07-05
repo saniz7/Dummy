@@ -88,7 +88,8 @@ const invokeTransaction = async (
         args[2],
         args[3],
         args[4],
-        args[5]
+        args[5],
+        args[6]
       );
       if (!result) {
         throw new Error("Transaction result is undefined");
@@ -179,7 +180,12 @@ const invokeTransaction = async (
         JSON.stringify(args[4]),
         JSON.stringify(args[5]),
         args[6],
-        args[7]
+        args[7],
+        args[8],
+        args[9],
+        args[10],
+        args[11],
+        args[12]
       ); // Include args[7] for department
       message = `Successfully added the prescription record to the ledger with id ${args[0]}`;
     } else if (fcn === "medicineDispensed") {

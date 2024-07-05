@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 
-const PatientCategoryPage = () => {
+const PatientDetailCategory = () => {
   const departments = [
     "cardiology",
     "dermatology",
@@ -36,7 +36,7 @@ const PatientCategoryPage = () => {
       {departments.map((department, index) => (
         <Link
           key={index}
-          to={`/patient-details/${department}/${patientId}`}
+          to={`/health-records/${department}`}
           style={{ textDecoration: "none" }}
         >
           <span className="scale-90 md:scale-100 border-2 rounded-3xl flex flex-col justify-center sm:mt-10 mx-5 md:mx-5 items-center border-blue-100 p-10 text-xl hover:border-blue-200 cursor-pointer hover:bg-blue-50 transition delay-100 hover:scale-90 md:hover:scale-110">
@@ -48,4 +48,4 @@ const PatientCategoryPage = () => {
   );
 };
 
-export default PatientCategoryPage;
+export default PatientDetailCategory;

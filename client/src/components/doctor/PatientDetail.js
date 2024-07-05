@@ -1,5 +1,3 @@
-// PatientDetails.js
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../common/loader";
@@ -7,7 +5,8 @@ import patientService from "../../services/patientService";
 
 function PatientDetails() {
   const { patientId } = useParams();
-  console.log(patientId);
+  const { category } = useParams();
+  console.log(category);
   const [loader, setLoader] = useState(true);
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -42,27 +41,46 @@ function PatientDetails() {
       {loader ? (
         <Loader />
       ) : prescriptions.length > 0 ? (
-        <div className="overflow-hidden border border-gray-200 rounded-lg mb-8">
+        <div className="overflow-x-auto border border-gray-200 rounded-lg mb-8">
           <div className="px-4 py-5 sm:px-6">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    Patient ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Record ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Doctor ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    Doctor Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    Weight
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    Height
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    Temperature
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    Blood Pressure
+                  </th>
+
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Diagnosis
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Medicines
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Lab Tests
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Created At
                   </th>
                 </tr>
@@ -71,52 +89,73 @@ function PatientDetails() {
                 {prescriptions.map((prescription, index) => (
                   <React.Fragment key={index}>
                     {prescription.medicalRecords.map((record, idx) => {
-                      console.log(record.medicines);
-                      let med;
-                      let medd;
-                      let meddd;
-                      let lab;
-                      let labb;
-                      let labbb;
-                      med = JSON.parse(record.medicines);
-                      medd = JSON.parse(med);
-                      meddd = JSON.parse(medd);
-                      lab = JSON.parse(record.labTests);
-                      labb = JSON.parse(lab);
-                      labbb = JSON.parse(labb);
-                      return (
-                        <tr key={`${index}-${idx}`}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.recordId}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.doctorId}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.diagnosis}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <ul className="divide-y divide-gray-200">
-                              {meddd.map((medicine, index) => (
-                                <li key={index}>
-                                  {`Name: ${medicine.name}, Dose: ${medicine.dose}`}
-                                </li>
-                              ))}{" "}
-                            </ul>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <ul className="divide-y divide-gray-200">
-                              {labbb.map((medicine, index) => (
-                                <li key={index}>{`Name: ${medicine.name}`}</li>
-                              ))}{" "}
-                            </ul>
-                          </td>
-                          {/* Add code for rendering lab tests if needed */}
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {new Date(record.createdAt).toLocaleDateString()}
-                          </td>
-                        </tr>
-                      );
+                      if (
+                        record.department === category &&
+                        record.patientId === patientId
+                      ) {
+                        console.log(record.labTests);
+                        const meddd = JSON.parse(
+                          JSON.parse(JSON.parse(record.medicines))
+                        );
+                        const labbb = JSON.parse(
+                          JSON.parse(JSON.parse(record.labTests))
+                        );
+
+                        return (
+                          <tr key={`${index}-${idx}`}>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.patientId}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.recordId}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.doctorId}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.name}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.weight} kg
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.height} cm
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.temp}&deg;C
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.bp} hg
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {record.diagnosis}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              <ul className="divide-y divide-gray-200">
+                                {meddd.map((medicine, index) => (
+                                  <li key={index}>
+                                    {`Name: ${medicine.name}, Dose: ${medicine.dose}`}
+                                  </li>
+                                ))}
+                              </ul>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              <ul className="divide-y divide-gray-200">
+                                {labbb.map((medicine, index) => (
+                                  <li
+                                    key={index}
+                                  >{`Name: ${medicine.name}`}</li>
+                                ))}
+                              </ul>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                              {new Date(record.createdAt).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        );
+                      } else {
+                        return null; // If record.department does not match category, return null or handle as needed
+                      }
                     })}
                   </React.Fragment>
                 ))}

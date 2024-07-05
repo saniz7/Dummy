@@ -23,6 +23,7 @@ function Login() {
 
       console.log(res);
       if (res.success) {
+        localStorage.setItem("user", res.userName);
         setLoader(false);
         navigate("/dashboard");
       } else {
