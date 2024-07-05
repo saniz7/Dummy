@@ -101,7 +101,7 @@ function Dashboard() {
     {
       name: "Patient Records",
       imgSrc: Canteen,
-      link: "/patient-records",
+      link: "/paitient-records",
       blocked: false,
     },
   ];
@@ -132,6 +132,11 @@ function Dashboard() {
       name: "Doctor List",
       imgSrc: Canteen,
       link: "/doctor-list",
+      blocked: false,
+    },
+    {
+      name: "Lab List",
+      link: "/lab-list",
       blocked: false,
     },
   ];

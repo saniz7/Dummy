@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loader from "../../common/loader";
 import patientService from "../../services/patientService";
 
@@ -83,6 +83,9 @@ function PatientDetails() {
                   <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
                     Created At
                   </th>
+                  <th className="px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider min-w-0">
+                    View Lab Record
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -150,6 +153,11 @@ function PatientDetails() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                               {new Date(record.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                              <Link to={`/lab-records-all/${record.patientId}`}>
+                                View Lab Record
+                              </Link>
                             </td>
                           </tr>
                         );

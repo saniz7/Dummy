@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Input from "../../common/input";
 import Loader from "../../common/loader";
-import paitientService from "../../services/patientService";
+import patientService from "../../services/patientService";
 
 function AddReports({ patientId, recordId }) {
   const [loader, setLoader] = useState(false);
@@ -13,7 +13,7 @@ function AddReports({ patientId, recordId }) {
   const [medicines, setMedicines] = useState([]);
   const [labTests, setLabTests] = useState([]);
   const [diagnosis, setDiagnosis] = useState("");
-  const [labBill, setLabBill] = useState([]);
+  const [labBill, setLabBill] = useState("");
 
   const [inputFields, setInputFields] = useState([]);
   const [inputLabFields, setInputLabFields] = useState([]);
@@ -28,8 +28,7 @@ function AddReports({ patientId, recordId }) {
       comment: "",
     };
     console.log("inputFields: ", inputFields);
-    medicines.push(newMedicineData);
-    setMedicines(medicines);
+    setMedicines([...medicines, newMedicineData]);
     console.log("medicines: ", medicines);
   };
 
@@ -45,8 +44,7 @@ function AddReports({ patientId, recordId }) {
       },
     };
     console.log("inputlabfields: ", inputLabFields);
-    labTests.push(newLabTestData);
-    setMedicines(labTests);
+    setLabTests([...labTests, newLabTestData]);
     console.log("labtests: ", labTests);
   };
 
@@ -60,14 +58,24 @@ function AddReports({ patientId, recordId }) {
     console.log("medicines: ", medicines[index]);
   };
 
-  const handleLabReportChange = (index, report) => {
-    const updatedMedicines = [...medicines];
-    updatedMedicines[index] = {
-      ...updatedMedicines[index],
-      labReport: { report: report, dateOfReport: new Date() },
+  const handleLabTestChange = (index, key, value) => {
+    const updatedLabTests = [...labTests];
+    updatedLabTests[index] = {
+      ...updatedLabTests[index],
+      [key]: value,
     };
-    setMedicines(updatedMedicines);
-    console.log("dose: ", medicines[index]);
+    setLabTests(updatedLabTests);
+    console.log("lab tests: ", labTests[index]);
+  };
+
+  const handleLabReportChange = (index, report) => {
+    const updatedLabTests = [...labTests];
+    updatedLabTests[index] = {
+      ...updatedLabTests[index],
+      labReport: { ...updatedLabTests[index].labReport, report: report },
+    };
+    setLabTests(updatedLabTests);
+    console.log("lab tests: ", labTests[index]);
   };
 
   const handleInputChange = (index, value) => {
@@ -75,7 +83,9 @@ function AddReports({ patientId, recordId }) {
     newInputFields[index] = value;
     setInputFields(newInputFields);
   };
-
+  const handlebill = (e) => {
+    setLabBill(e.target.value);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -88,20 +98,16 @@ function AddReports({ patientId, recordId }) {
     console.log("patientId: ", patientId);
     console.log("diagnosis: ", diagnosis);
 
-    // const args = [
-    //     diagnosis, medicines, labTests, patientId
-    // ]
-
     const postData = {
       recordId: recordId,
       patientId: patientId,
-      labReport: medicines,
+      labReport: labTests,
       labBill: labBill,
       username: "lab1",
     };
 
     try {
-      const res = await paitientService.postLabReport(postData);
+      const res = await patientService.postLabReport(postData);
       if (res.data.success) {
         setSuccess("Report added successfully!");
         setLoader(false);
@@ -112,36 +118,9 @@ function AddReports({ patientId, recordId }) {
       }
     } catch (error) {
       console.log("error");
+      setLoader(false);
+      setError("Something went wrong!");
     }
-
-    // console.log("username: ", username);
-
-    // setLoader(true);
-    // setError("");
-    // setSuccess("");
-
-    // try {
-    //     const res = await registerService.register({ username, orgName: "patient", password });
-    //     // setLoader(false);
-
-    //     if (res.data.success === true) {
-    //         await handleLedgerRegistration(res.data.userId);
-    //         return;
-    //     }
-    //     else {
-    //         setError("Something went wrong!");
-    //         return;
-    //     }
-    // } catch (error) {
-    //     setLoader(false);
-
-    //     if (error.response) {
-    //         setError(error.response.data.message);
-    //     } else {
-    //         setError("Something went wrong!");
-    //     }
-    //     return;
-    // }
   };
 
   return (
@@ -183,13 +162,7 @@ function AddReports({ patientId, recordId }) {
               </div>
               {inputLabFields.map((value, index) => (
                 <div key={index} className="mb-4">
-                  <div className="mt-3">
-                    <label
-                      htmlFor={"labTest"}
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      {"Test Name"}
-                    </label>
+                  <div className="mt-3 grid grid-cols-2 gap-3">
                     <input
                       type={"text"}
                       name={"labTest"}
@@ -197,12 +170,11 @@ function AddReports({ patientId, recordId }) {
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                       placeholder={"Test Name"}
                       required
-                      value={medicines[index].name}
+                      value={labTests[index]?.name || ""}
                       onChange={(e) =>
-                        handleMedicineNameChange(index, e.target.value)
+                        handleLabTestChange(index, "name", e.target.value)
                       }
                     />
-                    <br></br>
                     <input
                       type={"text"}
                       name={"report"}
@@ -210,46 +182,34 @@ function AddReports({ patientId, recordId }) {
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                       placeholder={"Report Status"}
                       required
-                      value={medicines[index].labReport.report}
+                      value={labTests[index]?.labReport?.report || ""}
                       onChange={(e) =>
                         handleLabReportChange(index, e.target.value)
                       }
                     />
                   </div>
-
-                  {/* <Input
-                                        label="Lab Test"
-                                        type="text"
-                                        id="labtest"
-                                        required
-                                        value={confirmPassword}
-                                        onChange={setConfirmPassword}
-                                    /> */}
-
                   <br></br>
                   <hr></hr>
                 </div>
               ))}
 
               <Input
-                label="Total Bill"
-                type="number"
+                label="Report Status"
+                type="text"
                 id="medicineBill"
                 required
                 value={labBill}
                 onChange={setLabBill}
               />
 
-              {error ? (
-                <div className="text-red-500 text-sm text-center  ">
-                  {error}
-                </div>
-              ) : null}
-              {success ? (
-                <div className="text-green-500 text-sm text-center  ">
+              {error && (
+                <div className="text-red-500 text-sm text-center">{error}</div>
+              )}
+              {success && (
+                <div className="text-green-500 text-sm text-center">
                   {success}
                 </div>
-              ) : null}
+              )}
 
               <button
                 type="submit"
@@ -264,4 +224,5 @@ function AddReports({ patientId, recordId }) {
     </>
   );
 }
+
 export default AddReports;

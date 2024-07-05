@@ -487,12 +487,12 @@ class KVContract extends Contract {
   /////////////////////////////
   // Add Lab Test Report
   /////////////////////////////
-  async addLabTestReport(ctx, recordId, labTestReport, labBill) {
+  async addLabTestReport(ctx, recordId, labTestReport, labBill, createdAt) {
     let record = await this.getPrescriptionRecord(ctx, recordId);
 
     record.labTests = JSON.stringify(labTestReport);
     record.labBill = labBill;
-
+    record.createdAt = createdAt;
     const recordBuffer = Buffer.from(JSON.stringify(record));
     await ctx.stub.putState(recordId, recordBuffer);
 
@@ -510,9 +510,9 @@ class KVContract extends Contract {
     }
 
     const medicalRecord = JSON.parse(buffer.toString());
-    const labRecord = medicalRecord.labTests;
+    // const labRecord = medicalRecord.labTests;
 
-    return labRecord;
+    return medicalRecord;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////

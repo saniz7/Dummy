@@ -211,7 +211,8 @@ const invokeTransaction = async (
         fcn,
         args[0],
         JSON.stringify(args[1]),
-        args[2]
+        args[2],
+        args[3]
       );
       message = `Successfully added the lab report to the ledger with id ${args[0]}`;
     } else if (fcn === "addClaimRequest") {

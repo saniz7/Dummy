@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema({
   department: {
     type: String,
   },
+  NMCnum: {
+    type: Number,
+  },
+  mobile: {
+    type: Number,
+  },
   password: {
     type: String,
     required: [true, "Please Enter Your Password"],

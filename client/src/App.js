@@ -219,6 +219,7 @@ import PatientDetails from "./components/doctor/PatientDetail";
 import PatientCategoryPage from "./components/doctor/PatientCategory";
 import PatientDetailCategory from "./components/doctor/PatientDetailCategory";
 import PatientList from "./components/lab/PatientList";
+import AllLabRecords from "./components/patient/AllLabRecords";
 
 function App() {
   const location = useLocation();
@@ -249,6 +250,8 @@ function App() {
           <Route path="/select-doctor/:id" element={<SelectDoctorpage />} />
           <Route path="/profile" element={<UpdateProfile />} />
           <Route path="/updatePassword" element={<UpdatePassword />} />
+          <Route path="/lab-records/:id" element={<LabRecords />} />
+          <Route path="/lab-records-all/:id" element={<AllLabRecords />} />
 
           {/* Admin */}
           <Route element={<RoleAccess roles={["Admin"]} />}>
@@ -262,7 +265,6 @@ function App() {
           <Route element={<RoleAccess roles={["patient"]} />}>
             <Route path="/select-doctor" element={<DoctorCategoryPage />} />
             <Route path="/select-lab" element={<SelectLab />} />
-            <Route path="/lab-records" element={<LabRecords />} />
             <Route
               path="/health-records-category"
               element={<PatientDetailCategory />}

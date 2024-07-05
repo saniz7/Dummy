@@ -82,6 +82,8 @@ function RegisterByAdmin() {
           username: name,
           orgName: org,
           department: department,
+          NMCnumber: NMCnumber,
+          contact: contact,
           password,
           fcn,
         });

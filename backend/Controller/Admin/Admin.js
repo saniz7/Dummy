@@ -18,15 +18,9 @@ function getErrorMessage(field) {
 }
 
 exports.register = async (req, res, next) => {
-  const args = req.body.args;
-  const username = req.body.username;
-  const orgName = req.body.orgName;
-  const password = req.body.password;
-  const department = req.body.department;
+  const { args, username, orgName, password, department, fcn } = req.body;
+  let { NMCnumber, contact: mobile } = req.body;
   const transient = {};
-  const fcn = req.body.fcn;
-
-  // check admin status
 
   if (!username) {
     res.json(getErrorMessage("'username'"));
@@ -37,21 +31,36 @@ exports.register = async (req, res, next) => {
     return;
   }
 
-  // if (user1) {
-  //     res.status(400).json({
-  //         success: false,
-  //         message: "User Already Exits"
-  //     });
-  //     return;
-  // }
-
   const user1 = await User.findOne({ userName: username }).select("+password");
   if (user1) {
     res.status(400).json({
       success: false,
-      message: "User Already Exits",
+      message: "User Already Exists",
     });
     return;
+  }
+
+  if (orgName === "doctor") {
+    const existingNMCnumber = await User.findOne({ NMCnum: NMCnumber });
+    if (existingNMCnumber) {
+      res.status(400).json({
+        success: false,
+        message: "NMC number already exists",
+      });
+      return;
+    }
+
+    const existingMobile = await User.findOne({ mobile });
+    if (existingMobile) {
+      res.status(400).json({
+        success: false,
+        message: "Mobile number already exists",
+      });
+      return;
+    }
+  } else {
+    NMCnumber = null; // Clear NMCnumber if orgName is not "doctor"
+    mobile = null; // Clear mobile if orgName is not "doctor"
   }
 
   while (true) {
@@ -100,6 +109,8 @@ exports.register = async (req, res, next) => {
       password,
       userId,
       department,
+      NMCnum: NMCnumber,
+      mobile,
     });
     req.session.uid = user.userId;
     req.session.role = user.orgName;
@@ -727,3 +738,56 @@ exports.deleteLab = async (req, res, next) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+exports.getAllLabRecords = async (req, res, next) => {
+  try {
+    console.log("Fetching all lab records");
+
+    // Fetch all records from the database
+    const labRecords = await Record.find({});
+
+    if (labRecords.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No lab records found" });
+    }
+
+    console.log("labRecords: ", labRecords);
+
+    // Retrieve detailed data for each lab record
+    const labRecordsData = await Promise.all(
+      labRecords.map(async (record) => {
+        // Assuming you have a function to fetch lab record details from ledger
+        const labRecordDetails = await fetchLabRecordDetails(record.RecordId);
+
+        return {
+          record,
+          labRecordDetails,
+          // Add other fields as needed
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      labRecords: labRecordsData,
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Error fetching lab records list: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// Example function to fetch lab record details from a ledger or database
+async function fetchLabRecordDetails(recordId) {
+  // Implement your logic to fetch details using query.query or any other method
+  const labRecordDetails = await query.query(
+    "main-channel1",
+    "chaincode1",
+    [recordId],
+    "getLabTestReport"
+    // Add additional parameters as needed
+  );
+
+  return labRecordDetails;
+}

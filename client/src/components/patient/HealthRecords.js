@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loader from "../../common/loader";
 import AutoService from "../../services/AutoServices";
 import paitientService from "../../services/patientService";
@@ -181,6 +181,9 @@ function HealthRecords(props) {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Department
                             </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              View Lab Record
+                            </th>
                           </tr>
                         </thead>
                         {data.map((record, index) => {
@@ -260,6 +263,13 @@ function HealthRecords(props) {
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     {record.department}
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <Link
+                                      to={`/lab-records/${record.recordId}`}
+                                    >
+                                      View Lab Record
+                                    </Link>
                                   </td>
                                 </tr>
                               </tbody>

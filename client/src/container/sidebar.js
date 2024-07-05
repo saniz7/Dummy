@@ -36,12 +36,7 @@ const Sidebar = () => {
       link: "/health-records-category",
       blocked: false,
     },
-    {
-      name: "Lab Records",
-      icon: <FaFileMedical />,
-      link: "/lab-records",
-      blocked: false,
-    },
+
   ];
 
   const doctorDashboard = [

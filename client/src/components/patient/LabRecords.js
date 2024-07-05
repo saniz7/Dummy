@@ -21,49 +21,64 @@ function LabRecords(props) {
     getLabRecords();
   }, [id]);
 
-  // Filter records that are objects
-  const filteredData = data.filter((record) => typeof record === "object");
   return (
     <>
-      {filteredData.length === 0 ? (
-        <div className="text-lg">No Records Found</div>
-      ) : (
-        <div className="flex justify-center">
-          <div className="flex flex-col">
-            <h2 className="font-bold text-lg mb-2 text-center mt-10">
-              Lab Record Details
-            </h2>
-            <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-200 mt-8">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Lab Tests</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredData.map((record, index) => (
-                        <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {record[0].name}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <ul className="list-disc list-inside">
-                              {record[0].labReport.report}
-                            </ul>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+      <div className="flex justify-center">
+        <div className="flex flex-col">
+          <h2 className="font-bold text-lg mb-2 text-center mt-10">
+            Lab Record Details
+          </h2>
+          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+              <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-200 mt-8">
+                  <thead>
+                    <tr>
+                      <th>Record ID</th>
+                      <th>Doctor Name</th>
+                      <th>Lab Tests</th>
+                      <th>Params</th>
+                      <th>Lab Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {data.map((value, index) => {
+                      let lab = [];
+                      let labb = [];
+                      lab = JSON.parse(value.labTests);
+                      labb = JSON.parse(lab);
+                      console.log(labb);
+                      if (id === value.recordId) {
+                        return (
+                          <tr key={index}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                              {value.recordId}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {value.name}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {labb[0]?.name ? labb[0]?.name : "No Lab Tests"}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {labb[0]?.labReport?.report
+                                ? labb[0]?.labReport?.report
+                                : "No Lab Tests"}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {value.labBill}
+                            </td>
+                          </tr>
+                        );
+                      }
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
