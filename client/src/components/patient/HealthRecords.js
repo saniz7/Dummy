@@ -268,7 +268,9 @@ function HealthRecords(props) {
                                     <Link
                                       to={`/lab-records/${record.recordId}`}
                                     >
-                                      View Lab Record
+                                      <button className="bg-gray-800 text-white p-2 hover:cursor-pointer rounded-full">
+                                        View Lab Record
+                                      </button>
                                     </Link>
                                   </td>
                                 </tr>

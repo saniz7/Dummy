@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TiThMenu } from "react-icons/ti";
 import { Link } from "react-router-dom";
-import authService from "../../services/authService";
 
 function Table4({
   tableName,
@@ -11,10 +10,14 @@ function Table4({
   patientIdButtonClick,
 }) {
   const updatedColumnNames = [...columnNames, "Action"];
-  const [show, setShow] = useState(false);
-
-  const handleClick = () => {
-    setShow(!show);
+  const [show, setShow] = useState({});
+  const [ID, setID] = useState("");
+  const handleClick = (patientId) => {
+    setID(patientId);
+    setShow((prevState) => ({
+      ...prevState,
+      [patientId]: !prevState[patientId],
+    }));
   };
 
   return (
@@ -25,8 +28,8 @@ function Table4({
           <div className="flex flex-col relative">
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className=" shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-200 ">
+                <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         {updatedColumnNames.map((column, index) => (
@@ -61,19 +64,23 @@ function Table4({
                                     {key === "name" ? (
                                       user
                                     ) : key === "Action" ? (
-                                      <div className=" flex justify-end items-end">
-                                        {show && (
-                                          <div className="absolute flex flex-col gap-2 top-12 right-[80px] bg-gray-300 text-black p-2 rounded-lg z-10">
+                                      <div className="flex justify-end items-end relative">
+                                        {show[item.patientId] && (
+                                          <div className="absolute flex flex-col gap-2 top-1 right-3 bg-gray-300 text-black p-2 rounded-lg z-10">
                                             <Link
                                               className="hover:cursor-pointer"
-                                              to={`/view-paitient-records/${item.patientId}`}
+                                              to={`/view-paitient-records/${ID}`}
                                             >
                                               View Report
                                             </Link>
                                           </div>
                                         )}
                                         <div className="flex justify-end items-end cursor-pointer">
-                                          <TiThMenu onClick={handleClick} />
+                                          <TiThMenu
+                                            onClick={() =>
+                                              handleClick(item.patientId)
+                                            }
+                                          />
                                         </div>
                                       </div>
                                     ) : (

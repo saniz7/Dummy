@@ -5,12 +5,12 @@ import patientService from "../../services/patientService";
 import AddReports from "./AddReports";
 
 function Paitients() {
-  const { patientId } = useParams();
+  const { id } = useParams();
+
   const [loader, setLoader] = useState(true);
   const [prescriptions, setPrescriptions] = useState([]);
   const [showPopover, setShowPopover] = useState(false);
   const [popoverData, setPopoverData] = useState({});
-
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
@@ -31,8 +31,8 @@ function Paitients() {
     };
 
     fetchPatientDetails();
-  }, [patientId]);
-
+  }, [id]);
+  console.log(id);
   const handleAddReportClick = (record) => {
     setPopoverData(record);
     setShowPopover(true);
@@ -42,7 +42,7 @@ function Paitients() {
     setShowPopover(false);
     setPopoverData({});
   };
-
+  console.log(prescriptions);
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Patient Details</h2>
@@ -82,62 +82,71 @@ function Paitients() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {prescriptions.map((prescription, index) => (
-                  <React.Fragment key={index}>
-                    {prescription.medicalRecords.map((record, idx) => {
-                      const meddd = JSON.parse(
-                        JSON.parse(JSON.parse(record.medicines))
-                      );
-                      const labbb = JSON.parse(
-                        JSON.parse(JSON.parse(record.labTests))
-                      );
+                {prescriptions.map((prescription, index) => {
+                  console.log(prescription.patientId);
+                  if (prescription.patientId === id) {
+                    return (
+                      <React.Fragment key={index}>
+                        {prescription.medicalRecords.map((record, idx) => {
+                          const meddd = JSON.parse(
+                            JSON.parse(JSON.parse(record.medicines))
+                          );
+                          const labbb = JSON.parse(
+                            JSON.parse(JSON.parse(record.labTests))
+                          );
 
-                      return (
-                        <tr key={`${index}-${idx}`}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.patientId}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.recordId}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.doctorId}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {record.diagnosis}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <ul className="divide-y divide-gray-200">
-                              {meddd.map((medicine, index) => (
-                                <li key={index}>
-                                  {`Name: ${medicine.name}, Dose: ${medicine.dose}`}
-                                </li>
-                              ))}
-                            </ul>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <ul className="divide-y divide-gray-200">
-                              {labbb.map((medicine, index) => (
-                                <li key={index}>{`Name: ${medicine.name}`}</li>
-                              ))}
-                            </ul>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {new Date(record.createdAt).toLocaleDateString()}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <button
-                              className="hover:cursor-pointer"
-                              onClick={() => handleAddReportClick(record)}
-                            >
-                              Add Report
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </React.Fragment>
-                ))}
+                          return (
+                            <tr key={`${index}-${idx}`}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {record.patientId}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {record.recordId}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {record.doctorId}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {record.diagnosis}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <ul className="divide-y divide-gray-200">
+                                  {meddd.map((medicine, index) => (
+                                    <li key={index}>
+                                      {`Name: ${medicine.name}, Dose: ${medicine.dose}`}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <ul className="divide-y divide-gray-200">
+                                  {labbb.map((medicine, index) => (
+                                    <li
+                                      key={index}
+                                    >{`Name: ${medicine.name}`}</li>
+                                  ))}
+                                </ul>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {new Date(
+                                  record.createdAt
+                                ).toLocaleDateString()}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <button
+                                  className="hover:cursor-pointer bg-black text-white rounded-full p-2"
+                                  onClick={() => handleAddReportClick(record)}
+                                >
+                                  Add Report
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </React.Fragment>
+                    );
+                  }
+                })}
               </tbody>
             </table>
           </div>

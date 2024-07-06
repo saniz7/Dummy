@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../common/loader";
 import authService from "../../services/authService";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Input from "../../common/input";
 
 function Login() {
   const [loader, setLoader] = useState(false);
@@ -9,6 +11,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [org, setOrg] = useState("patient");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -38,7 +41,9 @@ function Login() {
       }
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900 min-h-[93vh]">
@@ -70,23 +75,21 @@ function Login() {
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
+              <div className="relative ">
+                <Input
+                  label="Password"
+                  type={passwordVisible ? "text" : "password"}
                   id="password"
-                  placeholder="Password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
                   required
+                  value={password}
+                  onChange={setPassword}
                 />
+                <div
+                  className="absolute inset-y-0 top-6 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </div>
               </div>
 
               <div className="relative">

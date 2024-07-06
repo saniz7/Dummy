@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Input from "../../common/input";
 import Loader from "../../common/loader";
-import paitientService from "../../services/patientService";
+import patientService from "../../services/patientService";
 import { useLocation } from "react-router-dom";
 
 function AddPatientRecords() {
@@ -11,7 +10,6 @@ function AddPatientRecords() {
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [patientId, setPatientId] = useState("");
   const [medicines, setMedicines] = useState([]);
   const [labTests, setLabTests] = useState([]);
   const [diagnosis, setDiagnosis] = useState("");
@@ -54,17 +52,37 @@ function AddPatientRecords() {
   const handleDiagnosisChange = (e) => {
     setDiagnosis(e.target.value);
   };
-  const handleweightChange = (e) => {
-    setWeight(e.target.value);
+
+  const handleWeightChange = (e) => {
+    const newWeight = e.target.value;
+    if (newWeight === "" || (newWeight >= 0 && newWeight <= 300)) {
+      setWeight(newWeight);
+    } else {
+      setError("Weight cannot be more than 300 kg");
+    }
   };
-  const handleheightChange = (e) => {
-    setHeight(e.target.value);
+
+  const handleHeightChange = (e) => {
+    const newHeight = e.target.value;
+    if (newHeight === "" || (newHeight >= 0 && newHeight <= 250)) {
+      setHeight(newHeight);
+    } else {
+      setError("Height cannot be more than 250 cm");
+    }
   };
-  const handletempChange = (e) => {
+
+  const handleTempChange = (e) => {
     setTemp(e.target.value);
   };
-  const handlebpChange = (e) => {
-    setBP(e.target.value);
+
+  const handleBPChange = (e) => {
+    const newBP = e.target.value;
+    // const bpPattern = /^\d{2,3}\\\d{2,3}$/;
+    // if (bpPattern.test(newBP)) {
+    setBP(newBP);
+    // } else {
+    // setError("Blood Pressure should be in format 120/80");
+    // }
   };
 
   const handleSubmit = async (e) => {
@@ -87,12 +105,11 @@ function AddPatientRecords() {
     };
 
     try {
-      const res = await paitientService.postPrescription(prescriptionData);
+      const res = await patientService.postPrescription(prescriptionData);
       if (res.data.success) {
         setSuccess("Prescription added successfully!");
         setError("");
         setLoader(false);
-        setPatientId("");
         setMedicines([]);
         setLabTests([]);
         setDiagnosis("");
@@ -127,7 +144,7 @@ function AddPatientRecords() {
                   htmlFor={"weight"}
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Weight
+                  Weight (kg)
                 </label>
                 <input
                   type="text"
@@ -137,7 +154,7 @@ function AddPatientRecords() {
                   placeholder="Weight"
                   required
                   value={weight}
-                  onChange={handleweightChange}
+                  onChange={handleWeightChange}
                 />
               </div>
               <div className="mt-3">
@@ -145,7 +162,7 @@ function AddPatientRecords() {
                   htmlFor={"height"}
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Height
+                  Height (cm)
                 </label>
                 <input
                   type="text"
@@ -155,7 +172,7 @@ function AddPatientRecords() {
                   placeholder="Height"
                   required
                   value={height}
-                  onChange={handleheightChange}
+                  onChange={handleHeightChange}
                 />
               </div>
             </div>
@@ -165,7 +182,7 @@ function AddPatientRecords() {
                   htmlFor={"temperature"}
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Temperature
+                  Temperature (°C)
                 </label>
                 <input
                   type="text"
@@ -175,7 +192,7 @@ function AddPatientRecords() {
                   placeholder="Temperature"
                   required
                   value={temp}
-                  onChange={handletempChange}
+                  onChange={handleTempChange}
                 />
               </div>
               <div className="">
@@ -183,7 +200,7 @@ function AddPatientRecords() {
                   htmlFor={"bp"}
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Blood Pressure
+                  Blood Pressure (mmHg)
                 </label>
                 <input
                   type="text"
@@ -193,12 +210,12 @@ function AddPatientRecords() {
                   placeholder="Blood Pressure"
                   required
                   value={bp}
-                  onChange={handlebpChange}
+                  onChange={handleBPChange}
                 />
               </div>
             </div>
             <div
-              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded"
+              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded cursor-pointer"
               onClick={handleMedicineButtonClick}
             >
               Add Medicines +
@@ -249,7 +266,7 @@ function AddPatientRecords() {
             ))}
 
             <div
-              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded"
+              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded cursor-pointer"
               onClick={handleLabButtonClick}
             >
               Add Lab Test +
@@ -286,7 +303,7 @@ function AddPatientRecords() {
               >
                 Diagnosis
               </label>
-              <input
+              <textarea
                 type="text"
                 name="diagnosis"
                 id="diagnosis"

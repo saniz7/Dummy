@@ -114,6 +114,7 @@ function AddReports({ patientId, recordId }) {
         setError("");
         console.log("response data");
         console.log(res.data);
+        window.location.href = "/paitient-records";
         return;
       }
     } catch (error) {
