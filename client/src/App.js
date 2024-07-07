@@ -252,6 +252,7 @@ function App() {
           <Route path="/updatePassword" element={<UpdatePassword />} />
           <Route path="/lab-records/:id" element={<LabRecords />} />
           <Route path="/lab-records-all/:id" element={<AllLabRecords />} />
+          <Route path="/patient-records" element={<PaitentsRecords />} />
 
           {/* Admin */}
           <Route element={<RoleAccess roles={["Admin"]} />}>
@@ -273,13 +274,25 @@ function App() {
               path="/health-records/:category"
               element={<HealthRecords />}
             />
-            <Route path="/" element={<HealthRecords />} />
+
+            <Route
+              path="/select-insurance-company"
+              element={<SelectInsuranceCompany />}
+            />
+
+            <Route path="/select-doctor/doctor-data" element={<DoctorData />} />
+            <Route path="/health-records" element={<HealthRecords />} />
+            <Route path="/select-pharmacy" element={<SelectChemist />} />
+            <Route path="/select-pharmacy/lab-data" element={<LabData />} />
+            <Route path="/lab-records" element={<LabRecords />} />
+            <Route path="/pharmacy-records" element={<PharmacyRecords />} />
+
+            <Route path="/insurance-records" element={<InsuranceRecords />} />
           </Route>
 
           {/* Doctor */}
           <Route element={<RoleAccess roles={["doctor"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/patient-records" element={<PaitentsRecords />} />
             <Route
               path="/patient-category/:patientId"
               element={<PatientCategoryPage />}
@@ -314,6 +327,7 @@ function App() {
           {/* Insurance */}
           <Route element={<RoleAccess roles={["insurance"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
+
             <Route path="/latest-requests" element={<ClaimRequests />} />
           </Route>
 
