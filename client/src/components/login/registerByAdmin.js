@@ -180,8 +180,8 @@ function RegisterByAdmin() {
                   >
                     <option value={"doctor"}>Doctor</option>
                     <option value={"lab"}>Lab</option>./
-                    {/* <option value={"pharmacy"}>Pharmacy</option> */}
-                    {/* <option value={"insurance"}>Insurance</option> */}
+                    <option value={"pharmacy"}>Pharmacy</option>
+                    <option value={"insurance"}>Insurance</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-28 pointer-events-none">
                     <svg
