@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import {
-  FaFileMedical,
-  FaFlask,
   FaUserMd,
+  FaFlask,
+  FaFileMedical,
+  FaPills,
+  FaRegBuilding,
+  FaNotesMedical,
+  FaVial,
+  FaBriefcaseMedical,
   FaUsers,
   FaUserPlus,
 } from "react-icons/fa";
@@ -31,12 +36,41 @@ const Sidebar = () => {
       blocked: false,
     },
     {
+      name: "Select Pharmacy",
+      icon: <FaPills />,
+      link: "/select-pharmacy",
+      blocked: false,
+    },
+    {
+      name: "Select Insurance Company",
+      icon: <FaRegBuilding />,
+      link: "/select-insurance-company",
+      blocked: false,
+    },
+    {
       name: "Health Records",
       icon: <FaFileMedical />,
       link: "/health-records-category",
       blocked: false,
     },
-
+    {
+      name: "Pharmacy Records",
+      icon: <FaNotesMedical />,
+      link: "/pharmacy-records",
+      blocked: false,
+    },
+    {
+      name: "Lab Records",
+      icon: <FaVial />,
+      link: "/lab-records",
+      blocked: false,
+    },
+    {
+      name: "Insurance Records",
+      icon: <FaBriefcaseMedical />,
+      link: "/insurance-records",
+      blocked: false,
+    },
   ];
 
   const doctorDashboard = [

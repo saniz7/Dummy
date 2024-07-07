@@ -17,48 +17,48 @@ function Dashboard() {
       link: "/select-doctor",
       blocked: false,
     },
-    // {
-    //   name: "Select Pharmacy",
-    //   imgSrc: Canteen,
-    //   link: "/select-pharmacy",
-    //   blocked: false,
-    // },
+    {
+      name: "Select Pharmacy",
+      imgSrc: Canteen,
+      link: "/select-pharmacy",
+      blocked: false,
+    },
     {
       name: "Select Lab",
       imgSrc: Canteen,
       link: "/select-lab",
       blocked: false,
     },
-    // {
-    //   name: "Select Insurance Company",
-    //   imgSrc: Canteen,
-    //   link: "/select-insurance-company",
-    //   blocked: false,
-    // },
+    {
+      name: "Select Insurance Company",
+      imgSrc: Canteen,
+      link: "/select-insurance-company",
+      blocked: false,
+    },
     {
       name: "Health Records",
       imgSrc: BuyAndSell,
-      link: "/health-records",
+      link: "/health-records-category",
       blocked: false,
     },
-    // {
-    //   name: "Pharmacy Records",
-    //   imgSrc: AutoShare,
-    //   link: "/pharmacy-records",
-    //   blocked: false,
-    // },
-    // {
-    //   name: "Lab Records",
-    //   imgSrc: AutoShare,
-    //   link: "/lab-records",
-    //   blocked: false,
-    // },
-    // {
-    //   name: "Insurance Records",
-    //   imgSrc: AutoShare,
-    //   link: "/insurance-records",
-    //   blocked: false,
-    // }
+    {
+      name: "Pharmacy Records",
+      imgSrc: AutoShare,
+      link: "/pharmacy-records",
+      blocked: false,
+    },
+    {
+      name: "Lab Records",
+      imgSrc: AutoShare,
+      link: "/lab-records",
+      blocked: false,
+    },
+    {
+      name: "Insurance Records",
+      imgSrc: AutoShare,
+      link: "/insurance-records",
+      blocked: false,
+    }
   ];
 
   const doctorDashboard = [
@@ -71,18 +71,18 @@ function Dashboard() {
   ];
 
   const chemistDashboard = [
-    // {
-    //   name: "Registered Patient",
-    //   imgSrc: Canteen,
-    //   link: "/registered-patient",
-    //   blocked: false,
-    // },
-    // {
-    //   name: "Generate Bill",
-    //   imgSrc: Canteen,
-    //   link: "/generate-bill",
-    //   blocked: false,
-    // }
+    {
+      name: "Registered Patient",
+      imgSrc: Canteen,
+      link: "/registered-patient",
+      blocked: false,
+    },
+    {
+      name: "Generate Bill",
+      imgSrc: Canteen,
+      link: "/generate-bill",
+      blocked: false,
+    },
     {
       name: "Patient Records",
       imgSrc: Canteen,
@@ -107,12 +107,12 @@ function Dashboard() {
   ];
 
   const insuranceDashboard = [
-    // {
-    //   name: "Latest Requests",
-    //   imgSrc: Canteen,
-    //   link: "/latest-requests",
-    //   blocked: false,
-    // }
+    {
+      name: "Latest Requests",
+      imgSrc: Canteen,
+      link: "/latest-requests",
+      blocked: false,
+    },
     {
       name: "Patient Records",
       imgSrc: Canteen,
