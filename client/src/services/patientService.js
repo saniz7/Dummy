@@ -46,6 +46,9 @@ function getPharmacyRecords() {
 function getInsuranceRecords() {
   return httpService.get(`/patient-insurance-records`);
 }
+function getMedicineRecord() {
+  return httpService.get(`/get-medicine-record`);
+}
 
 function getUserDetails() {
   return httpService.get("/get-user-detail");
@@ -98,6 +101,7 @@ const paitientService = {
   getPatient,
   getPatientHealthRecords,
   patientExists,
+  getMedicineRecord,
   postInsuranceResponse,
   postLabReport,
 };

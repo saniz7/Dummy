@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import Loader from "../../common/loader";
 import patientService from "../../services/patientService";
 import AddReports from "./AddReports";
+import GenerateBill from "../chemist/GenerateBill";
+import authService from "../../services/authService";
+import ClaimRequest from "../Insurance/ClaimRequest";
 
 function Paitients() {
   const { id } = useParams();
@@ -11,6 +14,7 @@ function Paitients() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [showPopover, setShowPopover] = useState(false);
   const [popoverData, setPopoverData] = useState({});
+
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
@@ -32,7 +36,7 @@ function Paitients() {
 
     fetchPatientDetails();
   }, [id]);
-  console.log(id);
+
   const handleAddReportClick = (record) => {
     setPopoverData(record);
     setShowPopover(true);
@@ -42,41 +46,45 @@ function Paitients() {
     setShowPopover(false);
     setPopoverData({});
   };
-  console.log(prescriptions);
+
+  const userRole = authService.getRole();
+  console.log(userRole);
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold mb-4">Patient Details</h2>
+      <h2 className="text-2xl font-bold mb-4 text-[#023047]">
+        Patient Details
+      </h2>
 
       {loader ? (
         <Loader />
       ) : prescriptions.length > 0 ? (
         <div className="overflow-hidden border border-gray-200 rounded-lg mb-8">
-          <div className="px-4 py-5 sm:px-6">
+          <div className="">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-[#005f73]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Patient ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Record ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Doctor ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Diagnosis
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Medicines
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Lab Tests
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Created At
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Action
                   </th>
                 </tr>
@@ -121,9 +129,9 @@ function Paitients() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 <ul className="divide-y divide-gray-200">
                                   {labbb.map((medicine, index) => (
-                                    <li
-                                      key={index}
-                                    >{`Name: ${medicine.name}`}</li>
+                                    <li key={index}>
+                                      {`Name: ${medicine.name}`}
+                                    </li>
                                   ))}
                                 </ul>
                               </td>
@@ -134,7 +142,7 @@ function Paitients() {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 <button
-                                  className="hover:cursor-pointer bg-black text-white rounded-full p-2"
+                                  className="hover:cursor-pointer bg-[#0a9396] text-white rounded-lg p-2"
                                   onClick={() => handleAddReportClick(record)}
                                 >
                                   Add Report
@@ -156,7 +164,7 @@ function Paitients() {
       )}
 
       {showPopover && (
-        <div className="fixed  inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white relative rounded-lg shadow-lg w-[500px]">
             <button
               className="absolute -top-8 -right-3 m-4 text-white text-6xl"
@@ -164,15 +172,34 @@ function Paitients() {
             >
               &times;
             </button>
-
-            <AddReports
-              patientId={popoverData.patientId}
-              recordId={popoverData.recordId}
-              labTests={JSON.parse(
-                JSON.parse(JSON.parse(popoverData.labTests))
-              )}
-              closePopover={closePopover}
-            />
+            {userRole === "lab" ? (
+              <AddReports
+                patientId={popoverData.patientId}
+                recordId={popoverData.recordId}
+                labTests={JSON.parse(
+                  JSON.parse(JSON.parse(popoverData.labTests))
+                )}
+                closePopover={closePopover}
+              />
+            ) : userRole === "insurance" ? (
+              <ClaimRequest
+                patientId={popoverData.patientId}
+                recordId={popoverData.recordId}
+                labTests={JSON.parse(
+                  JSON.parse(JSON.parse(popoverData.labTests))
+                )}
+                closePopover={closePopover}
+              />
+            ) : (
+              <GenerateBill
+                patientId={popoverData.patientId}
+                recordId={popoverData.recordId}
+                labTests={JSON.parse(
+                  JSON.parse(JSON.parse(popoverData.labTests))
+                )}
+                closePopover={closePopover}
+              />
+            )}
           </div>
         </div>
       )}

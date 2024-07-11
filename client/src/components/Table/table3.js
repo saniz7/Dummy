@@ -67,15 +67,15 @@ function Table3({
                                     {key === "Action" ? (
                                       <div className="flex justify-end items-end ">
                                         {dropdownVisible[item.patientId] && (
-                                          <div className="absolute flex flex-col gap-2 top-0 right-0 bg-gray-300 text-black p-2 rounded-lg z-10">
+                                          <div className="absolute flex flex-col gap-2 top-14 -right-10 bg-gray-300 text-black p-3 rounded-lg z-10">
                                             <Link
                                               key={index}
-                                              className="hover:cursor-pointer bg-gray-800 text-white p-2 rounded-full"
+                                              className="hover:cursor-pointer "
                                               to={`/add-patient-records/${ID}`}
                                             >
                                               Add Report
                                             </Link>
-
+                                            <hr className="bg-black h-1"></hr>
                                             <Link
                                               key={index}
                                               className="hover:cursor-pointer"

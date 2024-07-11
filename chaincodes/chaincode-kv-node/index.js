@@ -379,6 +379,7 @@ class KVContract extends Contract {
     let data = {
       medicineBill: record.medicineBill,
       medicines: record.medicines,
+      username: record.username,
     };
 
     return data;
@@ -387,15 +388,15 @@ class KVContract extends Contract {
   /////////////////////////////
   // Mark Medicine as Dispensed
   /////////////////////////////
-  async medicineDispensed(ctx, recordId, medicineBill, medicineData) {
+  async medicineDispensed(ctx, recordId, medicineBill, medicineData, username) {
     let record = await this.getPrescriptionRecord(ctx, recordId);
 
-    record.medicineBill = medicineBill;
+    record.medicineBill = JSON.stringify(medicineBill);
 
     record.medicines = JSON.stringify(medicineData);
 
     const recordBuffer = Buffer.from(JSON.stringify(record));
-    await ctx.stub.putState(recordId, recordBuffer);
+    await ctx.stub.putState(recordId, recordBuffer, username);
 
     return { success: "OK" };
   }
@@ -487,12 +488,20 @@ class KVContract extends Contract {
   /////////////////////////////
   // Add Lab Test Report
   /////////////////////////////
-  async addLabTestReport(ctx, recordId, labTestReport, labBill, createdAt) {
+  async addLabTestReport(
+    ctx,
+    recordId,
+    labTestReport,
+    labBill,
+    createdAt,
+    username
+  ) {
     let record = await this.getPrescriptionRecord(ctx, recordId);
 
     record.labTests = JSON.stringify(labTestReport);
     record.labBill = labBill;
     record.createdAt = createdAt;
+    record.username = username;
     const recordBuffer = Buffer.from(JSON.stringify(record));
     await ctx.stub.putState(recordId, recordBuffer);
 
@@ -636,21 +645,37 @@ class KVContract extends Contract {
   // claim Response by Insurance Company
   /////////////////////////////
   async addClaimResponse(ctx, recordId, status, responseDate) {
+    // Fetch the current state of the medical record
     let buffer = await ctx.stub.getState(recordId);
 
+    // Check if the medical record exists
     if (!buffer || buffer.length === 0) {
       throw new Error(`The medical record with ID ${recordId} does not exist`);
     }
 
-    let record = JSON.parse(buffer.toString());
+    // Parse the buffer into a JavaScript object
+    let record;
+    try {
+      record = JSON.parse(buffer.toString());
+    } catch (error) {
+      throw new Error(
+        `Error parsing the medical record with ID ${recordId}: ${error.message}`
+      );
+    }
 
-    let insuranceRecord = record.insuranceRecord;
-    insuranceRecord.status = status;
-    insuranceRecord.claimResponseDate = responseDate;
+    // Initialize insuranceRecord if it does not exist
+    if (!record.insuranceRecord) {
+      record.insuranceRecord = {};
+    }
 
-    record.insuranceRecord = insuranceRecord;
+    // Update the insurance record
+    record.insuranceRecord.status = status;
+    record.insuranceRecord.claimResponseDate = responseDate;
 
+    // Serialize the updated record back to a buffer
     const recordBuffer = Buffer.from(JSON.stringify(record));
+
+    // Put the updated state back into the ledger
     await ctx.stub.putState(recordId, recordBuffer);
 
     return { success: "OK" };

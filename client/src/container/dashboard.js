@@ -58,7 +58,7 @@ function Dashboard() {
       imgSrc: AutoShare,
       link: "/insurance-records",
       blocked: false,
-    }
+    },
   ];
 
   const doctorDashboard = [
@@ -101,7 +101,7 @@ function Dashboard() {
     {
       name: "Patient Records",
       imgSrc: Canteen,
-      link: "/paitient-records",
+      link: "/patient-list",
       blocked: false,
     },
   ];
@@ -114,9 +114,9 @@ function Dashboard() {
       blocked: false,
     },
     {
-      name: "Patient Records",
+      name: "Patient List",
       imgSrc: Canteen,
-      link: "/patient-records",
+      link: "/patient-list",
       blocked: false,
     },
   ];

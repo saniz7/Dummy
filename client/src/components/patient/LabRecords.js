@@ -15,8 +15,8 @@ function LabRecords(props) {
   useEffect(() => {
     const getLabRecords = async () => {
       let LabRecords = await paitientService.getLabRecords();
-      console.log(LabRecords.data.recordsData);
-      setData(LabRecords.data.recordsData);
+      console.log(LabRecords?.data?.recordsData);
+      setData(LabRecords?.data?.recordsData);
     };
     getLabRecords();
   }, [id]);
@@ -45,17 +45,18 @@ function LabRecords(props) {
                     {data.map((value, index) => {
                       let lab = [];
                       let labb = [];
-                      lab = JSON.parse(value.labTests);
-                      labb = JSON.parse(lab);
-                      console.log(labb);
+                      if (value?.labTests) {
+                        lab = JSON.parse(value.labTests);
+                        labb = JSON.parse(lab);
+                      }
                       if (id === value.recordId) {
                         return (
                           <tr key={index}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {value.recordId}
+                              {value?.recordId}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {value.name}
+                              {value?.name}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {labb[0]?.name ? labb[0]?.name : "No Lab Tests"}

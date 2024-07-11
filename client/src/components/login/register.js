@@ -196,86 +196,88 @@ function Register() {
                   {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  label="Date of Birth"
+                  type="date"
+                  id="dob"
+                  required
+                  value={dob}
+                  onChange={setDob}
+                />
 
-              <Input
-                label="Date of Birth"
-                type="date"
-                id="dob"
-                required
-                value={dob}
-                onChange={setDob}
-              />
-
-              <div className="mt-6">
-                <label
-                  htmlFor="gender"
-                  className="block text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Gender
-                </label>
-                <div className="mt-2 relative">
-                  <select
-                    id="gender"
-                    name="gender"
-                    className="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
+                <div className="mt-3">
+                  <label
+                    htmlFor="gender"
+                    className="block text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    <option value="Male" className="bg-gray-800 text-white">
-                      Male
-                    </option>
-                    <option value="Female" className="bg-gray-800 text-white">
-                      Female
-                    </option>
-                    <option value="Other" className="bg-gray-800 text-white">
-                      Other
-                    </option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                    <svg
-                      className="h-4 w-4 fill-current"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
+                    Gender
+                  </label>
+                  <div className="mt-2 relative">
+                    <select
+                      id="gender"
+                      name="gender"
+                      className="block appearance-none w-full py-[10px] px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)}
                     >
-                      <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
-                    </svg>
+                      <option value="Male" className="bg-gray-800 text-white">
+                        Male
+                      </option>
+                      <option value="Female" className="bg-gray-800 text-white">
+                        Female
+                      </option>
+                      <option value="Other" className="bg-gray-800 text-white">
+                        Other
+                      </option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                      <svg
+                        className="h-4 w-4 fill-current"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  label="Contact"
+                  type="tel"
+                  id="contact"
+                  required
+                  value={contact}
+                  onChange={setContact}
+                />
 
-              <Input
-                label="Contact"
-                type="tel"
-                id="contact"
-                required
-                value={contact}
-                onChange={setContact}
-              />
-
-              <div className="mt-6">
-                <label
-                  htmlFor="blood_group"
-                  className="block text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Blood Group
-                </label>
-                <select
-                  id="blood_group"
-                  name="blood_group"
-                  className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  value={bloodGroup}
-                  onChange={(e) => setBloodGroup(e.target.value)}
-                >
-                  <option value="">Select Blood Group</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                </select>
+                <div className="mt-3">
+                  <label
+                    htmlFor="blood_group"
+                    className="block text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Blood Group
+                  </label>
+                  <select
+                    id="blood_group"
+                    name="blood_group"
+                    className="block w-full mt-2 py-[10px] px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={bloodGroup}
+                    onChange={(e) => setBloodGroup(e.target.value)}
+                  >
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                  </select>
+                </div>
               </div>
               <Input
                 label="Address"

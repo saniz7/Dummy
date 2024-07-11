@@ -168,7 +168,6 @@ function RegisterByAdmin() {
               onSubmit={(e) => handleSubmit(e)}
             >
               <div class="mt-6">
-                {/* Dropdown input box, center aligned*/}
                 <div className="relative">
                   <select
                     id="dropdown"
@@ -204,298 +203,216 @@ function RegisterByAdmin() {
               {org === "doctor" ? (
                 <div>
                   <Input
-                    label="Email"
-                    type="email"
+                    label="Name"
+                    type="text"
                     id="name"
                     required
                     value={name}
                     onChange={setName}
                   />
-
-                  <div class="mt-3">
-                    <label
-                      for="gender"
-                      class="block text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Gender
-                    </label>
-                    <div class="mt-2 relative">
-                      <select
-                        id="gender"
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                        name="gender"
-                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  <div className="grid grid-cols-2 gap-2">
+                    <div class="mt-3">
+                      <label
+                        for="gender"
+                        class="block text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        <option value="Male" class="bg-gray-800 text-white">
-                          Male
-                        </option>
-                        <option value="Female" class="bg-gray-800 text-white">
-                          Female
-                        </option>
-                        <option value="Other" class="bg-gray-800 text-white">
-                          Other
-                        </option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg
-                          class="h-4 w-4 fill-current"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
+                        Gender
+                      </label>
+                      <div class="mt-2 relative">
+                        <select
+                          id="gender"
+                          value={gender}
+                          onChange={(e) => setGender(e.target.value)}
+                          name="gender"
+                          class="block appearance-none w-full py-[10px] px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >
-                          <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
-                        </svg>
+                          <option value="Male" class="bg-gray-800 text-white">
+                            Male
+                          </option>
+                          <option value="Female" class="bg-gray-800 text-white">
+                            Female
+                          </option>
+                          <option value="Other" class="bg-gray-800 text-white">
+                            Other
+                          </option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                          <svg
+                            class="h-4 w-4 fill-current"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <Input
-                    label="NMC Number"
-                    type="text"
-                    id="nmc_number"
-                    required
-                    value={NMCnumber}
-                    onChange={setNMCnumber}
-                  />
+                    <Input
+                      label="NMC Number"
+                      type="text"
+                      id="nmc_number"
+                      required
+                      value={NMCnumber}
+                      onChange={setNMCnumber}
+                    />
+                    <Input
+                      label="Contact"
+                      type="tel"
+                      id="contact"
+                      required
+                      value={contact}
+                      onChange={setContact}
+                    />
 
-                  <Input
-                    label="Contact"
-                    type="tel"
-                    id="contact"
-                    required
-                    value={contact}
-                    onChange={setContact}
-                  />
-
-                  <div class="mt-3">
-                    <label
-                      for="department"
-                      class="block text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Department
-                    </label>
-                    <div class="mt-2 relative">
-                      <select
-                        id="department"
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value)}
-                        name="department"
-                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    <div class="mt-3">
+                      <label
+                        for="department"
+                        class="block text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        <option
-                          value="cardiology"
-                          className="bg-gray-800 text-white"
+                        Department
+                      </label>
+                      <div class="mt-2 relative">
+                        <select
+                          id="department"
+                          value={department}
+                          onChange={(e) => setDepartment(e.target.value)}
+                          name="department"
+                          class="block appearance-none w-full py-[10px] px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >
-                          Cardiology
-                        </option>
-                        <option
-                          value="dermatology"
-                          className="bg-gray-800 text-white"
-                        >
-                          Dermatology
-                        </option>
-                        <option
-                          value="neurology"
-                          className="bg-gray-800 text-white"
-                        >
-                          Neurology
-                        </option>
-                        <option
-                          value="orthopedics"
-                          className="bg-gray-800 text-white"
-                        >
-                          Orthopedics
-                        </option>
-                        <option
-                          value="pediatrics"
-                          className="bg-gray-800 text-white"
-                        >
-                          Pediatrics
-                        </option>
-                        <option
-                          value="psychiatry"
-                          className="bg-gray-800 text-white"
-                        >
-                          Psychiatry
-                        </option>
-                        <option
-                          value="radiology"
-                          className="bg-gray-800 text-white"
-                        >
-                          Radiology
-                        </option>
-                        <option
-                          value="surgery"
-                          className="bg-gray-800 text-white"
-                        >
-                          Surgery
-                        </option>
-                        <option
-                          value="urology"
-                          className="bg-gray-800 text-white"
-                        >
-                          Urology
-                        </option>
-                        <option
-                          value="oncology"
-                          className="bg-gray-800 text-white"
-                        >
-                          Oncology
-                        </option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg
-                          class="h-4 w-4 fill-current"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
-                        </svg>
+                          <option
+                            value="cardiology"
+                            className="bg-gray-800 text-white"
+                          >
+                            Cardiology
+                          </option>
+                          <option
+                            value="dermatology"
+                            className="bg-gray-800 text-white"
+                          >
+                            Dermatology
+                          </option>
+                          <option
+                            value="neurology"
+                            className="bg-gray-800 text-white"
+                          >
+                            Neurology
+                          </option>
+                          <option
+                            value="orthopedics"
+                            className="bg-gray-800 text-white"
+                          >
+                            Orthopedics
+                          </option>
+                          <option
+                            value="pediatrics"
+                            className="bg-gray-800 text-white"
+                          >
+                            Pediatrics
+                          </option>
+                          <option
+                            value="psychiatry"
+                            className="bg-gray-800 text-white"
+                          >
+                            Psychiatry
+                          </option>
+                          <option
+                            value="radiology"
+                            className="bg-gray-800 text-white"
+                          >
+                            Radiology
+                          </option>
+                          <option
+                            value="surgery"
+                            className="bg-gray-800 text-white"
+                          >
+                            Surgery
+                          </option>
+                          <option
+                            value="urology"
+                            className="bg-gray-800 text-white"
+                          >
+                            Urology
+                          </option>
+                          <option
+                            value="oncology"
+                            className="bg-gray-800 text-white"
+                          >
+                            Oncology
+                          </option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                          <svg
+                            class="h-4 w-4 fill-current"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* <Input
-                    label="Degree"
-                    type="text"
-                    id="degree"
-                    required
-                    value={degree}  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  const validateContact = (contact) => {
-    const re = /^[0-9]{10}$/;
-    return re.test(contact);
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 8;
-  };
-    return re.test(email);
-  };
-
-  const validateContact = (contact) => {
-    const re = /^[0-9]{10}$/;
-    return re.test(contact);
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 8;
-  };
-                    <label
-                      for="degree"
-                      class="block text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Degree
-                    </label>
-                    <div class="mt-2 relative">
-                      <select
-                        id="degree"
-                        value={gender}
-                        onChange={(e) => setDegree(e.target.value)}
-                        name="degree"
-                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    <div class="mt-3">
+                      <label
+                        for="specification"
+                        class="block text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        <option value="mbbs" class="bg-gray-800 text-white">
-                          MBBS
-                        </option>
-                        <option value="md" class="bg-gray-800 text-white">
-                          MD
-                        </option>
-                        <option value="ms" class="bg-gray-800 text-white">
-                          MS
-                        </option>
-                        <option value="dm" class="bg-gray-800 text-white">
-                          DM
-                        </option>
-                        <option value="mch" class="bg-gray-800 text-white">
-                          MCh
-                        </option>
-                        <option value="dnb" class="bg-gray-800 text-white">
-                          DNB
-                        </option>
-                        <option value="phd" class="bg-gray-800 text-white">
-                          PhD
-                        </option>
-                        <option value="other" class="bg-gray-800 text-white">
-                          Other
-                        </option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg
-                          class="h-4 w-4 fill-current"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
+                        Specification
+                      </label>
+                      <div class="mt-2 relative">
+                        <select
+                          id="specification"
+                          value={specification}
+                          onChange={(e) => setSpecification(e.target.value)}
+                          name="specification"
+                          class="block appearance-none w-full py-[10px] px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >
-                          <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
-                        </svg>
+                          <option
+                            value="Surgeon"
+                            class="bg-gray-800 text-white"
+                          >
+                            Surgeon
+                          </option>
+                          <option
+                            value="General"
+                            class="bg-gray-800 text-white"
+                          >
+                            General
+                          </option>
+                          <option
+                            value="Physician"
+                            class="bg-gray-800 text-white"
+                          >
+                            Physician
+                          </option>
+                          <option
+                            value="Therapist"
+                            class="bg-gray-800 text-white"
+                          >
+                            Therapist
+                          </option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                          <svg
+                            class="h-4 w-4 fill-current"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
+                    <Input
+                      label="D.O.B"
+                      type="date"
+                      id="dob"
+                      required
+                      value={dob}
+                      onChange={setDob}
+                    />
                   </div>
-                  {/* <Input
-                    label="Specification"
-                    type="text"
-                    id="specification"
-                    required
-                    value={specification}
-                    onChange={setSpecification}
-                  /> */}
-
-                  <div class="mt-3">
-                    <label
-                      for="specification"
-                      class="block text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Specification
-                    </label>
-                    <div class="mt-2 relative">
-                      <select
-                        id="specification"
-                        value={specification}
-                        onChange={(e) => setSpecification(e.target.value)}
-                        name="specification"
-                        class="block appearance-none w-full py-2 px-3 border text-gray-300 border-gray-500 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      >
-                        <option value="Surgeon" class="bg-gray-800 text-white">
-                          Surgeon
-                        </option>
-                        <option value="General" class="bg-gray-800 text-white">
-                          General
-                        </option>
-                        <option
-                          value="Physician"
-                          class="bg-gray-800 text-white"
-                        >
-                          Physician
-                        </option>
-                        <option
-                          value="Therapist"
-                          class="bg-gray-800 text-white"
-                        >
-                          Therapist
-                        </option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg
-                          class="h-4 w-4 fill-current"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M14.95 7.95a1 1 0 01-1.414 0L10 4.414l-3.536 3.536a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <Input
-                    label="D.O.B"
-                    type="date"
-                    id="dob"
-                    required
-                    value={dob}
-                    onChange={setDob}
-                  />
 
                   <div className="relative ">
                     <Input

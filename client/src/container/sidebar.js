@@ -86,7 +86,7 @@ const Sidebar = () => {
     {
       name: "Patient Records",
       icon: <FaFileMedical />,
-      link: "/paitient-records",
+      link: "/patient-list",
       blocked: false,
     },
   ];
@@ -95,7 +95,7 @@ const Sidebar = () => {
     {
       name: "Patient Records",
       icon: <FaFileMedical />,
-      link: "/paitient-records",
+      link: "/patient-list",
       blocked: false,
     },
   ];
@@ -104,7 +104,7 @@ const Sidebar = () => {
     {
       name: "Patient Records",
       icon: <FaFileMedical />,
-      link: "/patient-records",
+      link: "/patient-list",
       blocked: false,
     },
   ];

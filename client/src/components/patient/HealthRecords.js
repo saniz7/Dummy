@@ -4,6 +4,9 @@ import Loader from "../../common/loader";
 import AutoService from "../../services/AutoServices";
 import paitientService from "../../services/patientService";
 import Table from "../Table/table";
+import authService from "../../services/authService";
+import { TiThMenu } from "react-icons/ti";
+
 function HealthRecords(props) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -27,118 +30,31 @@ function HealthRecords(props) {
       setData(HealthRecords.data.recordsData);
     };
     getHealthRecords();
-    // const getDoctorData = async () => {
-    //   const patientDummyData = [
-    //     {
-    //       patientId: "123456",
-    //       name: "John Doe",
-    //       dob: "01-01-1990",
-    //       gender: "Male",
-    //       aadharNumber: "123456789012",
-    //       contact: "+91 9876543210",
-    //       bloodGroup: "O+",
-    //       address: "123 Main St, Anytown, USA",
-    //       createdAt: "01-01-2023",
-    //       medicalRecords: [
-    //         {
-    //           recordId: "23523452435",
-    //           doctorId: "252345",
-    //           createdAt: "01-01-2023",
-    //           diagnosis: "illness, flu, headache",
-    //           medicines: [
-    //             {
-    //               name: "Medicine1",
-    //               dose: "3 times a day",
-    //               dispensed: false,
-    //             },
-    //             {
-    //               name: "Medicine2",
-    //               dose: "2 times a day",
-    //               dispensed: true,
-    //             },
-    //           ],
-    //           labTests: [
-    //             {
-    //               name: "Ultrasound",
-    //               labReport: {
-    //                 reportFileHash: "RandomHash_najskdfjksdf",
-    //                 dateOfReport: "02-01-2023",
-    //               },
-    //             },
-    //           ],
-    //         },
-    //         {
-    //           recordId: "23523452435",
-    //           doctorId: "252345",
-    //           createdAt: "01-01-2023",
-    //           diagnosis: "illness, flu, headache",
-    //           medicines: [
-    //             {
-    //               name: "Medicine1",
-    //               dose: "3 times a day",
-    //               dispensed: false,
-    //             },
-    //             {
-    //               name: "Medicine2",
-    //               dose: "2 times a day",
-    //               dispensed: true,
-    //             },
-    //           ],
-    //           labTests: [
-    //             {
-    //               name: "Ultrasound",
-    //               labReport: {
-    //                 reportFileHash: "RandomHash_najskdfjksdf",
-    //                 dateOfReport: "02-01-2023",
-    //               },
-    //             },
-    //           ],
-    //         },
-    //         {
-    //           recordId: "23523452435",
-    //           doctorId: "252345",
-    //           createdAt: "01-01-2023",
-    //           diagnosis: "illness, flu, headache",
-    //           medicines: [
-    //             {
-    //               name: "Medicine1",
-    //               dose: "3 times a day",
-    //               dispensed: false,
-    //             },
-    //             {
-    //               name: "Medicine2",
-    //               dose: "2 times a day",
-    //               dispensed: true,
-    //             },
-    //           ],
-    //           labTests: [
-    //             {
-    //               name: "Ultrasound",
-    //               labReport: {
-    //                 reportFileHash: "RandomHash_najskdfjksdf",
-    //                 dateOfReport: "02-01-2023",
-    //               },
-    //             },
-    //           ],
-    //         },
-    //       ],
-    //       insuranceRecords: [
-    //         {
-    //           claimRequestId: "1491327498",
-    //           claimRequestDate: "10-01-2023",
-    //           medicalRecordAttached: ["23523452435", "23523453232"],
-    //           status: "Pending",
-    //         },
-    //       ],
-    //     },
-    //   ];
-    //   console.log(patientDummyData[0].medicalRecords);
-    //   setData(patientDummyData[0].medicalRecords);
-    // };
-    // getDoctorData();
     console.log(data);
   }, [id]);
+  const userRole = authService.getRole();
+  const applyforclaim = async (recordId, patientId) => {
+    console.log(recordId, patientId);
+    let ClaimStatus = await paitientService.postclaimrequest({
+      recordId,
+      patientId,
+    });
+    if (ClaimStatus.success) {
+      window.alert(`${ClaimStatus.message.message}`);
+      window.location.reload();
+    }
+  };
+  const [dropdownVisible, setDropdownVisible] = useState({});
+  const [ID, setID] = useState("");
 
+  const handleClick = (patientId) => {
+    setID(patientId);
+    setDropdownVisible((prevState) => ({
+      ...prevState,
+      [patientId]: !prevState[patientId],
+    }));
+  };
+  console.log(ID);
   return (
     <>
       <>
@@ -154,7 +70,7 @@ function HealthRecords(props) {
                 <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                      <table className="min-w-full divide-y divide-gray-200 mt-8">
+                      <table className="min-w-full divide-y divide-gray-20">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -265,13 +181,64 @@ function HealthRecords(props) {
                                     {record.department}
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    <Link
+                                    {/* <Link
                                       to={`/lab-records/${record.recordId}`}
                                     >
                                       <button className="bg-gray-800 text-white p-2 hover:cursor-pointer rounded-full">
                                         View Lab Record
                                       </button>
-                                    </Link>
+                                    </Link> */}
+                                    {/* <button
+                                      onClick={() =>
+                                        applyforclaim(
+                                          record.recordId,
+                                          authService.getId()
+                                        )
+                                      }
+                                      className="w-full text-white bg-green-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                    >
+                                      Apply for Claim
+                                    </button> */}
+                                    <div className="flex ">
+                                      {dropdownVisible[record.patientId] && (
+                                        <div className="absolute flex flex-col gap-2 top-[250px] right-0 bg-white border border-black text-black p-3 rounded-lg z-10">
+                                          <Link
+                                            to={`/lab-records/${record.recordId}`}
+                                          >
+                                            <button className="  hover:cursor-pointer rounded-full">
+                                              Lab Record
+                                            </button>
+                                          </Link>
+                                          <hr className="bg-black h-[2px]"></hr>
+                                          <Link
+                                            to={`/pharmacy-records/${record.recordId}`}
+                                          >
+                                            <button className="  hover:cursor-pointer rounded-full">
+                                              Pharmacy Record
+                                            </button>
+                                          </Link>
+                                          <hr className="bg-black h-[2px]"></hr>
+                                          <button
+                                            onClick={() =>
+                                              applyforclaim(
+                                                record.recordId,
+                                                authService.getId()
+                                              )
+                                            }
+                                            className="w-full text-white bg-green-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                          >
+                                            Claim
+                                          </button>
+                                        </div>
+                                      )}
+                                      <div className="flex justify-end items-end cursor-pointer">
+                                        <TiThMenu
+                                          onClick={() =>
+                                            handleClick(record.patientId)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                               </tbody>
