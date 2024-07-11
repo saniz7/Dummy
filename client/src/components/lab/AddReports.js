@@ -20,22 +20,17 @@ function AddReports({ patientId, recordId }) {
 
   const handleMedicineButtonClick = () => {
     setInputFields([...inputFields, ""]);
-    console.log("medicines: ", medicines);
     let newMedicineData = {
       name: "",
       dose: "",
       dispensed: "",
       comment: "",
     };
-    console.log("inputFields: ", inputFields);
     setMedicines([...medicines, newMedicineData]);
-    console.log("medicines: ", medicines);
   };
 
   const handleLabButtonClick = () => {
     setInputLabFields([...inputLabFields, ""]);
-    console.log("lab tests: ", labTests);
-
     let newLabTestData = {
       name: "",
       labReport: {
@@ -43,9 +38,7 @@ function AddReports({ patientId, recordId }) {
         dateOfReport: "",
       },
     };
-    console.log("inputlabfields: ", inputLabFields);
     setLabTests([...labTests, newLabTestData]);
-    console.log("labtests: ", labTests);
   };
 
   const handleMedicineNameChange = (index, name) => {
@@ -55,7 +48,6 @@ function AddReports({ patientId, recordId }) {
       name: name,
     };
     setMedicines(updatedMedicines);
-    console.log("medicines: ", medicines[index]);
   };
 
   const handleLabTestChange = (index, key, value) => {
@@ -65,7 +57,6 @@ function AddReports({ patientId, recordId }) {
       [key]: value,
     };
     setLabTests(updatedLabTests);
-    console.log("lab tests: ", labTests[index]);
   };
 
   const handleLabReportChange = (index, report) => {
@@ -75,7 +66,6 @@ function AddReports({ patientId, recordId }) {
       labReport: { ...updatedLabTests[index].labReport, report: report },
     };
     setLabTests(updatedLabTests);
-    console.log("lab tests: ", labTests[index]);
   };
 
   const handleInputChange = (index, value) => {
@@ -83,20 +73,17 @@ function AddReports({ patientId, recordId }) {
     newInputFields[index] = value;
     setInputFields(newInputFields);
   };
+
   const handlebill = (e) => {
     setLabBill(e.target.value);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setLoader(true);
     setError("");
     setSuccess("");
-
-    console.log("medicines: ", medicines);
-    console.log("lab tests: ", labTests);
-    console.log("patientId: ", patientId);
-    console.log("diagnosis: ", diagnosis);
 
     const postData = {
       recordId: recordId,
@@ -112,13 +99,10 @@ function AddReports({ patientId, recordId }) {
         setSuccess("Report added successfully!");
         setLoader(false);
         setError("");
-        console.log("response data");
-        console.log(res.data);
-        window.location.href = "/paitient-records";
+        window.location.href = "/patient-list";
         return;
       }
     } catch (error) {
-      console.log("error");
       setLoader(false);
       setError("Something went wrong!");
     }
@@ -126,7 +110,7 @@ function AddReports({ patientId, recordId }) {
 
   return (
     <>
-      <section className="bg-gray-50 dark:bg-gray-900 py-10 rounded-lg">
+      <section className="bg-blue-50  py-10 rounded-lg">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0">
           <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
             <h2 className="mb-1 text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -156,7 +140,7 @@ function AddReports({ patientId, recordId }) {
                 />
               </div>
               <div
-                className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-2 rounded"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded cursor-pointer"
                 onClick={handleLabButtonClick}
               >
                 Add Lab Test +
@@ -168,7 +152,7 @@ function AddReports({ patientId, recordId }) {
                       type={"text"}
                       name={"labTest"}
                       id={"labTest"}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder={"Test Name"}
                       required
                       value={labTests[index]?.name || ""}
@@ -180,7 +164,7 @@ function AddReports({ patientId, recordId }) {
                       type={"text"}
                       name={"report"}
                       id={"report"}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder={"Report Status"}
                       required
                       value={labTests[index]?.labReport?.report || ""}
@@ -214,7 +198,7 @@ function AddReports({ patientId, recordId }) {
 
               <button
                 type="submit"
-                className="w-full text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 {loader ? <Loader height={5} width={5} /> : "Submit"}
               </button>
