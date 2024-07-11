@@ -189,16 +189,13 @@ const invokeTransaction = async (
       ); // Include args[7] for department
       message = `Successfully added the prescription record to the ledger with id ${args[0]}`;
     } else if (fcn === "medicineDispensed") {
-      console.log(
-        "inside medicineDispensed, args: ",
-        args,
-        JSON.stringify(args[2])
-      );
+      console.log("inside medicineDispensed, args: ", args, args[2]);
       result = await contract.submitTransaction(
         fcn,
         args[0],
         args[1],
-        JSON.stringify(args[2])
+        JSON.stringify(args[2]),
+        args[3]
       );
       message = `Successfully added the medicine dispensed record to the ledger with id ${args[0]}`;
     } else if (fcn === "addLabTestReport") {
@@ -212,7 +209,8 @@ const invokeTransaction = async (
         args[0],
         JSON.stringify(args[1]),
         args[2],
-        args[3]
+        args[3],
+        args[4]
       );
       message = `Successfully added the lab report to the ledger with id ${args[0]}`;
     } else if (fcn === "addClaimRequest") {
