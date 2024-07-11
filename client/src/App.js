@@ -253,6 +253,9 @@ function App() {
           <Route path="/lab-records/:id" element={<LabRecords />} />
           <Route path="/lab-records-all/:id" element={<AllLabRecords />} />
           <Route path="/patient-records" element={<PaitentsRecords />} />
+          <Route path="/view-patient-reports/:id" element={<Paitents />} />
+          <Route path="/patient-list" element={<PatientList />} />
+          <Route path="/pharmacy-records/:id" element={<PharmacyRecords />} />
 
           {/* Admin */}
           <Route element={<RoleAccess roles={["Admin"]} />}>
@@ -319,9 +322,6 @@ function App() {
           <Route element={<RoleAccess roles={["lab"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-reports/:rid/:pid" element={<AddRecords />} />
-
-            <Route path="/paitient-records" element={<PatientList />} />
-            <Route path="/view-paitient-records/:id" element={<Paitents />} />
           </Route>
 
           {/* Insurance */}

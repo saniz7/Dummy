@@ -23,7 +23,7 @@ function InsuranceRecords(props) {
   const applyforclaim = async (recordId, patientId) => {
     console.log(recordId, patientId);
     let ClaimStatus = await paitientService.postclaimrequest({
-      recordId,
+      recordId: "89578",
       patientId,
     });
     if (ClaimStatus.success) {
@@ -35,7 +35,7 @@ function InsuranceRecords(props) {
   useEffect(() => {
     const getInsuranceRecords = async () => {
       let InsuranceRecords = await paitientService.getInsuranceRecords();
-      console.log(InsuranceRecords.data.recordsData);
+      console.log(InsuranceRecords.data);
       setData(InsuranceRecords.data.recordsData);
     };
     getInsuranceRecords();
@@ -59,33 +59,37 @@ function InsuranceRecords(props) {
                       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                           <table className="min-w-full divide-y divide-gray-200 mt-8">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Record ID
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Date
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Status
+                                </th>
+                              </tr>
+                            </thead>{" "}
                             <tbody className="bg-white divide-y divide-gray-200">
                               <tr>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                  Record ID
-                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                   {record.recordId}
                                 </td>
-                              </tr>
-                              <tr>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                  Date
-                                </td>
+
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                   {record.claimRequestDate}
                                 </td>
-                              </tr>
-                              <tr>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                  Status
-                                </td>
+
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                  {record.status}
+                                  {record.insuranceClaim
+                                    ? "Claimed"
+                                    : "Not Claimed"}
                                 </td>
                               </tr>
 
-                              {record.insuranceClaim ? (
+                              {/* {record.insuranceClaim ? (
                                 <>
                                   <tr>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -119,7 +123,7 @@ function InsuranceRecords(props) {
                                     </td>
                                   </tr>
                                 </>
-                              )}
+                              )} */}
                             </tbody>
                           </table>
                         </div>

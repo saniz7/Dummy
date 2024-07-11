@@ -3,13 +3,13 @@ import Input from "../../common/input";
 import Loader from "../../common/loader";
 import paitientService from "../../services/patientService";
 
-function ClaimRequest() {
+function ClaimRequest({ patientId, recordId }) {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [patientId, setPatientId] = useState("");
-  const [recordId, setRecordId] = useState("");
+  const [pId, setPId] = useState(patientId);
+  const [rId, setRId] = useState(recordId);
   const [claimStatus, setClaimStatus] = useState("Approve");
 
   const handleSubmit = async (e) => {
@@ -44,7 +44,7 @@ function ClaimRequest() {
 
   return (
     <>
-      <section className="bg-gray-50 dark:bg-gray-900 min-h-[93vh] py-10">
+      <section className="bg-gray-50 dark:bg-gray-900  py-10">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0">
           <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
             <h2 className="mb-1 text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -59,8 +59,9 @@ function ClaimRequest() {
                 type="number"
                 id="patientid"
                 required
-                value={patientId}
-                onChange={setPatientId}
+                disabled
+                value={pId}
+                onChange={(e) => setPId(e.target.value)}
               />
 
               <Input
@@ -68,8 +69,9 @@ function ClaimRequest() {
                 type="number"
                 id="recordId"
                 required
-                value={recordId}
-                onChange={setRecordId}
+                disabled
+                value={rId}
+                onChange={(e) => setRId(e.target.value)}
               />
 
               <div class="mt-6">
