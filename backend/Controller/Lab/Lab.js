@@ -20,12 +20,11 @@ function getErrorMessage(field) {
 exports.labReports = async (req, res, next) => {
   const patientId = req.body.patientId;
   const recordId = req.body.recordId;
-  const labReport = req.body.labReport;
+  const labTests = req.body.labReport;
   const labBill = req.body.labBill;
   const createdAt = new Date();
   const orgName = "lab";
   const transient = {};
-  const args = [recordId, labReport, labBill, createdAt];
 
   var flag = 0;
 
@@ -34,6 +33,7 @@ exports.labReports = async (req, res, next) => {
     (result) => {
       username = result.userName;
       console.log("result: ", result, "patientId: ", patientId);
+      console.log("username: ", username);
       if (!result.access.includes(patientId)) {
         flag = 1;
         return res.status(400).json({
@@ -47,6 +47,53 @@ exports.labReports = async (req, res, next) => {
   if (flag == 1) {
     return;
   }
+  let existingRecord;
+  try {
+    existingRecord = await query.query(
+      "main-channel1",
+      "chaincode1",
+      [recordId],
+      "getLabTestReport",
+      username,
+      orgName
+    );
+    console.log(existingRecord);
+    existingRecord.labTests = existingRecord.labTests; // Parse the existing medicines data
+    existingRecord.labBill = existingRecord.labBill; // Parse the existing medicine bills data
+  } catch (error) {
+    console.log("Record does not exist. Creating a new one.", error);
+    existingRecord = { labTests: [], labBill: [] };
+  }
+  // invoke code to update the medicalRecord with recordId
+  console.log("255", existingRecord.labBill);
+  console.log("25", labBill);
+  if (existingRecord.labTests) {
+    console.log("24", existingRecord.labTests);
+    let ex = JSON.parse(JSON.parse(JSON.parse(existingRecord.labTests)));
+
+    neww = [...ex, ...labTests];
+  } else {
+    neww = [...labTests];
+  }
+  if (existingRecord.labBill) {
+    console.log("23", JSON.parse(existingRecord.labBill));
+    let bi = JSON.parse(existingRecord.labBill);
+    console.log("bi", bi);
+    newbi = [...bi, ...labBill];
+  } else {
+    newbi = [...labBill];
+  }
+  console.log(JSON.stringify(newbi));
+  console.log(JSON.stringify(labBill));
+  const args = [
+    recordId,
+    JSON.stringify(newbi),
+    JSON.stringify(neww),
+    createdAt,
+    username,
+  ];
+  console.log(args);
+  // const args = [recordId, labTests, labBill, createdAt, username];
 
   let message = await invoke.invokeTransaction(
     "main-channel1",

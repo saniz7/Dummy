@@ -282,41 +282,87 @@ exports.LabRecords = async (req, res, next) => {
 };
 
 exports.PharmacyRecords = async (req, res, next) => {
-  var username;
+  try {
+    const patientId = req.session.uid;
 
-  const patientId = req.session.uid;
-
-  const getPatient = await User.findOne({ userId: patientId }).then(
-    (result) => {
-      console.log("result: ", result, "patientId: ", patientId);
-      username = result.userName;
+    // Fetch patient details
+    const user = await User.findOne({ userId: patientId });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
-  );
 
-  var recordsData = [];
+    const username = user.userName;
+    console.log("result: ", user, "patientId: ", patientId);
 
-  const records = await Record.find({ patientId }).then(async (result) => {
+    const recordsData = [];
+
+    // Fetch records for the patient
+    const records = await Record.find({ patientId });
+
+    if (records.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No records found for the patient",
+      });
+    }
+
+    // Process each record
     await Promise.all(
-      Object.keys(result).map(async (item) => {
-        console.log("result: ", result[item]);
-        let message = await query.query(
-          "main-channel1",
-          "chaincode1",
-          [result[item].RecordId],
-          "getMedicineData",
-          username,
-          "patient"
-        );
+      records.map(async (record) => {
+        console.log("record: ", record);
+
+        let message;
+        try {
+          message = await query.query(
+            "main-channel1",
+            "chaincode1",
+            [record.RecordId],
+            "getMedicineData",
+            username,
+            "patient"
+          );
+        } catch (error) {
+          console.error("Error querying chaincode: ", error);
+          return;
+        }
+
         console.log("message record data: ", message);
-        message.medicines = JSON.parse(JSON.parse(message.medicines));
-        message.recordId = result[item].RecordId;
-        message.doctorId = result[item].doctorId;
+
+        // Ensure message.medicines and message.medicineBill are valid JSON strings
+        try {
+          message.medicines = JSON.parse(message.medicines);
+        } catch (error) {
+          console.error("Error parsing medicines JSON: ", error);
+          message.medicines = [];
+        }
+
+        try {
+          message.medicineBill = JSON.parse(message.medicineBill);
+        } catch (error) {
+          console.error("Error parsing medicineBill JSON: ", error);
+          message.medicineBill = {};
+        }
+
+        message.recordId = record.RecordId;
+        message.doctorId = record.doctorId;
+        message.username = record.username;
+
         recordsData.push(message);
       })
     );
-  });
 
-  res.status(200).json({ success: true, recordsData });
+    res.status(200).json({ success: true, recordsData });
+  } catch (error) {
+    console.error("Error occurred: ", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching pharmacy records",
+      error: error.message,
+    });
+  }
 };
 
 exports.InsuranceRecords = async (req, res, next) => {
